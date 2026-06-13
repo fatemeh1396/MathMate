@@ -11,12 +11,14 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+      Ref: actions/setup-python@v5
+      with:
+        python-version: "3.11"
 
-      - name: Install Flet
-        run: pip install flet
+      - name: Install Flet & Certifi
+        run: |
+          pip install flet
+          pip install certifi
 
       - name: Build APK
         run: yes | flet build apk
