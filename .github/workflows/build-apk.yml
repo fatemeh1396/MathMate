@@ -1,4 +1,4 @@
-name: Build MathMate APK
+name: Build MathMate Release APK
 
 on:
   workflow_dispatch:
@@ -32,15 +32,75 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Restore release keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 --decode > android/app/release.keystore
+
+      - name: Configure release signing
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          cat >> android/gradle.properties <<EOF
+          MYAPP_RELEASE_STORE_FILE=release.keystore
+          MYAPP_RELEASE_STORE_PASSWORD=$KEYSTORE_PASSWORD
+          MYAPP_RELEASE_KEY_ALIAS=$KEY_ALIAS
+          MYAPP_RELEASE_KEY_PASSWORD=$KEY_PASSWORD
+          EOF
+
+      - name: Configure Gradle signing
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("android/app/build.gradle")
+          text = path.read_text()
+
+          signing = '''
+              signingConfigs {
+                  release {
+                      storeFile file(MYAPP_RELEASE_STORE_FILE)
+                      storePassword MYAPP_RELEASE_STORE_PASSWORD
+                      keyAlias MYAPP_RELEASE_KEY_ALIAS
+                      keyPassword MYAPP_RELEASE_KEY_PASSWORD
+                  }
+              }
+          '''
+
+          text = text.replace(
+              "android {",
+              "android {" + signing,
+              1
+          )
+
+          text = text.replace(
+              "buildTypes {",
+              """buildTypes {
+                  release {
+                      signingConfig signingConfigs.release
+                  }
+              """,
+              1
+          )
+
+          path.write_text(text)
+          PY
+
       - name: Sync Capacitor Android
         run: npx cap sync android
 
-      - name: Build APK
-        working-directory: android
-        run: ./gradlew assembleDebug
+      - name: Make Gradle executable
+        run: chmod +x android/gradlew
 
-      - name: Upload APK
+      - name: Build signed Release APK
+        working-directory: android
+        run: ./gradlew assembleRelease
+
+      - name: Upload signed APK
         uses: actions/upload-artifact@v4
         with:
-          name: MathMate-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: MathMate-Release-APK
+          path: android/app/build/outputs/apk/release/app-release.apk
