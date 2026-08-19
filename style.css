@@ -1,0 +1,3644 @@
+@font-face {
+    font-family: "Arad";
+    src: url("fonts/AradVF.ttf") format("truetype");
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #14B8A6;
+    --primary-dark: #0F766E;
+    --primary-color: #14B8A6;
+
+    --background: #F8FAFC;
+    --card: #FFFFFF;
+    --card-bg: #FFFFFF;
+
+    --text: #1E293B;
+    --text-light: #64748B;
+    --border: #E2E8F0;
+
+    --input-bg: #F8FAFC;
+    --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+body.dark {
+    --background: #0F172A;
+    --card: #1E293B;
+    --card-bg: #1E293B;
+
+    --text: #F8FAFC;
+    --text-light: #94A3B8;
+    --border: #334155;
+
+    --input-bg: #0F172A;
+    --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+body {
+    font-family: "Arad", sans-serif;
+    background: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+.app {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-bottom: 100px;
+}
+
+/* ================= HEADER ================= */
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile-icon {
+    width: 55px;
+    height: 55px;
+    background: linear-gradient(135deg, #14B8A6, #2DD4BF);
+    border-radius: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 28px;
+
+    box-shadow: 0 8px 20px rgba(20, 184, 166, 0.25);
+}
+
+.hello {
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+.profile h1 {
+    font-size: 19px;
+    margin-top: 3px;
+}
+
+.theme-btn {
+    width: 48px;
+    height: 48px;
+
+    border: none;
+    background: var(--card);
+    border-radius: 16px;
+
+    font-size: 21px;
+    cursor: pointer;
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+}
+
+/* ================= WELCOME CARD ================= */
+
+.welcome-card {
+    min-height: 240px;
+
+    background: linear-gradient(135deg, #14B8A6, #0F766E);
+
+    border-radius: 28px;
+    padding: 28px;
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    position: relative;
+    overflow: hidden;
+
+    margin-bottom: 35px;
+
+    box-shadow: 0 15px 35px rgba(20, 184, 166, 0.25);
+}
+
+.welcome-card::before {
+    content: "";
+    position: absolute;
+
+    width: 200px;
+    height: 200px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    left: -70px;
+    bottom: -100px;
+}
+
+.welcome-text {
+    position: relative;
+    z-index: 1;
+}
+
+.badge {
+    display: inline-block;
+
+    background: rgba(255, 255, 255, 0.18);
+
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    margin-bottom: 15px;
+}
+
+.welcome-card h2 {
+    font-size: 25px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.welcome-card p {
+    font-size: 13px;
+    line-height: 1.8;
+    opacity: 0.9;
+    max-width: 300px;
+}
+
+.start-btn {
+    margin-top: 20px;
+
+    border: none;
+    background: white;
+    color: var(--primary-dark);
+
+    padding: 12px 18px;
+
+    border-radius: 15px;
+
+    font-family: inherit;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.start-btn:hover {
+    transform: translateY(-2px);
+}
+
+.welcome-illustration {
+    font-size: 85px;
+
+    position: relative;
+    z-index: 1;
+
+    animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* ================= TOOLS ================= */
+
+.tools-section {
+    margin-bottom: 30px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+.section-header h2 {
+    font-size: 20px;
+}
+
+.more-btn {
+    border: none;
+    background: transparent;
+
+    color: var(--primary-dark);
+
+    font-family: inherit;
+
+    cursor: pointer;
+}
+
+.tools-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 15px;
+}
+
+.tool-card {
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 22px;
+
+    padding: 20px;
+
+    text-align: right;
+
+    font-family: inherit;
+
+    cursor: pointer;
+
+    transition: 0.25s;
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.04);
+}
+
+.tool-card:hover {
+    transform: translateY(-4px);
+
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+}
+
+.tool-icon {
+    width: 50px;
+    height: 50px;
+
+    border-radius: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 25px;
+
+    margin-bottom: 15px;
+}
+
+.calculator .tool-icon {
+    background: #DCFCE7;
+}
+
+.geometry .tool-icon {
+    background: #DBEAFE;
+}
+
+.numbers .tool-icon {
+    background: #F3E8FF;
+}
+
+.multiples .tool-icon {
+    background: #FEF3C7;
+}
+
+.learning .tool-icon {
+    background: #FCE7F3;
+}
+
+.counter .tool-icon {
+    background: #E0F2FE;
+}
+
+.tool-card h3 {
+    font-size: 15px;
+
+    margin-bottom: 6px;
+
+    color: var(--text);
+}
+
+.tool-card p {
+    font-size: 12px;
+
+    color: var(--text-light);
+}
+
+/* ================= LEARNING CARD ================= */
+
+.learning-card {
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 22px;
+
+    padding: 18px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+.learning-icon {
+    width: 55px;
+    height: 55px;
+
+    border-radius: 18px;
+
+    background: #FEF3C7;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 28px;
+}
+
+.learning-text {
+    flex: 1;
+}
+
+.learning-text h2 {
+    font-size: 16px;
+
+    margin-bottom: 4px;
+}
+
+.learning-text p {
+    font-size: 12px;
+
+    color: var(--text-light);
+}
+
+.learning-arrow {
+    font-size: 24px;
+
+    color: var(--primary);
+}
+
+/* ================= BOTTOM NAV ================= */
+
+.bottom-nav {
+    position: fixed;
+
+    bottom: 0;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 100%;
+    max-width: 700px;
+
+    background: rgba(255, 255, 255, 0.95);
+
+    backdrop-filter: blur(15px);
+
+    border-top: 1px solid var(--border);
+
+    display: flex;
+
+    justify-content: space-around;
+
+    padding: 10px 15px 12px;
+
+    z-index: 1000;
+}
+
+.nav-item {
+    border: none;
+
+    background: transparent;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 4px;
+
+    font-family: inherit;
+
+    color: var(--text-light);
+
+    cursor: pointer;
+
+    padding: 5px 15px;
+
+    border-radius: 15px;
+
+    transition: 0.2s;
+}
+
+.nav-item span {
+    font-size: 20px;
+}
+
+.nav-item small {
+    font-size: 11px;
+}
+
+.nav-item.active {
+    color: var(--primary-dark);
+
+    background: #CCFBF1;
+}
+
+/* ================= DARK MODE ================= */
+
+body.dark {
+    --background: #0F172A;
+    --card: #1E293B;
+    --text: #F8FAFC;
+    --text-light: #94A3B8;
+    --border: #334155;
+}
+
+body.dark .bottom-nav {
+    background: rgba(30, 41, 59, 0.95);
+}
+
+body.dark .tool-card {
+    background: var(--card);
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 500px) {
+
+    .app {
+        padding: 15px;
+        padding-bottom: 90px;
+    }
+
+    .welcome-card {
+        min-height: 220px;
+        padding: 22px;
+    }
+
+    .welcome-card h2 {
+        font-size: 21px;
+    }
+
+    .welcome-illustration {
+        font-size: 65px;
+    }
+
+    .tool-card {
+        padding: 16px;
+    }
+
+    .profile h1 {
+        font-size: 16px;
+    }
+}
+
+/* ================= DESKTOP ================= */
+
+@media (min-width: 768px) {
+
+    .app {
+        max-width: none;
+        width: 100%;
+        padding: 35px 7%;
+        padding-bottom: 100px;
+    }
+
+    .tools-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .welcome-card {
+        min-height: 280px;
+    }
+
+    .bottom-nav {
+        max-width: none;
+    }
+}
+/* ================= CALCULATOR PAGE ================= */
+
+.calculator-page {
+    display: none;
+}
+
+.calculator-page.show {
+    display: block;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 30px;
+}
+
+.page-header h2 {
+    font-size: 24px;
+}
+
+.back-btn {
+    border: none;
+    background: var(--card);
+    color: var(--text);
+
+    padding: 12px 18px;
+
+    border-radius: 14px;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    cursor: pointer;
+
+    border: 1px solid var(--border);
+
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    transform: translateY(-2px);
+}
+
+.calculator-box {
+    width: 100%;
+    max-width: 520px;
+
+    margin: 0 auto;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 30px;
+
+    padding: 20px;
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+.calculator-display {
+    min-height: 120px;
+
+    background: var(--background);
+
+    border-radius: 20px;
+
+    padding: 25px;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+
+    direction: ltr;
+
+    font-size: 40px;
+    font-weight: 700;
+
+    overflow-x: auto;
+
+    margin-bottom: 20px;
+}
+
+.calculator-buttons {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 12px;
+}
+
+.calc-btn {
+    border: none;
+
+    min-height: 65px;
+
+    background: var(--background);
+    color: var(--text);
+
+    border-radius: 18px;
+
+    font-family: inherit;
+    font-size: 20px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.calc-btn:hover {
+    transform: scale(1.04);
+}
+
+.calc-btn:active {
+    transform: scale(0.96);
+}
+
+.calc-btn.operator {
+    background: #CCFBF1;
+    color: var(--primary-dark);
+}
+
+.calc-btn.equals {
+    background: var(--primary);
+    color: white;
+}
+
+.calc-btn.zero {
+    grid-column: span 2;
+}
+
+/* ================= MULTIPLES PAGE ================= */
+
+.multiples-page {
+    display: none;
+}
+
+.multiples-page.show {
+    display: block;
+}
+
+.multiples-box {
+    width: 100%;
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 30px;
+
+    padding: 30px;
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+.multiples-intro {
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+.multiples-icon {
+    width: 75px;
+    height: 75px;
+
+    margin: 0 auto 15px;
+
+    background: #FEF3C7;
+
+    border-radius: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 38px;
+}
+
+.multiples-intro h2 {
+    font-size: 23px;
+
+    margin-bottom: 8px;
+}
+
+.multiples-intro p {
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    margin-bottom: 8px;
+}
+
+.input-group input {
+    width: 100%;
+
+    padding: 15px;
+
+    border-radius: 16px;
+
+    border: 1px solid var(--border);
+
+    background: var(--background);
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: 16px;
+
+    outline: none;
+
+    transition: 0.2s;
+}
+
+.input-group input:focus {
+    border-color: var(--primary);
+
+    box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.1);
+}
+
+.calculate-multiples-btn {
+    width: 100%;
+
+    border: none;
+
+    padding: 16px;
+
+    border-radius: 17px;
+
+    background: var(--primary);
+    color: white;
+
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+    margin-top: 5px;
+}
+
+.calculate-multiples-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 10px 20px rgba(20, 184, 166, 0.25);
+}
+
+
+/* نتیجه */
+
+.multiples-result {
+    display: none;
+
+    margin-top: 25px;
+
+    padding: 20px;
+
+    background: var(--background);
+
+    border-radius: 20px;
+}
+
+.multiples-result.show {
+    display: block;
+}
+
+.multiples-result h3 {
+    font-size: 17px;
+
+    margin-bottom: 15px;
+}
+
+.multiples-list {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+}
+
+.multiple-item {
+    background: #FEF3C7;
+
+    color: #92400E;
+
+    padding: 9px 14px;
+
+    border-radius: 12px;
+
+    font-weight: 600;
+}
+
+
+/* موبایل */
+
+@media (max-width: 500px) {
+
+    .multiples-box {
+        padding: 20px;
+
+        border-radius: 25px;
+    }
+
+    .multiples-intro h2 {
+        font-size: 20px;
+    }
+}
+
+/* ================= GEOMETRY PAGE ================= */
+
+.geometry-page {
+    display: none;
+}
+
+.geometry-page.show {
+    display: block;
+}
+
+.geometry-box {
+    width: 100%;
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 30px;
+
+    padding: 30px;
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+
+/* معرفی */
+
+.geometry-intro {
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+.geometry-icon {
+    width: 75px;
+    height: 75px;
+
+    margin: 0 auto 15px;
+
+    background: #DBEAFE;
+
+    border-radius: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 38px;
+}
+
+.geometry-intro h2 {
+    font-size: 23px;
+
+    margin-bottom: 8px;
+}
+
+.geometry-intro p {
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+
+/* انتخاب شکل */
+
+.shape-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 25px;
+}
+
+.shape-card {
+    border: 2px solid var(--border);
+
+    background: var(--background);
+    color: var(--text);
+
+    border-radius: 20px;
+
+    padding: 20px;
+
+    font-family: inherit;
+    font-size: 32px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 8px;
+}
+
+.shape-card span {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.shape-card:hover {
+    transform: translateY(-3px);
+
+    border-color: #60A5FA;
+}
+
+.shape-card.active {
+    border-color: #3B82F6;
+
+    background: #EFF6FF;
+
+    color: #2563EB;
+}
+
+
+/* ورودی‌ها */
+
+.geometry-inputs {
+    margin-bottom: 20px;
+}
+
+.geometry-input {
+    margin-bottom: 15px;
+}
+
+.geometry-input label {
+    display: block;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    margin-bottom: 8px;
+}
+
+.geometry-input input {
+    width: 100%;
+
+    padding: 15px;
+
+    border-radius: 16px;
+
+    border: 1px solid var(--border);
+
+    background: var(--background);
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: 16px;
+
+    outline: none;
+}
+
+.geometry-input input:focus {
+    border-color: #3B82F6;
+
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+
+/* دکمه محاسبه */
+
+.calculate-geometry-btn {
+    width: 100%;
+
+    border: none;
+
+    padding: 16px;
+
+    border-radius: 17px;
+
+    background: #3B82F6;
+
+    color: white;
+
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.calculate-geometry-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.25);
+}
+
+
+/* نتیجه */
+
+.geometry-result {
+    display: none;
+
+    margin-top: 25px;
+
+    background: var(--background);
+
+    border-radius: 20px;
+
+    padding: 20px;
+}
+
+.geometry-result.show {
+    display: block;
+}
+
+.result-row {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 15px 0;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.result-row:last-child {
+    border-bottom: none;
+}
+
+.result-row span {
+    color: var(--text-light);
+}
+
+.result-row strong {
+    font-size: 18px;
+
+    color: #2563EB;
+}
+
+
+/* موبایل */
+
+@media (max-width: 500px) {
+
+    .geometry-box {
+        padding: 20px;
+
+        border-radius: 25px;
+    }
+
+    .geometry-intro h2 {
+        font-size: 20px;
+    }
+
+    .shape-card {
+        padding: 15px;
+
+        font-size: 28px;
+    }
+}
+
+/* ================= GCD & LCM PAGE ================= */
+
+.gcd-lcm-page {
+    display: none;
+}
+
+.gcd-lcm-page.show {
+    display: block;
+}
+
+.gcd-lcm-box {
+    width: 100%;
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 30px;
+
+    padding: 30px;
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+
+/* معرفی */
+
+.gcd-lcm-intro {
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+.gcd-lcm-icon {
+    width: 75px;
+    height: 75px;
+
+    margin: 0 auto 15px;
+
+    background: #EDE9FE;
+
+    border-radius: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 38px;
+}
+
+.gcd-lcm-intro h2 {
+    font-size: 23px;
+
+    margin-bottom: 8px;
+}
+
+.gcd-lcm-intro p {
+    color: var(--text-light);
+
+    font-size: 14px;
+}
+
+
+/* دکمه محاسبه */
+
+.calculate-gcd-lcm-btn {
+    width: 100%;
+
+    border: none;
+
+    padding: 16px;
+
+    border-radius: 17px;
+
+    background: #8B5CF6;
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.calculate-gcd-lcm-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 10px 20px rgba(139, 92, 246, 0.25);
+}
+
+
+/* نتیجه */
+
+.gcd-lcm-result {
+    display: none;
+
+    margin-top: 25px;
+
+    background: var(--background);
+
+    border-radius: 20px;
+
+    padding: 20px;
+}
+
+.gcd-lcm-result.show {
+    display: block;
+}
+
+
+/* موبایل */
+
+@media (max-width: 500px) {
+
+    .gcd-lcm-box {
+        padding: 20px;
+
+        border-radius: 25px;
+    }
+
+    .gcd-lcm-intro h2 {
+        font-size: 20px;
+    }
+}
+
+/* ================= LEARNING PAGE ================= */
+
+.learning-page {
+    display: none;
+}
+
+.learning-page.show {
+    display: block;
+}
+
+.learning-box {
+    width: 100%;
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 30px;
+
+    padding: 30px;
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+
+/* معرفی صفحه */
+
+.learning-page-intro {
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+.learning-page-icon {
+    width: 75px;
+    height: 75px;
+
+    margin: 0 auto 15px;
+
+    background: #FCE7F3;
+
+    border-radius: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 38px;
+}
+
+.learning-page-intro h2 {
+    font-size: 23px;
+
+    margin-bottom: 8px;
+}
+
+.learning-page-intro p {
+    color: var(--text-light);
+
+    font-size: 14px;
+}
+
+
+/* دکمه‌های جستجو */
+
+.learning-search-buttons {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 15px;
+
+    margin-top: 10px;
+}
+
+.search-video-btn {
+    border: none;
+
+    padding: 16px 10px;
+
+    border-radius: 17px;
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+/* آپارات */
+
+.aparat-btn {
+    background: #ED145B;
+}
+
+
+/* یوتیوب */
+
+.youtube-btn {
+    background: #FF0000;
+}
+
+
+.search-video-btn:hover {
+    transform: translateY(-3px);
+
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.search-video-btn:active {
+    transform: scale(0.97);
+}
+
+
+/* موبایل */
+
+@media (max-width: 500px) {
+
+    .learning-box {
+        padding: 20px;
+
+        border-radius: 25px;
+    }
+
+    .learning-page-intro h2 {
+        font-size: 20px;
+    }
+
+    .learning-search-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .search-video-btn {
+        padding: 15px;
+    }
+
+}
+
+/* ================= FACTORS PAGE ================= */
+
+.factors-page {
+    display: none;
+}
+
+.factors-page.show {
+    display: block;
+}
+
+.factors-box {
+    width: 100%;
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 30px;
+
+    padding: 30px;
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+
+/* معرفی */
+
+.factors-intro {
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+.factors-icon {
+    width: 75px;
+    height: 75px;
+
+    margin: 0 auto 15px;
+
+    background: #E0F2FE;
+
+    border-radius: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 38px;
+}
+
+.factors-intro h2 {
+    font-size: 23px;
+
+    margin-bottom: 8px;
+}
+
+.factors-intro p {
+    color: var(--text-light);
+
+    font-size: 14px;
+}
+
+
+/* دکمه محاسبه */
+
+.calculate-factors-btn {
+    width: 100%;
+
+    border: none;
+
+    padding: 16px;
+
+    border-radius: 17px;
+
+    background: #0EA5E9;
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.calculate-factors-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 10px 20px rgba(14, 165, 233, 0.25);
+}
+
+
+/* نتیجه */
+
+.factors-result {
+    display: none;
+
+    margin-top: 25px;
+
+    padding: 20px;
+
+    background: var(--background);
+
+    border-radius: 20px;
+}
+
+.factors-result.show {
+    display: block;
+}
+
+.factors-result h3 {
+    font-size: 17px;
+
+    margin-bottom: 15px;
+}
+
+
+/* لیست شمارنده‌ها */
+
+.factors-list {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+}
+
+.factor-item {
+    background: #E0F2FE;
+
+    color: #0369A1;
+
+    padding: 9px 14px;
+
+    border-radius: 12px;
+
+    font-weight: 600;
+}
+
+
+/* موبایل */
+
+@media (max-width: 500px) {
+
+    .factors-box {
+        padding: 20px;
+
+        border-radius: 25px;
+    }
+
+    .factors-intro h2 {
+        font-size: 20px;
+    }
+
+}
+
+/* ================= TOOLS PAGE ================= */
+
+.tools-page {
+    display: none;
+}
+
+.tools-page.show {
+    display: block;
+    padding-bottom: 100px;
+}
+
+
+.tools-page-box {
+    width: 100%;
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 30px;
+
+    padding: 30px;
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+
+/* معرفی */
+
+.tools-page-intro {
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+.tools-page-icon {
+    width: 75px;
+    height: 75px;
+
+    margin: 0 auto 15px;
+
+    background: #E0F2FE;
+
+    border-radius: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 38px;
+}
+
+.tools-page-intro h2 {
+    font-size: 23px;
+
+    margin-bottom: 8px;
+}
+
+.tools-page-intro p {
+    color: var(--text-light);
+
+    font-size: 14px;
+}
+
+
+/* لیست ابزارها */
+
+.tools-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+/* کارت هر ابزار */
+
+.tool-list-item {
+    width: 100%;
+    height: 87px;
+
+    border: 1px solid var(--border);
+
+    background: var(--background);
+
+    color: var(--text);
+
+    border-radius: 20px;
+
+    padding: 15px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    font-family: inherit;
+
+    text-align: right;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.tool-list-item:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.07);
+}
+
+
+/* آیکون */
+
+.tool-list-icon {
+    width: 55px;
+    height: 55px;
+
+    flex-shrink: 0;
+
+    border-radius: 17px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 27px;
+}
+
+
+/* رنگ آیکون‌ها */
+
+.calculator-icon {
+    background: #DCFCE7;
+}
+
+.geometry-icon {
+    background: #DBEAFE;
+}
+
+.gcd-icon {
+    background: #EDE9FE;
+}
+
+.multiples-icon {
+    background: #FEF3C7;
+}
+
+.factors-icon {
+    background: #E0F2FE;
+}
+
+.learning-icon {
+    background: #FCE7F3;
+}
+
+.date-icon {
+    background: #E0F2FE;
+}
+
+.unit-icon {
+    background: #a9e0ff;
+}
+
+.percentage-ico {
+    background: #c7ffb9;
+    color: #334155;
+}
+
+.time-icon {
+    background: #E0F2FE;
+}
+
+/* متن */
+
+.tool-list-text {
+    flex: 1;
+}
+
+.tool-list-text h3 {
+    font-size: 15px;
+
+    margin-bottom: 5px;
+}
+
+.tool-list-text p {
+    font-size: 12px;
+
+    color: var(--text-light);
+}
+
+
+
+/* فلش */
+
+.tool-list-arrow {
+    font-size: 22px;
+
+    color: var(--primary);
+
+    padding-left: 5px;
+}
+
+
+/* موبایل */
+
+@media (max-width: 500px) {
+
+    .tools-page-box {
+        padding: 20px;
+
+        border-radius: 25px;
+    }
+
+    .tools-page-intro h2 {
+        font-size: 20px;
+    }
+
+    .tool-list-item {
+        height: 81px;
+        padding: 13px;
+    }
+
+}
+
+/* ================= صفحه فیلم‌های آموزشی ================= */
+
+.videos-page {
+    display: none;
+    padding-bottom: 100px;
+}
+
+.videos-page.show {
+    display: block;
+}
+
+
+/* جعبه اصلی */
+
+.videos-page-box {
+    padding: 20px;
+}
+
+
+/* بخش معرفی */
+
+.videos-page-intro {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.videos-page-icon {
+    font-size: 55px;
+    margin-bottom: 10px;
+}
+
+.videos-page-intro h2 {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.videos-page-intro p {
+    opacity: 0.7;
+    line-height: 1.8;
+}
+
+
+/* لیست فیلم‌ها */
+
+.videos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+
+/* کارت فیلم */
+
+.video-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+
+    transition: transform 0.2s ease;
+}
+
+.video-card:hover {
+    transform: translateY(-3px);
+}
+
+
+/* جای تصویر فیلم */
+
+.video-thumbnail {
+    height: 180px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 50px;
+
+    background: rgba(100, 100, 100, 0.15);
+}
+
+
+/* اطلاعات فیلم */
+
+.video-info {
+    padding: 15px;
+}
+
+.video-info h3 {
+    margin-bottom: 7px;
+    font-size: 18px;
+}
+
+.video-info p {
+    opacity: 0.7;
+    line-height: 1.7;
+}
+
+/* ================= لایه به‌زودی ================= */
+
+.coming-soon-overlay {
+    position: fixed;
+
+    top: 0;
+    right: 0;
+    left: 0;
+
+    /* لایه فقط تا بالای نوار پایین می‌آید */
+    bottom: 75px;
+
+    background: rgba(0, 0, 0, 0.55);
+
+    backdrop-filter: blur(6px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 999;
+}
+
+
+/* ================= کارت بزرگ وسط صفحه ================= */
+
+.coming-soon-card {
+    width: calc(100% - 40px);
+    max-width: 500px;
+
+    min-height: 320px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 30px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 30px;
+
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+}
+
+
+/* آیکون */
+
+.coming-soon-icon {
+    font-size: 70px;
+
+    margin-bottom: 15px;
+}
+
+
+/* عنوان */
+
+.coming-soon-card h2 {
+    font-size: 32px;
+
+    margin-bottom: 10px;
+}
+
+
+/* متن */
+
+.coming-soon-card p {
+    font-size: 16px;
+
+    color: var(--text-light);
+
+    line-height: 1.8;
+
+    max-width: 350px;
+}
+
+/* ===============================
+   SETTINGS & ABOUT PAGES FIX
+================================ */
+
+/* تمام صفحه‌های جداگانه */
+.page {
+    display: none;
+    width: 100%;
+    min-height: 100vh;
+    padding: 25px 20px 100px;
+    box-sizing: border-box;
+}
+
+/* صفحه فعال */
+.page.show {
+    display: block !important;
+}
+
+
+/* ===============================
+   PAGE HEADER
+================================ */
+
+.page-header {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+
+/* ===============================
+   SETTINGS PAGE
+================================ */
+
+.settings-page {
+    direction: rtl;
+}
+
+.settings-card {
+    width: 100%;
+    box-sizing: border-box;
+
+    margin-bottom: 20px;
+    padding: 20px;
+
+    border-radius: 22px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.settings-card h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.settings-card p {
+    margin-bottom: 20px;
+    opacity: 0.7;
+}
+
+
+/* ===============================
+   FONT SIZE BUTTONS
+================================ */
+
+.font-size-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.font-size-btn {
+    flex: 1;
+
+    min-width: 80px;
+
+    padding: 12px 10px;
+
+    border: none;
+    border-radius: 14px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+    font-size: 15px;
+
+    background: #f0f0f0;
+}
+
+.font-size-btn.active {
+    background: #667eea;
+    color: white;
+}
+
+
+/* ===============================
+   THEME BUTTONS
+================================ */
+
+.theme-options {
+    display: flex;
+    gap: 10px;
+}
+
+.theme-option {
+    flex: 1;
+
+    padding: 12px 10px;
+
+    border: none;
+    border-radius: 14px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+    font-size: 15px;
+
+    background: #f0f0f0;
+}
+
+.theme-option.active {
+    background: #667eea;
+    color: white;
+}
+
+
+/* ===============================
+   DEVICE INFORMATION
+================================ */
+
+.device-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 14px 0;
+
+    margin: 0 !important;
+
+    border-bottom:
+        1px solid rgba(0, 0, 0, 0.08);
+}
+
+.device-info:last-child {
+    border-bottom: none;
+}
+
+.device-info strong {
+    opacity: 1;
+}
+
+
+/* ===============================
+   ABOUT PAGE
+================================ */
+
+.about-page {
+    direction: rtl;
+}
+
+.about-card {
+    width: 100%;
+    box-sizing: border-box;
+
+    margin-bottom: 20px;
+    padding: 22px;
+
+    border-radius: 22px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.about-card h2 {
+    margin-top: 0;
+}
+
+.about-icon {
+    font-size: 55px;
+    text-align: center;
+
+    margin-bottom: 10px;
+}
+
+.about-card > h2 {
+    text-align: center;
+}
+
+.version {
+    text-align: center;
+
+    padding: 8px 15px;
+
+    margin: 10px auto 20px;
+
+    width: fit-content;
+
+    border-radius: 20px;
+
+    background: #f0f2ff;
+}
+
+.about-description {
+    width: 100%;
+    margin: 0 auto;
+
+    text-align: center !important;
+    line-height: 2;
+
+    display: block;
+}
+
+
+/* ===============================
+   FEATURES LIST
+================================ */
+
+.features-list {
+    list-style: none;
+
+    padding: 0;
+    margin: 0;
+}
+
+.features-list li {
+    padding: 12px 0;
+
+    border-bottom:
+        1px solid rgba(0, 0, 0, 0.08);
+}
+
+.features-list li:last-child {
+    border-bottom: none;
+}
+
+
+/* ===============================
+   ABOUT FOOTER
+================================ */
+
+.about-footer {
+    text-align: center;
+
+    padding: 20px;
+
+    opacity: 0.7;
+}
+
+
+/* ===============================
+   DARK MODE
+================================ */
+
+body.dark .settings-card,
+body.dark .about-card {
+    background: #1e1e1e;
+}
+
+body.dark .font-size-btn,
+body.dark .theme-option {
+    background: #2a2a2a;
+    color: white;
+}
+
+body.dark .font-size-btn.active,
+body.dark .theme-option.active {
+    background: #667eea;
+}
+
+body.dark .device-info,
+body.dark .features-list li {
+    border-color:
+        rgba(255, 255, 255, 0.1);
+}
+
+body.dark .version {
+    background: #2a2a2a;
+}
+
+
+/* ===============================
+   FONT SIZE SETTINGS
+================================ */
+
+body.font-small {
+    font-size: 14px;
+}
+
+body.font-normal {
+    font-size: 16px;
+}
+
+body.font-large {
+    font-size: 19px;
+}
+
+
+/* ===============================
+   MOBILE
+================================ */
+
+@media (max-width: 600px) {
+
+    .page {
+        padding:
+            20px 15px 100px;
+    }
+
+    .page-header h1 {
+        font-size: 24px;
+    }
+
+    .settings-card,
+    .about-card {
+        padding: 17px;
+        border-radius: 18px;
+    }
+
+}
+
+/* =========================================
+   GLOBAL FONT SIZE SYSTEM
+========================================= */
+
+body {
+    --font-scale: 1;
+}
+
+/* کوچک */
+body.font-small {
+    --font-scale: 0.90;
+}
+
+/* معمولی - دقیقاً اندازه اصلی */
+body.font-normal {
+    --font-scale: 1;
+}
+
+/* بزرگ */
+body.font-large {
+    --font-scale: 1.12;
+}
+
+/* اعمال روی کل رابط کاربری */
+body.font-small .app,
+body.font-normal .app,
+body.font-large .app,
+body.font-small .page,
+body.font-normal .page,
+body.font-large .page {
+    zoom: var(--font-scale);
+}
+
+/* ================= DATE CONVERTER ================= */
+
+.date-page {
+    padding-bottom: 100px;
+}
+
+
+/* جعبه اصلی */
+
+.date-box {
+    width: 100%;
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    padding: 30px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 30px;
+
+    box-shadow: var(--card-shadow);
+}
+
+
+/* معرفی */
+
+.date-intro {
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+.date-icon {
+    width: 75px;
+    height: 75px;
+
+    margin: 0 auto 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 38px;
+
+    border-radius: 24px;
+
+    background: #FEE2E2;
+
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.12);
+}
+
+.date-intro h2 {
+    font-size: 23px;
+
+    margin-bottom: 8px;
+}
+
+.date-intro p {
+    color: var(--text-light);
+
+    font-size: 14px;
+
+    line-height: 1.9;
+}
+
+
+/* ================= انتخاب تقویم ================= */
+
+.date-calendar-options {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 12px;
+
+    margin-bottom: 25px;
+}
+
+.date-calendar-option {
+    border: 1px solid var(--border);
+
+    padding: 16px 10px;
+
+    border-radius: 18px;
+
+    background: var(--background);
+
+    color: var(--text);
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    transition: 0.2s;
+}
+
+.date-calendar-option:hover {
+    transform: translateY(-2px);
+
+    border-color: var(--primary);
+
+    box-shadow: 0 8px 18px rgba(20, 184, 166, 0.08);
+}
+
+.date-calendar-option.active {
+    background: var(--primary);
+
+    border-color: var(--primary);
+
+    color: white;
+
+    box-shadow: 0 8px 20px rgba(20, 184, 166, 0.2);
+}
+
+
+/* ================= ورودی تاریخ ================= */
+
+.date-inputs {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 14px;
+
+    margin-bottom: 22px;
+}
+
+.date-input-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.date-input-group label {
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+.date-input-group input {
+    width: 100%;
+
+    padding: 15px 10px;
+
+    border: 1px solid var(--border);
+
+    outline: none;
+
+    border-radius: 16px;
+
+    background: var(--background);
+
+    color: var(--text);
+
+    font-family: inherit;
+
+    font-size: 16px;
+
+    text-align: center;
+
+    transition: 0.2s;
+}
+
+.date-input-group input:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 4px rgba(20, 184, 166, 0.1);
+}
+
+
+/* ================= دکمه تبدیل ================= */
+
+.calculate-date-btn {
+    width: 100%;
+
+    border: none;
+
+    padding: 16px;
+
+    border-radius: 17px;
+
+    background: var(--primary);
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+    box-shadow: 0 8px 18px rgba(20, 184, 166, 0.18);
+}
+
+.calculate-date-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 25px rgba(20, 184, 166, 0.25);
+}
+
+.calculate-date-btn:active {
+    transform: scale(0.98);
+}
+
+
+/* ================= نتیجه ================= */
+
+.date-result {
+    display: none;
+
+    margin-top: 25px;
+
+    padding: 20px;
+
+    border-radius: 20px;
+
+    background: var(--background);
+
+    border: 1px solid var(--border);
+}
+
+.date-result.show {
+    display: block;
+}
+
+.date-result h3 {
+    margin-top: 0;
+
+    margin-bottom: 15px;
+
+    font-size: 17px;
+}
+
+.date-result-item {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 15px 5px;
+
+    border-bottom:
+        1px solid var(--border);
+}
+
+.date-result-item:last-child {
+    border-bottom: none;
+}
+
+.date-result-item span {
+    color: var(--text-light);
+}
+
+.date-result-item strong {
+    direction: ltr;
+
+    font-size: 16px;
+}
+
+
+/* ================= موبایل ================= */
+
+@media (max-width: 600px) {
+
+    .date-box {
+        margin: 0 auto;
+
+        padding: 20px;
+
+        border-radius: 25px;
+    }
+
+    .date-intro h2 {
+        font-size: 20px;
+    }
+
+    .date-calendar-options {
+        gap: 8px;
+    }
+
+    .date-calendar-option {
+        padding: 14px 5px;
+
+        flex-direction: column;
+
+        gap: 5px;
+    }
+
+    .date-inputs {
+        gap: 8px;
+    }
+
+    .date-input-group input {
+        padding: 13px 5px;
+    }
+}
+
+
+/* موبایل */
+
+@media (max-width: 600px) {
+
+    .date-box {
+        margin: 20px 12px;
+        padding: 20px;
+    }
+
+    .date-calendar-options {
+        gap: 8px;
+    }
+
+    .date-calendar-option {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .date-inputs {
+        gap: 8px;
+    }
+
+    .date-input-group input {
+        padding: 12px 5px;
+    }
+
+}
+
+.tool-list-icon.date-icon {
+    width: 55px;
+    height: 55px;
+    font-size: 24px;
+    flex-shrink: 0;
+    border-radius: 17px;
+}
+
+/* ================= UNIT CONVERTER PAGE ================= */
+
+.unit-page {
+    padding-bottom: 100px;
+}
+
+
+/* کادر اصلی */
+
+.unit-page-box {
+    width: min(92%, 650px);
+    margin: 30px auto;
+    padding: 30px;
+    background: var(--card-bg);
+    border-radius: 24px;
+    box-shadow: var(--card-shadow);
+}
+
+
+/* معرفی */
+
+.unit-page-intro {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.unit-page-icon {
+    width: 75px;
+    height: 75px;
+
+    margin: 0 auto 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 38px;
+
+    background: rgba(76, 175, 80, 0.12);
+
+    border-radius: 20px;
+}
+
+.unit-page-intro h2 {
+    margin: 0 0 10px;
+
+    font-size: 24px;
+
+    color: var(--text-color);
+}
+
+.unit-page-intro p {
+    margin: 0;
+
+    color: var(--text-secondary);
+
+    line-height: 1.8;
+}
+
+
+/* ================= انتخاب نوع واحد ================= */
+
+.unit-types {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 12px;
+
+    margin-bottom: 30px;
+}
+
+
+.unit-type {
+    border: none;
+
+    padding: 16px 10px;
+
+    border-radius: 18px;
+
+    background: var(--input-bg);
+
+    color: var(--text-color);
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.unit-type span {
+    display: block;
+
+    margin-top: 7px;
+}
+
+
+.unit-type:hover {
+    transform: translateY(-2px);
+}
+
+
+.unit-type.active {
+    background: var(--primary-color);
+
+    color: white;
+
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+
+/* ================= ورودی‌ها ================= */
+
+.unit-input-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin-bottom: 18px;
+}
+
+
+.unit-input-group label {
+    font-weight: 600;
+
+    color: var(--text-color);
+}
+
+
+.unit-input-group input,
+.unit-input-group select {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 14px 16px;
+
+    border: 2px solid var(--border-color);
+
+    border-radius: 14px;
+
+    outline: none;
+
+    background: var(--input-bg);
+
+    color: var(--text-color);
+
+    font-family: inherit;
+
+    font-size: 16px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.unit-input-group input:focus,
+.unit-input-group select:focus {
+    border-color: var(--primary-color);
+
+    box-shadow:
+        0 0 0 4px rgba(76, 175, 80, 0.10);
+}
+
+
+/* ================= دکمه تبدیل ================= */
+
+.calculate-btn {
+    width: 100%;
+
+    margin-top: 10px;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 15px;
+
+    background: var(--primary-color);
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.calculate-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+
+.calculate-btn:active {
+    transform: scale(0.98);
+}
+
+
+/* ================= نتیجه ================= */
+
+.unit-result {
+    display: none;
+
+    margin-top: 25px;
+
+    padding: 22px;
+
+    border-radius: 18px;
+
+    background: var(--input-bg);
+
+    text-align: center;
+
+    animation: unitResultShow 0.3s ease;
+}
+
+
+.unit-result.show {
+    display: block;
+}
+
+
+.unit-result span {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--text-secondary);
+
+    font-size: 15px;
+}
+
+
+.unit-result strong {
+    display: block;
+
+    font-size: 30px;
+
+    color: var(--primary-color);
+
+    direction: ltr;
+}
+
+
+@keyframes unitResultShow {
+
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* ================= حالت تاریک ================= */
+
+body.dark .unit-page-icon {
+    background: rgba(76, 175, 80, 0.16);
+}
+
+
+body.dark .unit-type {
+    background: var(--input-bg);
+}
+
+
+body.dark .unit-type.active {
+    background: var(--primary-color);
+
+    color: white;
+}
+
+
+/* ================= موبایل ================= */
+
+@media (max-width: 600px) {
+
+    .unit-page-box {
+        width: 90%;
+
+        padding: 22px;
+
+        margin-top: 20px;
+
+        border-radius: 20px;
+    }
+
+
+    .unit-types {
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 10px;
+    }
+
+
+    .unit-type {
+        padding: 14px 8px;
+
+        font-size: 14px;
+    }
+
+
+    .unit-page-intro h2 {
+        font-size: 21px;
+    }
+
+
+    .unit-page-intro p {
+        font-size: 14px;
+    }
+
+
+    .unit-result strong {
+        font-size: 26px;
+    }
+
+}
+
+/* ===============================
+   PERCENTAGE PAGE
+================================ */
+
+.percentage-page {
+    padding-bottom: 120px;
+}
+
+
+/* ===============================
+   Percentage Box
+================================ */
+
+.percentage-box {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 30px;
+
+    background: var(--card-bg);
+    border-radius: 24px;
+
+    box-shadow: var(--card-shadow);
+
+    border: 1px solid var(--border-color);
+}
+
+
+/* ===============================
+   Intro
+================================ */
+
+.percentage-intro {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+
+.percentage-icon {
+    width: 70px;
+    height: 70px;
+
+    margin: 0 auto 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 20px;
+
+    font-size: 36px;
+
+    background: var(--primary-light);
+    color: var(--primary-color);
+}
+
+/* آیکون درصد داخل لیست ابزارها */
+.tool-list-icon.percentage-icon {
+    width: 55px;
+    height: 55px;
+
+    flex-shrink: 0;
+
+    font-size: 24px;
+
+    border-radius: 17px;
+
+    background: #E0F2FE;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.percentage-intro h2 {
+    margin: 0 0 10px;
+
+    font-size: 24px;
+
+    color: var(--text-primary);
+}
+
+
+.percentage-intro p {
+    margin: 0;
+
+    line-height: 1.8;
+
+    color: var(--text-secondary);
+
+    font-size: 15px;
+}
+
+
+/* ===============================
+   Input Group
+================================ */
+
+.percentage-box .input-group {
+    margin-bottom: 20px;
+}
+
+
+.percentage-box .input-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    color: var(--text-primary);
+}
+
+
+.percentage-box .input-group input {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 14px 16px;
+
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+
+    background: var(--input-bg);
+
+    color: var(--text-primary);
+
+    font-size: 16px;
+
+    outline: none;
+
+    transition: 0.2s;
+}
+
+
+.percentage-box .input-group input:focus {
+    border-color: var(--primary-color);
+
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+
+/* ===============================
+   Calculate Button
+================================ */
+
+.calculate-percentage-btn {
+    width: 100%;
+
+    border: none;
+
+    padding: 16px;
+
+    border-radius: 17px;
+
+    background: var(--primary);
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+    box-shadow: 0 8px 18px rgba(20, 184, 166, 0.18);
+}
+
+.calculate-percentage-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 25px rgba(20, 184, 166, 0.25);
+}
+
+.calculate-percentage-btn:active {
+    transform: scale(0.98);
+}
+
+
+/* ===============================
+   Result
+================================ */
+
+.percentage-result {
+    margin-top: 25px;
+
+    padding: 20px;
+
+    border-radius: 16px;
+
+    background: var(--input-bg);
+
+    border: 1px solid var(--border-color);
+}
+
+
+.percentage-result .result-row {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+
+.percentage-result .result-row span {
+    font-size: 16px;
+
+    color: var(--text-secondary);
+}
+
+
+.percentage-result .result-row strong {
+    font-size: 22px;
+
+    color: var(--primary-color);
+
+    direction: ltr;
+}
+
+
+/* ===============================
+   Mobile
+================================ */
+
+@media (max-width: 600px) {
+
+    .percentage-box {
+        margin: 20px 15px;
+        padding: 22px;
+
+        border-radius: 20px;
+    }
+
+
+    .percentage-icon {
+        width: 60px;
+        height: 60px;
+
+        font-size: 30px;
+    }
+
+
+    .percentage-intro h2 {
+        font-size: 21px;
+    }
+
+
+    .percentage-intro p {
+        font-size: 14px;
+    }
+
+
+    .percentage-box .input-group input {
+        padding: 13px 14px;
+    }
+
+    
+    .percentage-result .result-row {
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+}
+
+/* ================= TIME CONVERTER PAGE ================= */
+
+.time-page {
+    padding-bottom: 100px;
+}
+
+
+/* ================= جعبه اصلی ================= */
+
+.time-page-box {
+    width: min(92%, 650px);
+
+    margin: 30px auto;
+
+    padding: 30px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 24px;
+
+    box-shadow: var(--card-shadow);
+}
+
+
+/* ================= معرفی ================= */
+
+.time-page-intro {
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+
+.time-page-icon {
+    width: 75px;
+    height: 75px;
+
+    margin: 0 auto 15px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 38px;
+
+    background: #E0F2FE;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 8px 20px rgba(14, 165, 233, 0.12);
+}
+
+
+.time-page-intro h2 {
+    margin: 0 0 10px;
+
+    font-size: 24px;
+}
+
+
+.time-page-intro p {
+    margin: 0;
+
+    color: var(--text-light);
+
+    line-height: 1.8;
+
+    font-size: 14px;
+}
+
+
+/* ================= ردیف تبدیل ================= */
+
+.time-conversion-row {
+    display: grid;
+
+    grid-template-columns: 1.3fr 35px 1fr 1fr;
+
+    align-items: end;
+
+    gap: 10px;
+
+    margin-bottom: 25px;
+}
+
+
+/* ================= ورودی ================= */
+
+.time-input-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+.time-input-group label {
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+
+.time-input-group input,
+.time-input-group select {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 14px 12px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    outline: none;
+
+    background: var(--input-bg);
+
+    color: var(--text);
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.time-input-group input:focus,
+.time-input-group select:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 4px rgba(20, 184, 166, 0.10);
+}
+
+
+/* ================= فلش ================= */
+
+.time-arrow {
+    height: 47px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: var(--primary);
+
+    font-size: 22px;
+
+    font-weight: 700;
+}
+
+
+/* ================= دکمه ================= */
+
+.calculate-time-btn {
+    width: 100%;
+
+    margin-top: 5px;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 15px;
+
+    background: var(--primary);
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.calculate-time-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgba(20, 184, 166, 0.20);
+}
+
+
+.calculate-time-btn:active {
+    transform: scale(0.98);
+}
+
+
+/* ================= نتیجه ================= */
+
+.time-result {
+    display: none;
+
+    margin-top: 25px;
+
+    padding: 22px;
+
+    border-radius: 18px;
+
+    background: var(--input-bg);
+
+    border: 1px solid var(--border);
+
+    text-align: center;
+}
+
+
+.time-result.show {
+    display: block;
+
+    animation: timeResultShow 0.3s ease;
+}
+
+
+.time-result span {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--text-light);
+
+    font-size: 15px;
+}
+
+
+.time-result strong {
+    display: block;
+
+    color: var(--primary);
+
+    font-size: 30px;
+
+    direction: ltr;
+}
+
+
+@keyframes timeResultShow {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+
+}
+
+
+/* ================= حالت تاریک ================= */
+
+body.dark .time-page-icon {
+    background: rgba(14, 165, 233, 0.16);
+}
+
+
+/* ================= موبایل ================= */
+
+@media (max-width: 600px) {
+
+    .time-page-box {
+        width: 90%;
+
+        padding: 22px;
+
+        margin-top: 20px;
+
+        border-radius: 20px;
+    }
+
+
+    .time-page-intro h2 {
+        font-size: 21px;
+    }
+
+
+    .time-page-intro p {
+        font-size: 14px;
+    }
+
+
+    .time-conversion-row {
+        grid-template-columns: 1fr 1fr;
+
+        gap: 12px;
+    }
+
+
+    .time-arrow {
+        display: none;
+    }
+
+
+    .time-input-group:first-child {
+        grid-column: span 2;
+    }
+
+
+    .time-input-group input,
+    .time-input-group select {
+        padding: 13px 10px;
+    }
+
+
+    .time-result strong {
+        font-size: 26px;
+    }
+
+}
