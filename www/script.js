@@ -2,6 +2,29 @@ const themeBtn = document.getElementById("themeBtn");
 
 let currentPage = "home";
 
+function updateThemeButtonIcon(theme) {
+    if (!themeBtn) return;
+    const isDark = theme === "dark";
+    const isEnglish = document.documentElement.lang === "en";
+    const icon = themeBtn.querySelector(".theme-icon");
+    if (icon) {
+        icon.src = isDark ? "assets/icons/sun.svg" : "assets/icons/moon.svg";
+        icon.alt = isDark
+            ? (isEnglish ? "Light mode" : "حالت روشن")
+            : (isEnglish ? "Dark mode" : "حالت تاریک");
+    }
+    themeBtn.setAttribute(
+        "aria-label",
+        isDark
+            ? (isEnglish ? "Switch to light mode" : "تغییر به حالت روشن")
+            : (isEnglish ? "Switch to dark mode" : "تغییر به حالت تاریک")
+    );
+    themeBtn.title = isDark
+        ? (isEnglish ? "Light mode" : "حالت روشن")
+        : (isEnglish ? "Dark mode" : "حالت تاریک");
+}
+
+
 // تغییر حالت روشن و تاریک
 themeBtn.addEventListener("click", () => {
 
@@ -9,7 +32,7 @@ themeBtn.addEventListener("click", () => {
 
     const theme = isDark ? "dark" : "light";
 
-    themeBtn.textContent = isDark ? "☀️" : "🌙";
+    updateThemeButtonIcon(theme);
 
     localStorage.setItem("mathmateTheme", theme);
 
@@ -41,11 +64,25 @@ navItems.forEach((item) => {
 // دکمه شروع
 const startBtn = document.querySelector(".start-btn");
 
-startBtn.addEventListener("click", () => {
-    document.querySelector(".tools-section").scrollIntoView({
-        behavior: "smooth"
+if (startBtn) {
+    startBtn.addEventListener("click", () => {
+        const btn = document.getElementById("moreToolsBtn");
+        if (btn) btn.click();
+        else {
+            // fallback open tools
+            currentPage = "tools";
+            if (typeof activateToolsNav === "function") activateToolsNav();
+            hideAllPages();
+            document.querySelector(".header") && (document.querySelector(".header").style.display = "none");
+            document.querySelector(".welcome-card") && (document.querySelector(".welcome-card").style.display = "none");
+            document.querySelector(".tools-section") && (document.querySelector(".tools-section").style.display = "none");
+            document.querySelector(".learning-card") && (document.querySelector(".learning-card").style.display = "none");
+            if (toolsPage) toolsPage.classList.add("show");
+            if (typeof setActiveSidebar === "function") setActiveSidebar("tools");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
     });
-});
+}
 
 // ================= CALCULATOR PAGE =================
 
@@ -67,7 +104,7 @@ calculatorCard.addEventListener("click", () => {
     calculatorPage.classList.add("show");
 
     // مخفی کردن نوار پایین
-    document.querySelector(".bottom-nav").style.display = "none";
+    const _bn = document.querySelector(".bottom-nav"); if (_bn) _bn.style.display = "none";
 
     // رفتن به بالای صفحه
     window.scrollTo({
@@ -100,7 +137,7 @@ calculatorBack.addEventListener("click", () => {
     }
 
     // نمایش نوار پایین
-    document.querySelector(".bottom-nav").style.display = "flex";
+    const _bn2 = document.querySelector(".bottom-nav"); if (_bn2) _bn2.style.display = "none";
 
     window.scrollTo({
         top: 0,
@@ -115,62 +152,186 @@ const calcDisplay = document.getElementById("calculatorDisplay");
 const calcButtons = document.querySelectorAll(".calc-btn");
 
 let currentExpression = "";
+let justCalculated = false;
+// When user presses %, we keep the decimal value in currentExpression for math,
+// but show the original number with a "%" sign so it is not confusing.
+let percentDisplaySuffix = null; // e.g. "25%" while expression holds 0.25
+
+function safeEvaluate(expr) {
+    // Safe evaluator for + - * / and parentheses only (no Function/eval).
+    const s = String(expr).replace(/\s+/g, "");
+    if (!s || !/^[0-9+\-*/().]+$/.test(s)) throw new Error("Invalid expression");
+
+    let i = 0;
+    function peek() { return s[i] || ""; }
+    function consume() { return s[i++] || ""; }
+
+    function parseExpression() {
+        let left = parseTerm();
+        while (peek() === "+" || peek() === "-") {
+            const op = consume();
+            const right = parseTerm();
+            left = op === "+" ? left + right : left - right;
+        }
+        return left;
+    }
+    function parseTerm() {
+        let left = parseFactor();
+        while (peek() === "*" || peek() === "/") {
+            const op = consume();
+            const right = parseFactor();
+            if (op === "/" && right === 0) throw new Error("Division by zero");
+            left = op === "*" ? left * right : left / right;
+        }
+        return left;
+    }
+    function parseFactor() {
+        if (peek() === "+") { consume(); return parseFactor(); }
+        if (peek() === "-") { consume(); return -parseFactor(); }
+        if (peek() === "(") {
+            consume();
+            const v = parseExpression();
+            if (peek() !== ")") throw new Error("Missing )");
+            consume();
+            return v;
+        }
+        let start = i;
+        if (!/[0-9.]/.test(peek())) throw new Error("Expected number");
+        while (/[0-9.]/.test(peek())) consume();
+        const num = Number(s.slice(start, i));
+        if (!Number.isFinite(num)) throw new Error("Invalid number");
+        return num;
+    }
+
+    const result = parseExpression();
+    if (i !== s.length) throw new Error("Unexpected input");
+    if (!Number.isFinite(result)) throw new Error("Invalid result");
+    return result;
+}
+
+function renderCalculatorDisplay() {
+    if (!calcDisplay) return;
+    if (percentDisplaySuffix != null && currentExpression !== "") {
+        // Show human-friendly percent (e.g. 25%) while value is stored as decimal.
+        const displayExpression = currentExpression
+            .replace(/\*/g, "×")
+            .replace(/\//g, "÷");
+        // Replace trailing decimal that came from % with the labeled form
+        const replaced = displayExpression.replace(
+            /(\d+(?:\.\d+)?)$/,
+            percentDisplaySuffix
+        );
+        calcDisplay.textContent = replaced || "0";
+        return;
+    }
+    const displayExpression = currentExpression
+        .replace(/\*/g, "×")
+        .replace(/\//g, "÷");
+    calcDisplay.textContent = displayExpression || "0";
+}
+
+function appendCalculatorValue(value) {
+    if (/^\d$/.test(value)) {
+        if (justCalculated) {
+            currentExpression = "";
+            justCalculated = false;
+        }
+        percentDisplaySuffix = null;
+        currentExpression += value;
+        return;
+    }
+
+    if (value === ".") {
+        if (justCalculated) {
+            currentExpression = "";
+            justCalculated = false;
+        }
+        percentDisplaySuffix = null;
+        const lastNumber = currentExpression.split(/[+\-*/]/).pop() || "";
+        if (!lastNumber.includes(".")) {
+            currentExpression += lastNumber === "" ? "0." : ".";
+        }
+        return;
+    }
+
+    if (["+", "-", "*", "/"].includes(value)) {
+        justCalculated = false;
+        percentDisplaySuffix = null;
+        if (!currentExpression) {
+            if (value === "-") currentExpression = "-";
+            return;
+        }
+        if (/[+\-*/]$/.test(currentExpression)) {
+            currentExpression = currentExpression.slice(0, -1) + value;
+        } else {
+            currentExpression += value;
+        }
+        return;
+    }
+
+    if (value === "%") {
+        const match = currentExpression.match(/(\d+(?:\.\d+)?)$/);
+        if (match) {
+            const original = match[1];
+            const numeric = Number(original) / 100;
+            // Avoid ugly floating noise (e.g. 0.30000000000000004)
+            const clean = String(Number(numeric.toFixed(12)));
+            currentExpression = currentExpression.slice(0, -original.length) + clean;
+            percentDisplaySuffix = original + "%";
+            justCalculated = false;
+        }
+    }
+}
 
 calcButtons.forEach((button) => {
     button.addEventListener("click", () => {
-
-
         const value = button.dataset.value;
+        if (!calcDisplay) return;
 
-        // پاک کردن کامل
         if (value === "C") {
             currentExpression = "";
-            calcDisplay.textContent = "0";
+            justCalculated = false;
+            percentDisplaySuffix = null;
+            renderCalculatorDisplay();
             return;
         }
 
-        // پاک کردن آخرین کاراکتر
         if (value === "DEL") {
-            currentExpression = currentExpression.slice(0, -1);
-
-            if (currentExpression === "") {
-                calcDisplay.textContent = "0";
+            if (justCalculated) justCalculated = false;
+            if (percentDisplaySuffix != null) {
+                // Undo percent: restore original number from label
+                const orig = percentDisplaySuffix.replace(/%$/, "");
+                const match = currentExpression.match(/(\d+(?:\.\d+)?)$/);
+                if (match) {
+                    currentExpression = currentExpression.slice(0, -match[1].length) + orig;
+                }
+                percentDisplaySuffix = null;
             } else {
-                calcDisplay.textContent = currentExpression;
+                currentExpression = currentExpression.slice(0, -1);
             }
-
+            renderCalculatorDisplay();
             return;
         }
 
-        // محاسبه نتیجه
         if (value === "=") {
+            if (!currentExpression || /[+\-*/.]$/.test(currentExpression)) return;
             try {
-                if (currentExpression === "") return;
-
-                const result = Function(
-                    `"use strict"; return (${currentExpression})`
-                )();
-
-                currentExpression = String(result);
-                calcDisplay.textContent = currentExpression;
-
+                const result = safeEvaluate(currentExpression);
+                currentExpression = String(Number(result.toFixed(12)));
+                justCalculated = true;
+                percentDisplaySuffix = null;
+                renderCalculatorDisplay();
             } catch (error) {
-                calcDisplay.textContent = "خطا";
+                calcDisplay.textContent = translateKey("alert_calc_error");
                 currentExpression = "";
+                justCalculated = false;
+                percentDisplaySuffix = null;
             }
-
             return;
         }
 
-        // اضافه کردن عدد یا عملگر
-        currentExpression += value;
-
-        // نمایش علامت‌های زیباتر
-        let displayExpression = currentExpression
-            .replace(/\*/g, "×")
-            .replace(/\//g, "÷");
-
-        calcDisplay.textContent = displayExpression;
+        appendCalculatorValue(value);
+        renderCalculatorDisplay();
     });
 });
 
@@ -194,7 +355,7 @@ multiplesCard.addEventListener("click", () => {
     multiplesPage.classList.add("show");
 
     // مخفی کردن نوار پایین
-    document.querySelector(".bottom-nav").style.display = "none";
+    const _bn = document.querySelector(".bottom-nav"); if (_bn) _bn.style.display = "none";
 
     // رفتن به بالای صفحه
     window.scrollTo({
@@ -222,7 +383,7 @@ multiplesBack.addEventListener("click", () => {
 
     }
 
-    document.querySelector(".bottom-nav").style.display = "flex";
+    const _bn2 = document.querySelector(".bottom-nav"); if (_bn2) _bn2.style.display = "none";
 
     window.scrollTo({
         top: 0,
@@ -248,13 +409,13 @@ calculateMultiples.addEventListener("click", () => {
 
     // بررسی اینکه کاربر عدد وارد کرده باشد
     if (!multipleNumber.value || !multipleCount.value) {
-        alert("لطفاً هر دو قسمت را کامل کن 🙂");
+        alert(translateKey("alert_calc_both"));
         return;
     }
 
     // بررسی معتبر بودن اعداد
     if (!Number.isFinite(number) || !Number.isInteger(count) || count <= 0) {
-        alert("لطفاً عددهای معتبر وارد کن 🙂");
+        alert(translateKey("alert_calc_numbers"));
         return;
     }
 
@@ -301,7 +462,7 @@ geometryCard.addEventListener("click", () => {
     geometryPage.classList.add("show");
 
     // مخفی کردن نوار پایین
-    document.querySelector(".bottom-nav").style.display = "none";
+    const _bn = document.querySelector(".bottom-nav"); if (_bn) _bn.style.display = "none";
 
     // رفتن به بالای صفحه
     window.scrollTo({
@@ -334,7 +495,7 @@ geometryBack.addEventListener("click", () => {
     }
 
     // نمایش نوار پایین
-    document.querySelector(".bottom-nav").style.display = "flex";
+    const _bn2 = document.querySelector(".bottom-nav"); if (_bn2) _bn2.style.display = "none";
 
     window.scrollTo({
         top: 0,
@@ -357,70 +518,63 @@ let selectedShape = "rectangle";
 
 // نمایش ورودی‌های مربوط به هر شکل
 function showGeometryInputs(shape) {
+    const isEnglish = document.documentElement.lang === "en";
+    const text = isEnglish ? {
+        length: "Length", width: "Width", side: "Side length",
+        base: "Base", height: "Height", side1: "Side 1", side2: "Side 2", radius: "Radius"
+    } : {
+        length: "طول", width: "عرض", side: "اندازه ضلع",
+        base: "قاعده", height: "ارتفاع", side1: "ضلع اول", side2: "ضلع دوم", radius: "شعاع"
+    };
+    const example = isEnglish ? "e.g. " : "مثلاً ";
 
     if (shape === "rectangle") {
-
         geometryInputs.innerHTML = `
             <div class="geometry-input">
-                <label>طول</label>
-                <input type="number" id="length" placeholder="مثلاً 10">
+                <label>${text.length}</label>
+                <input type="number" id="length" placeholder="${example}10">
             </div>
-
             <div class="geometry-input">
-                <label>عرض</label>
-                <input type="number" id="width" placeholder="مثلاً 5">
+                <label>${text.width}</label>
+                <input type="number" id="width" placeholder="${example}5">
             </div>
         `;
-    }
-
-
-    else if (shape === "square") {
-
+    } else if (shape === "square") {
         geometryInputs.innerHTML = `
             <div class="geometry-input">
-                <label>اندازه ضلع</label>
-                <input type="number" id="side" placeholder="مثلاً 8">
+                <label>${text.side}</label>
+                <input type="number" id="side" placeholder="${example}8">
             </div>
         `;
-    }
-
-
-    else if (shape === "triangle") {
-
+    } else if (shape === "triangle") {
         geometryInputs.innerHTML = `
             <div class="geometry-input">
-                <label>قاعده</label>
-                <input type="number" id="base" placeholder="مثلاً 10">
+                <label>${text.base}</label>
+                <input type="number" id="base" placeholder="${example}10">
             </div>
-
             <div class="geometry-input">
-                <label>ارتفاع</label>
-                <input type="number" id="height" placeholder="مثلاً 6">
+                <label>${text.height}</label>
+                <input type="number" id="height" placeholder="${example}6">
             </div>
-
             <div class="geometry-input">
-                <label>ضلع اول</label>
-                <input type="number" id="side1" placeholder="مثلاً 8">
+                <label>${text.side1}</label>
+                <input type="number" id="side1" placeholder="${example}8">
             </div>
-
             <div class="geometry-input">
-                <label>ضلع دوم</label>
-                <input type="number" id="side2" placeholder="مثلاً 7">
+                <label>${text.side2}</label>
+                <input type="number" id="side2" placeholder="${example}7">
             </div>
         `;
-    }
-
-
-    else if (shape === "circle") {
-
+    } else if (shape === "circle") {
         geometryInputs.innerHTML = `
             <div class="geometry-input">
-                <label>شعاع</label>
-                <input type="number" id="radius" placeholder="مثلاً 5">
+                <label>${text.radius}</label>
+                <input type="number" id="radius" placeholder="${example}5">
             </div>
         `;
     }
 }
+
 
 
 // انتخاب شکل
@@ -465,7 +619,7 @@ calculateGeometry.addEventListener("click", () => {
         const width = Number(document.getElementById("width").value);
 
         if (length <= 0 || width <= 0) {
-            alert("لطفاً طول و عرض معتبر وارد کن 🙂");
+            alert(translateKey("alert_geometry_rect"));
             return;
         }
 
@@ -480,7 +634,7 @@ calculateGeometry.addEventListener("click", () => {
         const side = Number(document.getElementById("side").value);
 
         if (side <= 0) {
-            alert("لطفاً اندازه ضلع معتبر وارد کن 🙂");
+            alert(translateKey("alert_geometry_square"));
             return;
         }
 
@@ -498,7 +652,21 @@ calculateGeometry.addEventListener("click", () => {
         const side2 = Number(document.getElementById("side2").value);
 
         if (base <= 0 || height <= 0 || side1 <= 0 || side2 <= 0) {
-            alert("لطفاً همه اندازه‌ها را درست وارد کن 🙂");
+            alert(translateKey("alert_geometry_triangle"));
+            return;
+        }
+
+        // Triangle inequality on the three sides (base, side1, side2)
+        if (
+            base + side1 <= side2 ||
+            base + side2 <= side1 ||
+            side1 + side2 <= base
+        ) {
+            alert(
+                document.documentElement.lang === "en"
+                    ? "These sides cannot form a triangle."
+                    : "این اضلاع نمی‌توانند یک مثلث بسازند."
+            );
             return;
         }
 
@@ -513,7 +681,7 @@ calculateGeometry.addEventListener("click", () => {
         const radius = Number(document.getElementById("radius").value);
 
         if (radius <= 0) {
-            alert("لطفاً شعاع معتبر وارد کن 🙂");
+            alert(translateKey("alert_geometry_circle"));
             return;
         }
 
@@ -551,7 +719,7 @@ gcdLcmCard.addEventListener("click", () => {
     gcdLcmPage.classList.add("show");
 
     // مخفی کردن نوار پایین
-    document.querySelector(".bottom-nav").style.display = "none";
+    const _bn = document.querySelector(".bottom-nav"); if (_bn) _bn.style.display = "none";
 
     // رفتن به بالای صفحه
     window.scrollTo({
@@ -579,7 +747,7 @@ gcdLcmBack.addEventListener("click", () => {
 
     }
 
-    document.querySelector(".bottom-nav").style.display = "flex";
+    const _bn2 = document.querySelector(".bottom-nav"); if (_bn2) _bn2.style.display = "none";
 
     window.scrollTo({
         top: 0,
@@ -643,7 +811,7 @@ calculateGcdLcm.addEventListener("click", () => {
         number2 <= 0
     ) {
 
-        alert("لطفاً دو عدد صحیح و مثبت وارد کن 🙂");
+        alert(translateKey("alert_gcd"));
 
         return;
     }
@@ -689,7 +857,7 @@ learningCard.addEventListener("click", () => {
     learningPage.classList.add("show");
 
     // مخفی کردن نوار پایین
-    document.querySelector(".bottom-nav").style.display = "none";
+    const _bn = document.querySelector(".bottom-nav"); if (_bn) _bn.style.display = "none";
 
     // رفتن به بالای صفحه
     window.scrollTo({
@@ -721,7 +889,7 @@ learningBack.addEventListener("click", () => {
     }
 
     // نمایش نوار پایین
-    document.querySelector(".bottom-nav").style.display = "flex";
+    const _bn2 = document.querySelector(".bottom-nav"); if (_bn2) _bn2.style.display = "none";
 
     window.scrollTo({
         top: 0,
@@ -737,7 +905,7 @@ searchAparat.addEventListener("click", () => {
     const searchText = learningSearch.value.trim();
 
     if (searchText === "") {
-        alert("اول موضوع آموزشی مورد نظرت را وارد کن 🙂");
+        alert(translateKey("alert_learning"));
         return;
     }
 
@@ -756,7 +924,7 @@ searchYoutube.addEventListener("click", () => {
     const searchText = learningSearch.value.trim();
 
     if (searchText === "") {
-        alert("اول موضوع آموزشی مورد نظرت را وارد کن 🙂");
+        alert(translateKey("alert_learning"));
         return;
     }
 
@@ -800,7 +968,7 @@ factorsCard.addEventListener("click", () => {
 
     // مخفی کردن نوار پایین
 
-    document.querySelector(".bottom-nav").style.display = "none";
+    const _bn = document.querySelector(".bottom-nav"); if (_bn) _bn.style.display = "none";
 
 
     // رفتن به بالای صفحه
@@ -832,7 +1000,7 @@ factorsBack.addEventListener("click", () => {
 
     }
 
-    document.querySelector(".bottom-nav").style.display = "flex";
+    const _bn2 = document.querySelector(".bottom-nav"); if (_bn2) _bn2.style.display = "none";
 
     window.scrollTo({
         top: 0,
@@ -872,7 +1040,7 @@ calculateFactors.addEventListener("click", () => {
         number <= 0
     ) {
 
-        alert("لطفاً یک عدد صحیح و مثبت وارد کن 🙂");
+        alert(translateKey("alert_factors"));
 
         return;
     }
@@ -922,19 +1090,16 @@ const moreToolsBtn = document.getElementById("moreToolsBtn");
 const startLearningCard = document.getElementById("startLearningCard");
 
 function activateToolsNav() {
-
     // غیرفعال کردن همه دکمه‌های نوار پایین
     navItems.forEach((nav) => {
         nav.classList.remove("active");
     });
-
-    // فعال کردن ابزارها
-    toolsNav.classList.add("active");
-
+    // فعال کردن ابزارها (اگر نوار پایین وجود داشته باشد)
+    if (toolsNav) toolsNav.classList.add("active");
 }
 
 // رفتن به صفحه ابزارها از نوار پایین
-toolsNav.addEventListener("click", () => {
+if (toolsNav) toolsNav.addEventListener("click", () => {
 
     currentPage = "tools";
 
@@ -952,7 +1117,7 @@ toolsNav.addEventListener("click", () => {
     toolsPage.classList.add("show");
 
     // نوار پایین باقی بماند
-    document.querySelector(".bottom-nav").style.display = "flex";
+    const _bn2 = document.querySelector(".bottom-nav"); if (_bn2) _bn2.style.display = "none";
 
     window.scrollTo({
         top: 0,
@@ -966,7 +1131,7 @@ toolsNav.addEventListener("click", () => {
 
 const homeNav = document.getElementById("homeNav");
 
-homeNav.addEventListener("click", () => {
+if (homeNav) homeNav.addEventListener("click", () => {
 
     // مخفی کردن تمام صفحه‌های جداگانه
     hideAllPages();
@@ -994,55 +1159,33 @@ homeNav.addEventListener("click", () => {
 
 // ================= MORE TOOLS BUTTON =================
 
-moreToolsBtn.addEventListener("click", () => {
-
+if (moreToolsBtn) moreToolsBtn.addEventListener("click", () => {
     currentPage = "tools";
-
     activateToolsNav();
-
     hideAllPages();
-
-    // مخفی کردن صفحه خانه
-    document.querySelector(".header").style.display = "none";
-    document.querySelector(".welcome-card").style.display = "none";
-    document.querySelector(".tools-section").style.display = "none";
-    document.querySelector(".learning-card").style.display = "none";
-
-    // نمایش صفحه ابزارها
-    toolsPage.classList.add("show");
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-
+    document.querySelector(".header") && (document.querySelector(".header").style.display = "none");
+    document.querySelector(".welcome-card") && (document.querySelector(".welcome-card").style.display = "none");
+    document.querySelector(".tools-section") && (document.querySelector(".tools-section").style.display = "none");
+    document.querySelector(".learning-card") && (document.querySelector(".learning-card").style.display = "none");
+    if (toolsPage) toolsPage.classList.add("show");
+    if (typeof setActiveSidebar === "function") setActiveSidebar("tools");
+    window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
 // ================= START LEARNING CARD =================
 
-startLearningCard.addEventListener("click", () => {
-
+if (startLearningCard) startLearningCard.addEventListener("click", (e) => {
+    e.stopPropagation();
     currentPage = "tools";
-
     activateToolsNav();
-
     hideAllPages();
-
-    // مخفی کردن صفحه خانه
-    document.querySelector(".header").style.display = "none";
-    document.querySelector(".welcome-card").style.display = "none";
-    document.querySelector(".tools-section").style.display = "none";
-    document.querySelector(".learning-card").style.display = "none";
-
-    // نمایش صفحه ابزارها
-    toolsPage.classList.add("show");
-
-    // رفتن به بالای صفحه
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-
+    document.querySelector(".header") && (document.querySelector(".header").style.display = "none");
+    document.querySelector(".welcome-card") && (document.querySelector(".welcome-card").style.display = "none");
+    document.querySelector(".tools-section") && (document.querySelector(".tools-section").style.display = "none");
+    document.querySelector(".learning-card") && (document.querySelector(".learning-card").style.display = "none");
+    if (toolsPage) toolsPage.classList.add("show");
+    if (typeof setActiveSidebar === "function") setActiveSidebar("tools");
+    window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
 // ================= VIDEOS NAVIGATION =================
@@ -1050,7 +1193,7 @@ startLearningCard.addEventListener("click", () => {
 const videosNav = document.getElementById("videosNav");
 const videosPage = document.getElementById("videosPage");
 
-videosNav.addEventListener("click", () => {
+if (videosNav) videosNav.addEventListener("click", () => {
 
     currentPage = "videos";
 
@@ -1446,20 +1589,16 @@ function changeTheme(theme) {
         document.body.classList.add("dark");
 
         // تغییر آیکون
-        if (themeBtn) {
-            themeBtn.textContent = "☀️";
-        }
 
     } else {
 
         document.body.classList.remove("dark");
 
         // تغییر آیکون
-        if (themeBtn) {
-            themeBtn.textContent = "🌙";
-        }
 
     }
+
+    updateThemeButtonIcon(theme);
 
     // ذخیره تنظیم
     localStorage.setItem(
@@ -1520,50 +1659,55 @@ themeOptions.forEach(button => {
 
 // ================= DEVICE INFORMATION =================
 
+const osInfo = document.getElementById("osInfo");
+const userAgent = navigator.userAgent || "";
+const platform = navigator.platform || "";
 
-// ---------- سیستم عامل ----------
+function detectOSVersion() {
+    // Windows
+    if (/Windows NT 10\.0/.test(userAgent)) {
+        // Win11 often still reports NT 10.0; use platform or touch heuristics
+        if (navigator.userAgentData && navigator.userAgentData.platform === "Windows") {
+            // try high-entropy if available later
+        }
+        // Windows 11 detection: UA often still 10.0; check for specific tokens
+        if (/Windows NT 10\.0.*Win64/.test(userAgent) && (window.chrome || /Edg\//.test(userAgent))) {
+            // Many Win11 browsers still say 10.0 — show Windows 10/11
+            return "Windows 10 / 11";
+        }
+        return "Windows 10";
+    }
+    if (/Windows NT 6\.3/.test(userAgent)) return "Windows 8.1";
+    if (/Windows NT 6\.2/.test(userAgent)) return "Windows 8";
+    if (/Windows NT 6\.1/.test(userAgent)) return "Windows 7";
+    if (/Windows NT 6\.0/.test(userAgent)) return "Windows Vista";
+    if (/Windows NT 5\.1/.test(userAgent) || /Windows XP/.test(userAgent)) return "Windows XP";
+    if (/Windows/.test(userAgent)) return "Windows";
 
-const osInfo =
-    document.getElementById("osInfo");
+    // Android
+    const androidMatch = userAgent.match(/Android\s([0-9.]+)/);
+    if (androidMatch) return "Android " + androidMatch[1];
 
-let operatingSystem = "نامشخص";
+    // iOS
+    if (/iPhone|iPad|iPod/.test(userAgent)) {
+        const iosMatch = userAgent.match(/OS (\d+)[._](\d+)/);
+        if (iosMatch) return "iOS " + iosMatch[1] + "." + iosMatch[2];
+        return "iOS";
+    }
 
-const userAgent =
-    navigator.userAgent;
+    // macOS
+    if (/Mac OS X/.test(userAgent)) {
+        const macMatch = userAgent.match(/Mac OS X (\d+[._]\d+)/);
+        if (macMatch) return "macOS " + macMatch[1].replace("_", ".");
+        return "macOS";
+    }
 
-
-if (userAgent.includes("Windows")) {
-
-    operatingSystem = "Windows";
-
-} else if (userAgent.includes("Android")) {
-
-    operatingSystem = "Android";
-
-} else if (
-    userAgent.includes("iPhone") ||
-    userAgent.includes("iPad")
-) {
-
-    operatingSystem = "iOS";
-
-} else if (userAgent.includes("Mac OS")) {
-
-    operatingSystem = "macOS";
-
-} else if (userAgent.includes("Linux")) {
-
-    operatingSystem = "Linux";
-
+    if (/Linux/.test(userAgent)) return "Linux";
+    return "Unknown";
 }
 
-
-// نمایش سیستم عامل
 if (osInfo) {
-
-    osInfo.textContent =
-        operatingSystem;
-
+    osInfo.textContent = detectOSVersion();
 }
 
 
@@ -2032,7 +2176,7 @@ if (calculateDate) {
         ) {
 
             alert(
-                "لطفاً سال، ماه و روز را کامل وارد کن 🙂"
+                translateKey("alert_date_missing")
             );
 
             return;
@@ -2050,7 +2194,7 @@ if (calculateDate) {
         ) {
 
             alert(
-                "تاریخ واردشده معتبر نیست 🙂"
+                translateKey("alert_date_invalid")
             );
 
             return;
@@ -2338,58 +2482,18 @@ const conversionRates = {
 // ===============================
 
 const unitNames = {
-
-    // طول
-    length: {
-
-        meter: "متر",
-
-        kilometer: "کیلومتر",
-
-        centimeter: "سانتی‌متر",
-
-        millimeter: "میلی‌متر"
-
+    fa: {
+        length: { meter: "متر", kilometer: "کیلومتر", centimeter: "سانتی‌متر", millimeter: "میلی‌متر" },
+        weight: { kilogram: "کیلوگرم", gram: "گرم", milligram: "میلی‌گرم", ton: "تن" },
+        volume: { liter: "لیتر", milliliter: "میلی‌لیتر", cubicMeter: "متر مکعب" },
+        temperature: { celsius: "سلسیوس", fahrenheit: "فارنهایت", kelvin: "کلوین" }
     },
-
-
-    // وزن
-    weight: {
-
-        kilogram: "کیلوگرم",
-
-        gram: "گرم",
-
-        milligram: "میلی‌گرم",
-
-        ton: "تن"
-
-    },
-
-
-    // حجم
-    volume: {
-
-        liter: "لیتر",
-
-        milliliter: "میلی‌لیتر",
-
-        cubicMeter: "متر مکعب"
-
-    },
-
-
-    // دما
-    temperature: {
-
-        celsius: "سلسیوس",
-
-        fahrenheit: "فارنهایت",
-
-        kelvin: "کلوین"
-
+    en: {
+        length: { meter: "Meter", kilometer: "Kilometer", centimeter: "Centimeter", millimeter: "Millimeter" },
+        weight: { kilogram: "Kilogram", gram: "Gram", milligram: "Milligram", ton: "Ton" },
+        volume: { liter: "Liter", milliliter: "Milliliter", cubicMeter: "Cubic meter" },
+        temperature: { celsius: "Celsius", fahrenheit: "Fahrenheit", kelvin: "Kelvin" }
     }
-
 };
 
 
@@ -2414,6 +2518,8 @@ function updateUnitOptions() {
     // گرفتن واحدهای مربوط به نوع انتخاب‌شده
     const units =
         conversionRates[currentUnitType];
+    const lang = document.documentElement.lang === "en" ? "en" : "fa";
+    const labels = unitNames[lang][currentUnitType];
 
 
     // ساخت گزینه‌ها
@@ -2429,7 +2535,7 @@ function updateUnitOptions() {
         optionFrom.value = unit;
 
         optionFrom.textContent =
-            unitNames[currentUnitType][unit];
+            labels[unit];
 
         unitFrom.appendChild(optionFrom);
 
@@ -2444,7 +2550,7 @@ function updateUnitOptions() {
         optionTo.value = unit;
 
         optionTo.textContent =
-            unitNames[currentUnitType][unit];
+            labels[unit];
 
         unitTo.appendChild(optionTo);
 
@@ -2567,7 +2673,7 @@ if (calculateUnit) {
         ) {
 
             alert(
-                "لطفاً یک عدد معتبر وارد کن 🙂"
+                translateKey("alert_unit")
             );
 
             return;
@@ -2786,7 +2892,7 @@ calculatePercentage.addEventListener("click", () => {
         !Number.isFinite(number)
     ) {
 
-        alert("لطفاً درصد و عدد را به‌درستی وارد کن 🙂");
+        alert(translateKey("alert_percentage"));
 
         return;
     }
@@ -2921,15 +3027,8 @@ const timeConversionRates = {
 // ===============================
 
 const timeUnitNames = {
-
-    second: "ثانیه",
-
-    minute: "دقیقه",
-
-    hour: "ساعت",
-
-    day: "روز"
-
+    fa: { second: "ثانیه", minute: "دقیقه", hour: "ساعت", day: "روز" },
+    en: { second: "seconds", minute: "minutes", hour: "hours", day: "days" }
 };
 
 
@@ -2956,7 +3055,7 @@ if (calculateTimeBtn) {
         ) {
 
             alert(
-                "لطفاً یک مقدار معتبر وارد کن 🙂"
+                translateKey("alert_time")
             );
 
             timeResult.classList.remove("show");
@@ -3005,12 +3104,963 @@ if (calculateTimeBtn) {
         // ===============================
 
         timeResultValue.textContent =
-            `${cleanResult.toLocaleString("fa-IR")} ${timeUnitNames[to]}`;
-
+            `${cleanResult.toLocaleString(document.documentElement.lang === "en" ? "en" : "fa-IR")} ${timeUnitNames[document.documentElement.lang === "en" ? "en" : "fa"][to]}`;
 
         // نمایش کارت نتیجه
         timeResult.classList.add("show");
 
     });
-
 }
+
+/* ================= SIDEBAR ================= */
+const sidebar = document.getElementById("sidebar");
+const sidebarToggle = document.getElementById("sidebarToggle");
+const sidebarOverlay = document.getElementById("sidebarOverlay");
+const sidebarClose = document.getElementById("sidebarClose");
+const sidebarItems = document.querySelectorAll(".sidebar-item");
+
+let sidebarCloseTimer = null;
+
+function isMobileSidebar() {
+    return window.matchMedia("(max-width: 899px)").matches;
+}
+
+function openSidebar() {
+    if (!sidebar) return;
+    if (sidebarCloseTimer) {
+        clearTimeout(sidebarCloseTimer);
+        sidebarCloseTimer = null;
+    }
+    sidebar.classList.remove("is-closing");
+    sidebar.classList.add("open");
+    document.body.classList.add("sidebar-open");
+    if (isMobileSidebar() && sidebarOverlay) sidebarOverlay.classList.add("show");
+    if (sidebarToggle) sidebarToggle.style.display = "none";
+}
+
+function closeSidebar() {
+    if (!sidebar) return;
+    // Close sidebar and content layout simultaneously (same transition).
+    if (sidebarCloseTimer) {
+        clearTimeout(sidebarCloseTimer);
+        sidebarCloseTimer = null;
+    }
+    sidebar.classList.remove("is-closing");
+    sidebar.classList.remove("open");
+    document.body.classList.remove("sidebar-open");
+    if (sidebarOverlay) sidebarOverlay.classList.remove("show");
+    if (sidebarToggle) sidebarToggle.style.display = "";
+}
+
+if (sidebarToggle) sidebarToggle.addEventListener("click", () => {
+    if (sidebar?.classList.contains("open") && !sidebar.classList.contains("is-closing")) {
+        // toggle only closes on mobile via hamburger; on desktop hamburger opens
+        if (isMobileSidebar()) closeSidebar();
+        else openSidebar();
+    } else {
+        openSidebar();
+    }
+});
+if (sidebarClose) sidebarClose.addEventListener("click", closeSidebar);
+if (sidebarOverlay) sidebarOverlay.addEventListener("click", () => {
+    if (isMobileSidebar()) closeSidebar();
+});
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeSidebar();
+});
+
+window.addEventListener("resize", () => {
+    if (!sidebar) return;
+    if (isMobileSidebar()) {
+        if (sidebarOverlay) sidebarOverlay.classList.toggle("show", sidebar.classList.contains("open") && !sidebar.classList.contains("is-closing"));
+        if (!sidebar.classList.contains("open")) {
+            document.body.classList.remove("sidebar-open");
+            if (sidebarToggle) sidebarToggle.style.display = "";
+        }
+    } else {
+        // Desktop: keep current open/closed state; no overlay
+        if (sidebarOverlay) sidebarOverlay.classList.remove("show");
+        if (sidebar.classList.contains("open") && !sidebar.classList.contains("is-closing")) {
+            document.body.classList.add("sidebar-open");
+            if (sidebarToggle) sidebarToggle.style.display = "none";
+        } else {
+            document.body.classList.remove("sidebar-open");
+            if (sidebarToggle) sidebarToggle.style.display = "";
+        }
+    }
+});
+
+function setActiveSidebar(nav) {
+    document.querySelectorAll(".sidebar-item").forEach((item) => {
+        item.classList.toggle("active", item.dataset.nav === nav);
+    });
+}
+
+function goHome() {
+    hideAllPages();
+    const header = document.querySelector(".header");
+    const welcome = document.querySelector(".welcome-card");
+    const toolsSec = document.querySelector(".tools-section");
+    const learning = document.querySelector(".learning-card");
+    if (header) header.style.display = "flex";
+    if (welcome) welcome.style.display = "flex";
+    if (toolsSec) toolsSec.style.display = "block";
+    if (learning) learning.style.display = "flex";
+    setActiveSidebar("home");
+    if (typeof isMobileSidebar === "function" && isMobileSidebar()) closeSidebar();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function openToolsFromSidebar() {
+    currentPage = "tools";
+    hideAllPages();
+    document.querySelector(".header") && (document.querySelector(".header").style.display = "none");
+    document.querySelector(".welcome-card") && (document.querySelector(".welcome-card").style.display = "none");
+    document.querySelector(".tools-section") && (document.querySelector(".tools-section").style.display = "none");
+    document.querySelector(".learning-card") && (document.querySelector(".learning-card").style.display = "none");
+    if (toolsPage) toolsPage.classList.add("show");
+    setActiveSidebar("tools");
+    if (typeof isMobileSidebar === "function" && isMobileSidebar()) closeSidebar();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function openPageFromSidebar(pageId, navKey) {
+    hideAllPages();
+    document.querySelector(".header") && (document.querySelector(".header").style.display = "none");
+    document.querySelector(".welcome-card") && (document.querySelector(".welcome-card").style.display = "none");
+    document.querySelector(".tools-section") && (document.querySelector(".tools-section").style.display = "none");
+    document.querySelector(".learning-card") && (document.querySelector(".learning-card").style.display = "none");
+    const page = document.getElementById(pageId);
+    if (page) page.classList.add("show");
+    setActiveSidebar(navKey);
+    if (typeof isMobileSidebar === "function" && isMobileSidebar()) closeSidebar();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.getElementById("sidebarHome")?.addEventListener("click", goHome);
+document.getElementById("sidebarTools")?.addEventListener("click", openToolsFromSidebar);
+
+/* Collapsible Real World submenu */
+const realworldToggle = document.getElementById("sidebarRealWorldToggle");
+const realworldSubmenu = document.getElementById("realworldSubmenu");
+if (realworldToggle && realworldSubmenu) {
+    realworldToggle.addEventListener("click", () => {
+        const isOpen = realworldSubmenu.classList.toggle("open");
+        realworldToggle.classList.toggle("expanded", isOpen);
+    });
+}
+
+document.getElementById("sidebarPaint")?.addEventListener("click", () => openPageFromSidebar("paintPage", "paint"));
+document.getElementById("sidebarShopping")?.addEventListener("click", () => openPageFromSidebar("shoppingPage", "shopping"));
+document.getElementById("sidebarDiscount")?.addEventListener("click", () => openPageFromSidebar("discountPage", "discount"));
+document.getElementById("sidebarMeasurement")?.addEventListener("click", () => openPageFromSidebar("measurementPage", "measurement"));
+document.getElementById("sidebarSchool")?.addEventListener("click", () => openPageFromSidebar("schoolPage", "school"));
+
+document.getElementById("sidebarSettings")?.addEventListener("click", () => {
+    openPageFromSidebar("settingsPage", "settings");
+});
+document.getElementById("sidebarAbout")?.addEventListener("click", () => {
+    openPageFromSidebar("aboutPage", "about");
+});
+
+/* ================= PAINT ================= */
+document.getElementById("paintBack")?.addEventListener("click", () => {
+    document.getElementById("paintPage")?.classList.remove("show");
+    goHome();
+});
+document.getElementById("calculatePaint")?.addEventListener("click", () => {
+    const W = Number(document.getElementById("paintWidth")?.value);
+    const H = Number(document.getElementById("paintHeight")?.value);
+    const openings = Number(document.getElementById("paintOpenings")?.value) || 0;
+    const coats = Number(document.getElementById("paintCoats")?.value) || 1;
+    const coverage = Number(document.getElementById("paintCoverage")?.value) || 10;
+    if (!W || !H || W <= 0 || H <= 0 || coverage <= 0) {
+        alert(translateKey("alert_paint"));
+        return;
+    }
+    const totalArea = W * H;
+    const paintable = Math.max(0, totalArea - openings);
+    const withCoats = paintable * coats;
+    const liters = withCoats / coverage;
+    document.getElementById("paintLiters").textContent =
+        (currentLang === "en" ? "About " : "حدود ") +
+        liters.toLocaleString(currentLang === "en" ? "en" : "fa-IR", { maximumFractionDigits: 2 }) +
+        (currentLang === "en" ? " liters needed." : " لیتر رنگ لازم است.");
+    document.getElementById("paintSteps").innerHTML = `
+        <div class="step">${currentLang === "en" ? "Step 1" : "مرحله ۱"} — ${W} × ${H} = ${totalArea.toFixed(2)}</div>
+        <div class="step">${currentLang === "en" ? "Step 2" : "مرحله ۲"} — ${totalArea.toFixed(2)} − ${openings} = ${paintable.toFixed(2)}</div>
+        <div class="step">${currentLang === "en" ? "Step 3" : "مرحله ۳"} — ${paintable.toFixed(2)} × ${coats} = ${withCoats.toFixed(2)}</div>
+        <div class="step">${currentLang === "en" ? "Step 4" : "مرحله ۴"} — ${withCoats.toFixed(2)} ÷ ${coverage} = ${liters.toFixed(2)}</div>
+    `;
+    document.getElementById("paintResult").classList.add("show");
+});
+
+/* ================= SHOPPING ================= */
+document.getElementById("shoppingBack")?.addEventListener("click", () => {
+    document.getElementById("shoppingPage")?.classList.remove("show");
+    goHome();
+});
+document.getElementById("calculateShopping")?.addEventListener("click", () => {
+    const price = Number(document.getElementById("shopPrice")?.value);
+    const qty = Number(document.getElementById("shopQty")?.value);
+    const disc = Number(document.getElementById("shopDiscount")?.value) || 0;
+    if (!price || !qty || price <= 0 || qty <= 0) {
+        alert(translateKey("alert_shopping"));
+        return;
+    }
+    const subtotal = price * qty;
+    const discountAmt = subtotal * (disc / 100);
+    const final = subtotal - discountAmt;
+    const loc = currentLang === "en" ? "en" : "fa-IR";
+    document.getElementById("shopSubtotal").textContent = subtotal.toLocaleString(loc);
+    document.getElementById("shopDiscountAmount").textContent = discountAmt.toLocaleString(loc);
+    document.getElementById("shopTotal").textContent = final.toLocaleString(loc);
+    document.getElementById("shopSteps").innerHTML = `
+        <div class="step">${price.toLocaleString(loc)} × ${qty} = ${subtotal.toLocaleString(loc)}</div>
+        <div class="step">${subtotal.toLocaleString(loc)} × ${disc}% = ${discountAmt.toLocaleString(loc)}</div>
+        <div class="step">${subtotal.toLocaleString(loc)} − ${discountAmt.toLocaleString(loc)} = ${final.toLocaleString(loc)}</div>
+    `;
+    document.getElementById("shoppingResult").classList.add("show");
+});
+
+/* ================= DISCOUNT ================= */
+document.getElementById("discountBack")?.addEventListener("click", () => {
+    document.getElementById("discountPage")?.classList.remove("show");
+    goHome();
+});
+document.getElementById("calculateDiscount")?.addEventListener("click", () => {
+    const price = Number(document.getElementById("discountPrice")?.value);
+    const pct = Number(document.getElementById("discountPercent")?.value);
+    if (!price || price <= 0 || isNaN(pct) || pct < 0) {
+        alert(translateKey("alert_discount"));
+        return;
+    }
+    const amount = price * (pct / 100);
+    const final = price - amount;
+    const loc = currentLang === "en" ? "en" : "fa-IR";
+    document.getElementById("discountAmount").textContent = amount.toLocaleString(loc);
+    document.getElementById("discountFinal").textContent = final.toLocaleString(loc);
+    document.getElementById("discountSteps").innerHTML = `
+        <div class="step">${price.toLocaleString(loc)} × ${pct}% = ${amount.toLocaleString(loc)}</div>
+        <div class="step">${price.toLocaleString(loc)} − ${amount.toLocaleString(loc)} = ${final.toLocaleString(loc)}</div>
+    `;
+    document.getElementById("discountResult").classList.add("show");
+});
+
+/* ================= MEASUREMENT ================= */
+document.getElementById("measurementBack")?.addEventListener("click", () => {
+    document.getElementById("measurementPage")?.classList.remove("show");
+    goHome();
+});
+document.getElementById("calculateMeasurement")?.addEventListener("click", () => {
+    const L = Number(document.getElementById("measLength")?.value);
+    const W = Number(document.getElementById("measWidth")?.value);
+    const Hval = document.getElementById("measHeight")?.value.trim();
+    const H = Hval === "" ? null : Number(Hval);
+    if (!L || !W || L <= 0 || W <= 0) {
+        alert(translateKey("alert_measurement"));
+        return;
+    }
+    const area = L * W;
+    const perimeter = 2 * (L + W);
+    document.getElementById("measArea").textContent = area.toFixed(2);
+    document.getElementById("measPerimeter").textContent = perimeter.toFixed(2);
+    let steps = `<div class="step">${L} × ${W} = ${area.toFixed(2)}</div><div class="step">2 × (${L} + ${W}) = ${perimeter.toFixed(2)}</div>`;
+    if (H !== null && H > 0) {
+        const volume = area * H;
+        document.getElementById("measVolume").textContent = volume.toFixed(2);
+        document.getElementById("measVolumeRow").style.display = "flex";
+        steps += `<div class="step">${area.toFixed(2)} × ${H} = ${volume.toFixed(2)}</div>`;
+    } else {
+        document.getElementById("measVolumeRow").style.display = "none";
+    }
+    document.getElementById("measSteps").innerHTML = steps;
+    document.getElementById("measurementResult").classList.add("show");
+});
+
+/* ================= SCHOOL ================= */
+document.getElementById("schoolBack")?.addEventListener("click", () => {
+    document.getElementById("schoolPage")?.classList.remove("show");
+    goHome();
+});
+document.querySelectorAll(".school-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+        document.querySelectorAll(".school-tab").forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+        const name = tab.dataset.tab;
+        document.getElementById("schoolAverage").style.display = name === "average" ? "block" : "none";
+        document.getElementById("schoolProportion").style.display = name === "proportion" ? "block" : "none";
+        document.getElementById("schoolSpeed").style.display = name === "speed" ? "block" : "none";
+        document.getElementById("schoolResult")?.classList.remove("show");
+    });
+});
+document.getElementById("calcAverage")?.addEventListener("click", () => {
+    const raw = document.getElementById("avgNumbers")?.value.trim();
+    if (!raw) return alert("...");
+    const nums = raw.split(/[,،\s]+/).map(Number).filter((n) => Number.isFinite(n));
+    if (!nums.length) return;
+    const sum = nums.reduce((a, b) => a + b, 0);
+    const avg = sum / nums.length;
+    document.getElementById("schoolSteps").innerHTML = `
+        <div class="step">${nums.join(", ")}</div>
+        <div class="step">Σ = ${sum}</div>
+        <div class="step">n = ${nums.length}</div>
+        <div class="step">avg = ${avg.toLocaleString(undefined, { maximumFractionDigits: 4 })}</div>
+    `;
+    document.getElementById("schoolResult").classList.add("show");
+});
+document.getElementById("calcProportion")?.addEventListener("click", () => {
+    const a = Number(document.getElementById("propA")?.value);
+    const b = Number(document.getElementById("propB")?.value);
+    const c = Number(document.getElementById("propC")?.value);
+    if (!a || !b || !c) return;
+    const x = (b * c) / a;
+    document.getElementById("schoolSteps").innerHTML = `
+        <div class="step">x = (b × c) / a</div>
+        <div class="step">x = (${b} × ${c}) / ${a} = ${x}</div>
+    `;
+    document.getElementById("schoolResult").classList.add("show");
+});
+document.getElementById("calcSpeed")?.addEventListener("click", () => {
+    const s = document.getElementById("spdSpeed")?.value.trim() === "" ? null : Number(document.getElementById("spdSpeed").value);
+    const t = document.getElementById("spdTime")?.value.trim() === "" ? null : Number(document.getElementById("spdTime").value);
+    const d = document.getElementById("spdDist")?.value.trim() === "" ? null : Number(document.getElementById("spdDist").value);
+    let html = "";
+    if (s != null && t != null && d == null) html = `<div class="step">d = s × t = ${s * t}</div>`;
+    else if (d != null && t != null && s == null && t) html = `<div class="step">s = d / t = ${d / t}</div>`;
+    else if (d != null && s != null && t == null && s) html = `<div class="step">t = d / s = ${d / s}</div>`;
+    else return alert("Enter exactly two values");
+    document.getElementById("schoolSteps").innerHTML = html;
+    document.getElementById("schoolResult").classList.add("show");
+});
+
+/* ================= ANIMATIONS TOGGLE ================= */
+let animationsEnabled = localStorage.getItem("mathmateAnimations") !== "off";
+function applyAnimations(on) {
+    animationsEnabled = on;
+    document.body.classList.toggle("no-animations", !on);
+    localStorage.setItem("mathmateAnimations", on ? "on" : "off");
+    document.getElementById("animOn")?.classList.toggle("active", on);
+    document.getElementById("animOff")?.classList.toggle("active", !on);
+}
+applyAnimations(animationsEnabled);
+document.getElementById("animOn")?.addEventListener("click", () => applyAnimations(true));
+document.getElementById("animOff")?.addEventListener("click", () => applyAnimations(false));
+
+/* ================= LANGUAGE TOGGLE ================= */
+let currentLang = localStorage.getItem("mathmateLang") || "fa";
+const domPhrasePairs = [
+    ["همیار ریاضی", "MathMate"],
+    ["خانه", "Home"], ["ابزارها", "Tools"], ["ریاضی در دنیای واقعی", "Real-World Math"], ["ابزارهای کاربردی", "Practical Tools"],
+    ["رنگ‌آمیزی", "Paint"], ["خرید", "Shopping"], ["تخفیف", "Discount"], ["اندازه‌گیری", "Measurement"], ["مسائل مدرسه", "School Problems"], ["سایر", "Other"], ["تنظیمات", "Settings"], ["درباره ما", "About"],
+    ["بازگشت", "Back"], ["برگشت", "Back"], ["ماشین حساب", "Calculator"], ["مضرب‌ها", "Multiples"], ["پیدا کردن مضرب‌ها", "Find Multiples"],
+    ["یک عدد وارد کن تا مضرب‌های آن را پیدا کنیم.", "Enter a number to find its multiples."], ["عدد مورد نظر", "Number"], ["چند مضرب نمایش داده شود؟", "How many multiples should be shown?"], ["مضرب‌های عدد", "Multiples of the number"], ["نتیجه اینجا نمایش داده می‌شود", "The result will appear here."],
+    ["محاسبه مساحت و محیط", "Calculate Area & Perimeter"], ["شکل مورد نظر را انتخاب کن و اندازه‌های آن را وارد کن.", "Select a shape and enter its dimensions."], ["مستطیل", "Rectangle"], ["مربع", "Square"], ["مثلث", "Triangle"], ["دایره", "Circle"], ["JavaScript این قسمت را تغییر می‌دهد", "JavaScript updates this section"], ["محاسبه کن", "Calculate"], ["مساحت", "Area"], ["محیط", "Perimeter"],
+    ["محاسبه ب.م.م و ک.م.م", "Calculate GCD & LCM"], ["دو عدد وارد کن تا ب.م.م و ک.م.م آن‌ها را پیدا کنیم.", "Enter two numbers to find their GCD and LCM."], ["عدد اول", "First number"], ["عدد دوم", "Second number"], ["ب.م.م", "GCD"], ["ک.م.م", "LCM"],
+    ["آموزش", "Learning"], ["دنبال چی می‌گردی؟", "What are you looking for?"], ["موضوع مورد نظرت را وارد کن تا فیلم‌های آموزشی مرتبط را پیدا کنیم.", "Enter a topic to find related educational videos."], ["موضوع آموزشی", "Educational topic"], ["جستجو در آپارات", "Search on Aparat"], ["جستجو در یوتیوب", "Search on YouTube"],
+    ["شمارنده‌ها", "Factors"], ["پیدا کردن شمارنده‌ها", "Find Factors"], ["یک عدد وارد کن تا شمارنده‌های آن را پیدا کنیم.", "Enter a number to find its factors."], ["شمارنده‌های عدد", "Factors of the number"], ["نتیجه اینجا قرار می‌گیرد", "The result will appear here."],
+    ["تبدیل تاریخ", "Date Converter"], ["تاریخ شمسی، میلادی یا قمری را وارد کن تا به تقویم‌های دیگر تبدیل شود.", "Enter a Jalali, Gregorian, or Hijri date to convert it to the other calendars."], ["شمسی", "Jalali"], ["میلادی", "Gregorian"], ["قمری", "Hijri"], ["سال", "Year"], ["ماه", "Month"], ["روز", "Day"], ["نتیجه تبدیل", "Conversion result"],
+    ["تبدیل واحد", "Unit Converter"], ["مقدار مورد نظر را وارد کن و واحد آن را تبدیل کن.", "Enter a value and convert its unit."], ["طول", "Length"], ["وزن", "Weight"], ["حجم", "Volume"], ["دما", "Temperature"], ["مقدار", "Value"], ["تبدیل از", "Convert from"], ["تبدیل به", "Convert to"], ["نتیجه", "Result"],
+    ["محاسبه درصد", "Percentage Calculator"], ["درصد و عدد مورد نظر را وارد کن تا مقدار درصد را حساب کنیم.", "Enter the percentage and number to calculate the result."], ["درصد مورد نظر", "Percentage"], ["عدد", "Number"],
+    ["تبدیل زمان", "Time Converter"], ["زمان را به‌سادگی بین ثانیه، دقیقه، ساعت و روز تبدیل کنید.", "Easily convert time between seconds, minutes, hours, and days."], ["از", "From"], ["به", "To"], ["نتیجه تبدیل:", "Conversion result:"],
+    ["رنگ‌آمیزی دیوار", "Wall Painting"], ["محاسبه رنگ دیوار", "Calculate Wall Paint"], ["عرض، ارتفاع، مساحت بازشوها و تعداد دست رنگ را وارد کن.", "Enter the width, height, openings area, and number of coats."], ["عرض دیوار (متر)", "Wall width (m)"], ["ارتفاع دیوار (متر)", "Wall height (m)"], ["مساحت در و پنجره (متر مربع)", "Door and window area (m²)"], ["تعداد دست رنگ", "Number of coats"], ["پوشش هر لیتر رنگ (متر مربع)", "Coverage per liter (m²)"], ["رنگ مورد نیاز", "Required paint"],
+    ["هزینه خرید", "Shopping Cost"], ["محاسبه هزینه خرید", "Calculate Shopping Cost"], ["قیمت، تعداد و درصد تخفیف را وارد کن.", "Enter the price, quantity, and discount percentage."], ["قیمت کالا (تومان)", "Item price (toman)"], ["تعداد", "Quantity"], ["درصد تخفیف", "Discount percentage"], ["قیمت اولیه", "Subtotal"], ["مبلغ تخفیف", "Discount amount"], ["قیمت نهایی", "Final price"],
+    ["درصد و تخفیف", "Discount & Percentage"], ["محاسبه درصد و تخفیف", "Calculate Discount"], ["مبلغ و درصد را وارد کن تا مبلغ تخفیف و قیمت نهایی را ببینی.", "Enter the amount and percentage to see the discount and final price."], ["مبلغ (تومان)", "Amount (toman)"], ["درصد", "Percent"],
+    ["محاسبه مساحت، محیط و حجم", "Calculate Area, Perimeter & Volume"], ["طول و عرض را وارد کن. ارتفاع اختیاری است.", "Enter the length and width. Height is optional."], ["طول (متر)", "Length (m)"], ["عرض (متر)", "Width (m)"], ["ارتفاع (متر) — اختیاری", "Height (m) — optional"], ["حجم", "Volume"],
+    ["مسائل رایج مدرسه", "Common School Problems"], ["میانگین، تناسب یا سرعت/مسافت/زمان را انتخاب کن و اعداد را وارد کن.", "Choose average, proportion, or speed/distance/time and enter the numbers."], ["میانگین", "Average"], ["تناسب", "Proportion"], ["سرعت / مسافت", "Speed / Distance"], ["اعداد (با ویرگول جدا کن)", "Numbers (separate with commas)"], ["محاسبه میانگین", "Calculate Average"], ["فرمول: a / b = c / x x = (b × c) / a", "Formula: a / b = c / x  x = (b × c) / a"], ["محاسبه x", "Calculate x"], ["سرعت (اختیاری)", "Speed (optional)"], ["زمان (اختیاری)", "Time (optional)"], ["مسافت (اختیاری)", "Distance (optional)"], ["دو مقدار را وارد کن تا سومی محاسبه شود.", "Enter two values to calculate the third."],
+    ["فیلم‌های آموزشی", "Educational Videos"], ["آموزش‌های ریاضی را ببین و بهتر یاد بگیر.", "Watch math lessons and learn better."], ["عنوان فیلم آموزشی", "Lesson title"], ["توضیح کوتاهی درباره این آموزش", "A short description of this lesson"],
+    ["آواتار", "Avatar"], ["انتخاب آواتار", "Choose Avatar"], ["از آواتارهای پیش‌فرض یکی را انتخاب کن یا از دستگاه خودت یک عکس بگذار. عکس کامل با گوشه‌های گرد نمایش داده می‌شود.", "Choose a default avatar or upload a photo from your device. The full image is shown with rounded corners."], ["انتخاب از دستگاه", "Choose from device"], ["ذخیره آواتار", "Save Avatar"], ["آواتارهای پیش‌فرض", "Default Avatars"],
+    ["اندازه نوشته‌ها", "Font Size"], ["اندازه متن‌های برنامه را انتخاب کن.", "Choose the app text size."], ["کوچک", "Small"], ["معمولی", "Normal"], ["بزرگ", "Large"], ["ظاهر برنامه", "Appearance"], ["حالت روشن یا تاریک را انتخاب کن.", "Choose light or dark mode."], ["روشن", "Light"], ["تاریک", "Dark"], ["تم رنگی", "Color Theme"], ["پالت رنگ برنامه را انتخاب کن.", "Choose the app color palette."], ["اینستاگرام", "Instagram"], ["صورتی و بنفش", "Pink & Purple"], ["آبی و بنفش", "Blue & Purple"], ["زبان", "Language"], ["زبان رابط کاربری را انتخاب کن.", "Choose the interface language."], ["فارسی", "Persian"], ["انیمیشن‌ها", "Animations"], ["انیمیشن‌های برنامه را روشن یا خاموش کن.", "Enable or disable app animations."], ["خاموش", "Off"], ["اطلاعات دستگاه", "Device Info"], ["سیستم عامل", "Operating System"], ["در حال تشخیص...", "Detecting..."], ["معماری سیستم", "System Architecture"], ["مرورگر", "Browser"],
+    ["درباره همیار ریاضی", "About MathMate"], ["نسخه 3.0.0", "Version 3.0.0"], ["MathMate یک ابزار ساده و کاربردی برای کمک به انجام محاسبات ریاضی و یادگیری بهتر مفاهیم ریاضی است.", "MathMate is a simple and useful tool for calculations and learning math concepts."], ["امکانات برنامه", "Features"], ["محاسبه مضرب‌ها", "Calculate multiples"], ["پیدا کردن شمارنده‌ها", "Find factors"], ["محاسبه مساحت و محیط شکل‌ها", "Calculate area and perimeter of shapes"], ["جستجوی آموزش‌های ریاضی در آپارات و یوتیوب", "Search for math lessons on Aparat and YouTube"], ["تبدیل تاریخ شمسی، میلادی و قمری", "Convert Jalali, Gregorian, and Hijri dates"], ["تبدیل واحدهای طول، وزن، حجم و دما", "Convert length, weight, volume, and temperature units"], ["تبدیل واحدهای زمان", "Convert time units"], ["محاسبه درصد", "Calculate percentages"], ["محاسبه رنگ‌آمیزی دیوار", "Calculate wall paint"], ["محاسبه هزینه خرید", "Calculate shopping cost"], ["محاسبه تخفیف", "Calculate discount"], ["مسائل مدرسه با راه‌حل گام‌به‌گام", "School problems with step-by-step solutions"], ["حالت روشن و تاریک", "Light and dark mode"], ["تنظیم اندازه نوشته‌ها", "Adjust font size"], ["ذخیره تنظیمات با LocalStorage", "Save settings with LocalStorage"], ["نمایش اطلاعات دستگاه و مرورگر", "Show device and browser information"], ["سایدبار و نوار ناوبری", "Sidebar and navigation bar"], ["درباره نسخه", "About this version"], ["نسخه 3.0.0 یک نسخه جدیدتر و کامل‌تر از نسخه‌های اولیه MathMate است و با ظاهر بهتر، ابزارهای بیشتر و تنظیمات شخصی‌سازی ساخته شده.", "Version 3.0.0 is a newer and more complete version of the early MathMate releases, with a better interface, more tools, and personalization settings."],
+    ["سلام!", "Hello!"], ["به همیار ریاضی خوش اومدی", "Welcome to MathMate"], ["آماده یادگیری؟", "Ready to learn?"], ["ریاضی رو راحت‌تر", "Learn math easier"], ["و جذاب‌تر یاد بگیر!", "and make it more fun!"], ["ابزارهای کاربردی ریاضی، ماشین حساب و آموزش، همه در یک جا.", "Practical math tools, a calculator, and learning resources — all in one place."], ["شروع کنیم", "Let's start"], ["همه ابزارها", "All tools"], ["آماده‌ای شروع کنی؟", "Ready to begin?"], ["یک ابزار انتخاب کن و شروع کن!", "Pick a tool and start!"],
+    ["تغییر آواتار", "Change avatar"], ["پیش‌نمایش", "Preview"], ["تغییر حالت", "Toggle theme"], ["خطا", "Error"], ["نامشخص", "Unknown"],
+    ["ثانیه", "seconds"], ["دقیقه", "minutes"], ["ساعت", "hours"], ["مثلاً 5", "e.g. 5"], ["مثلاً 10", "e.g. 10"], ["مثلاً 12", "e.g. 12"], ["مثلاً 18", "e.g. 18"], ["مثلاً آموزش کسر کلاس هفتم", "e.g. a seventh-grade fraction lesson"], ["مثلاً 24", "e.g. 24"], ["مثلاً 1405", "e.g. 1405"], ["مثلاً 20", "e.g. 20"], ["مثلاً 500", "e.g. 500"], ["مثلاً 120", "e.g. 120"], ["مثلاً 4", "e.g. 4"], ["مثلاً 3", "e.g. 3"], ["مثلاً 2", "e.g. 2"], ["مثلاً 50000", "e.g. 50000"], ["مثلاً 200000", "e.g. 200000"], ["مثلاً 200000", "e.g. 200000"], ["مثلاً 18, 17, 19, 16", "e.g. 18, 17, 19, 16"], ["مثلاً 60", "e.g. 60"], ["مثلاً 27", "e.g. 27"], ["مثلاً 6", "e.g. 6"],
+    ["تقویم انتخاب شده:", "Selected calendar:"], ["Menu", "منو"], ["Close", "بستن"], ["English", "انگلیسی"],
+];
+
+const domPhraseFaToEn = new Map(domPhrasePairs.map(([fa, en]) => [fa, en]));
+const domPhraseEnToFa = new Map(domPhrasePairs.map(([fa, en]) => [en, fa]));
+
+function normalizeUiText(value) {
+    return String(value).replace(/\s+/g, " ").trim();
+}
+
+function translateUiText(value, lang) {
+    const normalized = normalizeUiText(value);
+    if (!normalized) return null;
+    const map = lang === "en" ? domPhraseFaToEn : domPhraseEnToFa;
+    return map.get(normalized) || null;
+}
+
+function translateKey(key) {
+    const lang = document.documentElement.lang === "en" ? "en" : "fa";
+    return (i18n[lang] && i18n[lang][key]) || "";
+}
+
+const i18n = {
+    fa: {
+        app_name: "همیار ریاضی",
+        home: "خانه", tools: "ابزارها", practical_tools: "ابزارهای کاربردی", paint: "رنگ‌آمیزی",
+        shopping: "خرید", discount: "تخفیف", measurement: "اندازه‌گیری", school: "مسائل مدرسه",
+        education: "آموزش", settings: "تنظیمات", about: "درباره ما",
+        realworld_section: "ریاضی در دنیای واقعی", other: "سایر",
+        language_title: "زبان", language_desc: "زبان رابط کاربری را انتخاب کن.",
+        anim_title: "انیمیشن‌ها", anim_desc: "انیمیشن‌های برنامه را روشن یا خاموش کن.",
+        device_title: "اطلاعات دستگاه", os_label: "سیستم عامل", arch_label: "معماری سیستم", browser_label: "مرورگر",
+        back: "بازگشت",
+        avatar_title: "آواتار", avatar_heading: "انتخاب آواتار",
+        avatar_desc: "از آواتارهای پیش‌فرض یکی را انتخاب کن یا از دستگاه خودت یک عکس بگذار. عکس کامل با گوشه‌های گرد نمایش داده می‌شود.",
+        avatar_upload: "انتخاب از دستگاه", avatar_save: "ذخیره آواتار", avatar_defaults: "آواتارهای پیش‌فرض",
+        avatar_saved: "آواتار ذخیره شد!", avatar_fail: "ذخیره آواتار ممکن نشد.",
+        font_size_title: "اندازه نوشته‌ها", font_size_desc: "اندازه متن‌های برنامه را انتخاب کن.",
+        font_small: "کوچک", font_normal: "معمولی", font_large: "بزرگ",
+        appearance_title: "ظاهر برنامه", appearance_desc: "حالت روشن یا تاریک را انتخاب کن.",
+        theme_light: "روشن", theme_dark: "تاریک",
+        color_theme_title: "تم رنگی", color_theme_desc: "پالت رنگ برنامه را انتخاب کن.",
+        theme_instagram: "اینستاگرام", theme_pink: "صورتی و بنفش", theme_blue: "آبی و بنفش",
+        hello: "سلام!", welcome_title: "به همیار ریاضی خوش اومدی",
+        badge_ready: "آماده یادگیری؟", hero_line1: "ریاضی رو راحت‌تر", hero_line2: "و جذاب‌تر یاد بگیر!",
+        hero_desc: "ابزارهای کاربردی ریاضی، ماشین حساب و آموزش، همه در یک جا.",
+        start_btn: "شروع کنیم", tools_section_title: "ابزارهای همیار ریاضی", all_tools: "همه ابزارها",
+        ready_start: "آماده‌ای شروع کنی؟", pick_tool: "یک ابزار انتخاب کن و شروع کن!",
+        tools_page_title: "ابزارهای همیار ریاضی", tools_page_desc: "ابزار مورد نظرت را انتخاب کن و شروع کن.",
+        about_title: "درباره همیار ریاضی",
+        calc: "ماشین حساب", geometry: "مساحت و محیط", gcd_lcm: "ب.م.م و ک.م.م",
+        multiples: "مضرب‌ها", learning: "آموزش", factors: "شمارنده‌ها",
+        date_convert: "تبدیل تاریخ", unit_convert: "تبدیل واحد", percentage: "محاسبه درصد",
+        time_convert: "تبدیل زمان",
+        anim_on: "روشن", anim_off: "خاموش",
+        features: "امکانات برنامه", version_about: "درباره نسخه",
+        footer: "ساخته شده با ❤ و JavaScript توسط حسین ثقفی",
+        desc_calc: "محاسبات سریع و آسان",
+        desc_geometry: "محاسبه شکل‌های هندسی",
+        desc_gcd: "محاسبه سریع اعداد",
+        desc_multiples: "پیدا کردن مضرب‌های یک عدد",
+        desc_multiples_short: "پیدا کردن مضرب‌ها",
+        desc_learning: "جستجوی فیلم‌های آموزشی",
+        desc_learning_short: "یادگیری آنلاین",
+        desc_factors: "پیدا کردن شمارنده‌های یک عدد",
+        desc_factors_short: "پیدا کردن شمارنده‌ها",
+        desc_date: "تبدیل تاریخ شمسی، میلادی و قمری",
+        desc_unit: "تبدیل واحدهای مختلف",
+        desc_percentage: "محاسبه درصد یک عدد",
+        desc_time: "تبدیل ثانیه، دقیقه، ساعت و روز",
+        desc_paint: "محاسبه رنگ دیوار",
+        desc_shopping: "محاسبه هزینه خرید",
+        desc_discount: "محاسبه درصد و تخفیف",
+        desc_measurement: "مساحت، محیط و حجم",
+        desc_school: "میانگین، تناسب، سرعت",
+        alert_calc_error: "خطا",
+        alert_calc_both: "لطفاً هر دو قسمت را کامل کن",
+        alert_calc_numbers: "لطفاً عددهای معتبر وارد کن",
+        alert_geometry_rect: "لطفاً طول و عرض معتبر وارد کن",
+        alert_geometry_square: "لطفاً اندازه ضلع معتبر وارد کن",
+        alert_geometry_triangle: "لطفاً همه اندازه‌ها را درست وارد کن",
+        alert_geometry_circle: "لطفاً شعاع معتبر وارد کن",
+        alert_gcd: "لطفاً دو عدد صحیح و مثبت وارد کن",
+        alert_learning: "اول موضوع آموزشی مورد نظرت را وارد کن",
+        alert_factors: "لطفاً یک عدد صحیح و مثبت وارد کن",
+        alert_date_missing: "لطفاً سال، ماه و روز را کامل وارد کن",
+        alert_date_invalid: "تاریخ واردشده معتبر نیست",
+        alert_unit: "لطفاً یک عدد معتبر وارد کن",
+        alert_percentage: "لطفاً درصد و عدد را به‌درستی وارد کن",
+        alert_time: "لطفاً یک مقدار معتبر وارد کن",
+        alert_paint: "لطفاً عرض، ارتفاع و پوشش را درست وارد کن",
+        alert_shopping: "لطفاً قیمت و تعداد معتبر وارد کن",
+        alert_discount: "لطفاً مبلغ و درصد معتبر وارد کن",
+        alert_measurement: "لطفاً طول و عرض معتبر وارد کن",
+        alert_select_image: "لطفاً یک تصویر انتخاب کن."
+    },
+    en: {
+        app_name: "MathMate",
+        home: "Home", tools: "Tools", practical_tools: "Practical Tools", paint: "Paint",
+        shopping: "Shopping", discount: "Discount", measurement: "Measurement", school: "School Problems",
+        education: "Education", settings: "Settings", about: "About",
+        realworld_section: "Real-World Math", other: "Other",
+        language_title: "Language", language_desc: "Choose interface language.",
+        anim_title: "Animations", anim_desc: "Enable or disable app animations.",
+        device_title: "Device Info", os_label: "Operating System", arch_label: "Architecture", browser_label: "Browser",
+        back: "Back",
+        avatar_title: "Avatar", avatar_heading: "Choose Avatar",
+        avatar_desc: "Pick a default avatar or upload a photo from your device. The full image is shown with rounded corners.",
+        avatar_upload: "Choose from device", avatar_save: "Save avatar", avatar_defaults: "Default avatars",
+        avatar_saved: "Avatar saved!", avatar_fail: "Could not save avatar.",
+        font_size_title: "Font size", font_size_desc: "Choose the app text size.",
+        font_small: "Small", font_normal: "Normal", font_large: "Large",
+        appearance_title: "Appearance", appearance_desc: "Choose light or dark mode.",
+        theme_light: "Light", theme_dark: "Dark",
+        color_theme_title: "Color theme", color_theme_desc: "Choose the app color palette.",
+        theme_instagram: "Instagram", theme_pink: "Pink & Purple", theme_blue: "Blue & Purple",
+        hello: "Hello!", welcome_title: "Welcome to MathMate",
+        badge_ready: "Ready to learn?", hero_line1: "Learn math easier", hero_line2: "and more fun!",
+        hero_desc: "Practical math tools, calculator and lessons — all in one place.",
+        start_btn: "Let's start", tools_section_title: "MathMate Tools", all_tools: "All tools",
+        ready_start: "Ready to begin?", pick_tool: "Pick a tool and start!",
+        tools_page_title: "MathMate Tools", tools_page_desc: "Choose a tool and get started.",
+        about_title: "About MathMate",
+        calc: "Calculator", geometry: "Area & Perimeter", gcd_lcm: "GCD & LCM",
+        multiples: "Multiples", learning: "Learning", factors: "Factors",
+        date_convert: "Date Convert", unit_convert: "Unit Convert", percentage: "Percentage",
+        time_convert: "Time Convert",
+        anim_on: "On", anim_off: "Off",
+        features: "Features", version_about: "About this version",
+        footer: "Made with ❤ and JavaScript by Hossein Saghafi",
+        desc_calc: "Quick and easy calculations",
+        desc_geometry: "Calculate geometric shapes",
+        desc_gcd: "Quick number calculations",
+        desc_multiples: "Find multiples of a number",
+        desc_multiples_short: "Find multiples",
+        desc_learning: "Search educational videos",
+        desc_learning_short: "Online learning",
+        desc_factors: "Find factors of a number",
+        desc_factors_short: "Find factors",
+        desc_date: "Convert Jalali, Gregorian and Hijri dates",
+        desc_unit: "Convert various units",
+        desc_percentage: "Calculate a percentage of a number",
+        desc_time: "Convert seconds, minutes, hours and days",
+        desc_paint: "Calculate wall paint",
+        desc_shopping: "Calculate shopping cost",
+        desc_discount: "Calculate percent and discount",
+        desc_measurement: "Area, perimeter and volume",
+        desc_school: "Average, proportion, speed",
+        alert_calc_error: "Error",
+        alert_calc_both: "Please complete both fields.",
+        alert_calc_numbers: "Please enter valid numbers.",
+        alert_geometry_rect: "Please enter valid length and width.",
+        alert_geometry_square: "Please enter a valid side length.",
+        alert_geometry_triangle: "Please enter all dimensions correctly.",
+        alert_geometry_circle: "Please enter a valid radius.",
+        alert_gcd: "Please enter two positive integers.",
+        alert_learning: "Enter an educational topic first.",
+        alert_factors: "Please enter a positive integer.",
+        alert_date_missing: "Please enter year, month, and day.",
+        alert_date_invalid: "The entered date is not valid.",
+        alert_unit: "Please enter a valid number.",
+        alert_percentage: "Please enter a valid percentage and number.",
+        alert_time: "Please enter a valid value.",
+        alert_paint: "Please enter valid width, height, and coverage.",
+        alert_shopping: "Please enter valid price and quantity.",
+        alert_discount: "Please enter a valid amount and percent.",
+        alert_measurement: "Please enter valid length and width.",
+        alert_select_image: "Please select an image."
+    }
+};
+
+function applyLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem("mathmateLang", lang);
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "fa" ? "rtl" : "ltr";
+    const dict = i18n[lang] || i18n.fa;
+
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key] != null) el.textContent = dict[key];
+    });
+
+    document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-title");
+        if (dict[key] != null) el.textContent = dict[key];
+    });
+
+    // Translate every remaining static phrase/placeholder so no Persian UI text
+    // is left behind on pages that predate the data-i18n attributes.
+    const phraseMap = lang === "en" ? domPhraseFaToEn : domPhraseEnToFa;
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    let node;
+    while ((node = walker.nextNode())) {
+        const parent = node.parentElement;
+        if (!parent || parent.closest("script,style,noscript")) continue;
+        textNodes.push(node);
+    }
+    textNodes.forEach((textNode) => {
+        const normalized = normalizeUiText(textNode.nodeValue);
+        if (!normalized) return;
+        const translated = phraseMap.get(normalized);
+        if (translated) {
+            const leading = (textNode.nodeValue.match(/^\s*/) || [""])[0];
+            const trailing = (textNode.nodeValue.match(/\s*$/) || [""])[0];
+            textNode.nodeValue = leading + translated + trailing;
+        }
+    });
+
+    const attrNames = ["placeholder", "title", "aria-label", "alt"];
+    document.querySelectorAll("*").forEach((el) => {
+        attrNames.forEach((attr) => {
+            const value = el.getAttribute(attr);
+            if (!value) return;
+            const translated = phraseMap.get(normalizeUiText(value));
+            if (translated) el.setAttribute(attr, translated);
+        });
+    });
+
+    const appName = dict.app_name || "MathMate";
+    document.title = appName;
+    const st = document.getElementById("sidebarAppTitle");
+    if (st) st.textContent = appName;
+    const animOn = document.getElementById("animOn");
+    const animOff = document.getElementById("animOff");
+    if (animOn) animOn.textContent = dict.anim_on || "On";
+    if (animOff) animOff.textContent = dict.anim_off || "Off";
+    const langFaBtn = document.getElementById("langFa");
+    const langEnBtn = document.getElementById("langEn");
+    if (langFaBtn) langFaBtn.textContent = lang === "en" ? "Persian" : "فارسی";
+    if (langEnBtn) langEnBtn.textContent = lang === "en" ? "English" : "انگلیسی";
+    langFaBtn?.classList.toggle("active", lang === "fa");
+    langEnBtn?.classList.toggle("active", lang === "en");
+
+    // Re-apply labels generated after the initial page load.
+    if (typeof updateUnitOptions === "function" && typeof unitFrom !== "undefined" && unitFrom) {
+        const fromValue = unitFrom.value;
+        const toValue = unitTo?.value;
+        updateUnitOptions();
+        if ([...unitFrom.options].some((o) => o.value === fromValue)) unitFrom.value = fromValue;
+        if (toValue && [...unitTo.options].some((o) => o.value === toValue)) unitTo.value = toValue;
+    }
+    if (typeof updateThemeButtonIcon === "function") {
+        const theme = document.body.classList.contains("dark") ? "dark" : "light";
+        updateThemeButtonIcon(theme);
+    }
+}
+applyLanguage(currentLang);
+document.getElementById("langFa")?.addEventListener("click", () => applyLanguage("fa"));
+document.getElementById("langEn")?.addEventListener("click", () => applyLanguage("en"));
+
+/* Hide architecture on mobile already via CSS; ensure bottom-nav gone */
+document.querySelectorAll(".bottom-nav").forEach((n) => (n.style.display = "none"));
+
+
+function applyColorTheme(theme) {
+  document.body.classList.remove("theme-instagram", "theme-pink-purple", "theme-blue-purple");
+  document.body.classList.add("theme-" + theme);
+  localStorage.setItem("mathmateColorTheme", theme);
+  document.querySelectorAll(".color-theme-btn").forEach(function (btn) {
+    btn.classList.toggle("active", btn.getAttribute("data-color-theme") === theme);
+  });
+}
+var savedColorTheme = localStorage.getItem("mathmateColorTheme") || "instagram";
+applyColorTheme(savedColorTheme);
+document.querySelectorAll(".color-theme-btn").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    applyColorTheme(btn.getAttribute("data-color-theme"));
+  });
+});
+
+function wireTool(id, pageId, nav) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener("click", function () {
+    if (typeof openPageFromSidebar === "function") openPageFromSidebar(pageId, nav);
+  });
+}
+wireTool("toolsPaint", "paintPage", "paint");
+wireTool("toolsShopping", "shoppingPage", "shopping");
+wireTool("toolsDiscount", "discountPage", "discount");
+wireTool("toolsMeasurement", "measurementPage", "measurement");
+wireTool("toolsSchool", "schoolPage", "school");
+
+// Desktop: start with sidebar open (like Win11 start), user can close with X
+if (window.matchMedia("(min-width: 900px)").matches) {
+  var sb = document.getElementById("sidebar");
+  if (sb) {
+    sb.classList.add("open");
+    document.body.classList.add("sidebar-open");
+    if (sidebarToggle) sidebarToggle.style.display = "none";
+  }
+}
+
+
+
+/* ================= LEARNING CARD WHOLE CLICK ================= */
+(function () {
+    const learningCardEl = document.querySelector(".learning-card");
+    if (learningCardEl && !learningCardEl.dataset.wired) {
+        learningCardEl.dataset.wired = "1";
+        learningCardEl.style.cursor = "pointer";
+        learningCardEl.addEventListener("click", () => {
+            currentPage = "tools";
+            if (typeof activateToolsNav === "function") activateToolsNav();
+            hideAllPages();
+            const header = document.querySelector(".header");
+            const welcome = document.querySelector(".welcome-card");
+            const toolsSec = document.querySelector(".tools-section");
+            const learning = document.querySelector(".learning-card");
+            if (header) header.style.display = "none";
+            if (welcome) welcome.style.display = "none";
+            if (toolsSec) toolsSec.style.display = "none";
+            if (learning) learning.style.display = "none";
+            if (toolsPage) toolsPage.classList.add("show");
+            if (typeof setActiveSidebar === "function") setActiveSidebar("tools");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    }
+})();
+
+
+
+/* ================= AVATAR SYSTEM (simple, no crop/zoom) ================= */
+(function () {
+    const avatarPage = document.getElementById("avatarPage");
+    const avatarBack = document.getElementById("avatarBack");
+    const sidebarAvatarBtn = document.getElementById("sidebarAvatarBtn");
+    const sidebarAvatarImg = document.getElementById("sidebarAvatarImg");
+    const previewImg = document.getElementById("avatarPreviewImg");
+    const fileInput = document.getElementById("avatarFileInput");
+    const saveBtn = document.getElementById("avatarSaveBtn");
+    const avatarGrid = document.getElementById("avatarGrid");
+
+    let selectedSrc = localStorage.getItem("mathmateAvatar") || "assets/avatars/avatar1.png";
+
+    function setPreview(src) {
+        selectedSrc = src;
+        if (previewImg) previewImg.src = src;
+        document.querySelectorAll(".avatar-option").forEach((btn) => {
+            btn.classList.toggle("active", btn.getAttribute("data-src") === src);
+        });
+    }
+
+    function applyAvatarEverywhere(src) {
+        if (sidebarAvatarImg) sidebarAvatarImg.src = src;
+        const p = document.querySelector(".profile-icon");
+        if (p) {
+            p.innerHTML = "";
+            const im = document.createElement("img");
+            im.src = src;
+            im.alt = "";
+            p.appendChild(im);
+        }
+    }
+
+    function openAvatarPage() {
+        hideAllPages();
+        document.querySelector(".header") && (document.querySelector(".header").style.display = "none");
+        document.querySelector(".welcome-card") && (document.querySelector(".welcome-card").style.display = "none");
+        document.querySelector(".tools-section") && (document.querySelector(".tools-section").style.display = "none");
+        document.querySelector(".learning-card") && (document.querySelector(".learning-card").style.display = "none");
+        if (avatarPage) avatarPage.classList.add("show");
+        if (typeof isMobileSidebar === "function" && isMobileSidebar() && typeof closeSidebar === "function") closeSidebar();
+        const saved = localStorage.getItem("mathmateAvatar") || "assets/avatars/avatar1.png";
+        setPreview(saved);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    if (sidebarAvatarBtn) {
+        sidebarAvatarBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openAvatarPage();
+        });
+    }
+    if (avatarBack) {
+        avatarBack.addEventListener("click", () => {
+            if (avatarPage) avatarPage.classList.remove("show");
+            if (typeof goHome === "function") goHome();
+        });
+    }
+    if (avatarGrid) {
+        avatarGrid.querySelectorAll(".avatar-option").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const src = btn.getAttribute("data-src");
+                if (src) setPreview(src);
+            });
+        });
+    }
+    if (fileInput) {
+        fileInput.addEventListener("change", () => {
+            const file = fileInput.files && fileInput.files[0];
+            if (!file) return;
+            if (!file.type.startsWith("image/")) {
+                alert(translateKey("alert_select_image"));
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = () => {
+                setPreview(String(reader.result));
+            };
+            reader.readAsDataURL(file);
+            fileInput.value = "";
+        });
+    }
+    if (saveBtn) {
+        saveBtn.addEventListener("click", () => {
+            if (!selectedSrc) {
+                alert((i18n[currentLang] && i18n[currentLang].avatar_fail) || "ذخیره آواتار ممکن نشد.");
+                return;
+            }
+            try {
+                localStorage.setItem("mathmateAvatar", selectedSrc);
+                applyAvatarEverywhere(selectedSrc);
+                alert((i18n[currentLang] && i18n[currentLang].avatar_saved) || "آواتار ذخیره شد!");
+            } catch (err) {
+                // localStorage quota for large dataURLs
+                alert((i18n[currentLang] && i18n[currentLang].avatar_fail) || "ذخیره آواتار ممکن نشد.");
+            }
+        });
+    }
+
+    // Load on startup
+    const saved = localStorage.getItem("mathmateAvatar");
+    if (saved) applyAvatarEverywhere(saved);
+})();
+
+/* ================= MOBILE INSTALL BANNER ================= */
+(function () {
+    const banner = document.getElementById("mobileInstallBanner");
+    const closeBtn = document.getElementById("mibClose");
+    if (!banner || !closeBtn) return;
+
+    const mibI18n = {
+        fa: {
+            title: "همیار ریاضی",
+            sub: "همراه همه‌فن‌حریف ریاضی",
+            myket: "دانلود از مایکت",
+            bazaar: "دانلود از بازار"
+        },
+        en: {
+            title: "MathMate",
+            sub: "Your all-in-one math companion",
+            myket: "Download from Myket",
+            bazaar: "Download from Bazaar"
+        }
+    };
+
+    function applyMibLang() {
+        const lang = (document.documentElement.lang === "en") ? "en" : "fa";
+        const t = mibI18n[lang];
+        banner.querySelectorAll("[data-i18n-mib]").forEach((el) => {
+            const key = el.getAttribute("data-i18n-mib");
+            if (t[key]) el.textContent = t[key];
+        });
+    }
+
+    function isMobileView() {
+        return window.matchMedia("(max-width: 899px)").matches;
+    }
+
+    function showBanner() {
+        if (!isMobileView()) return;
+        applyMibLang();
+        banner.setAttribute("aria-hidden", "false");
+        // force reflow then show
+        banner.style.display = "block";
+        requestAnimationFrame(() => {
+            banner.classList.remove("hiding");
+            banner.classList.add("show");
+        });
+    }
+
+    function hideBanner() {
+        banner.classList.add("hiding");
+        banner.classList.remove("show");
+        banner.setAttribute("aria-hidden", "true");
+        setTimeout(() => {
+            if (!banner.classList.contains("show")) {
+                banner.style.display = "none";
+                banner.classList.remove("hiding");
+            }
+        }, 380);
+    }
+
+    closeBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        hideBanner();
+    });
+
+    // Show every visit on mobile (until user closes for this page load)
+    function tryShow() {
+        if (!isMobileView()) return;
+        setTimeout(showBanner, 400);
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", tryShow);
+    } else {
+        tryShow();
+    }
+
+    // Re-apply text when language changes
+    const origApply = window.applyLanguage;
+    if (typeof applyLanguage === "function") {
+        const _apply = applyLanguage;
+        window.applyLanguage = function (lang) {
+            _apply(lang);
+            applyMibLang();
+        };
+        // also hook existing listeners already bound to applyLanguage - they call the local name
+    }
+    document.getElementById("langFa")?.addEventListener("click", () => setTimeout(applyMibLang, 50));
+    document.getElementById("langEn")?.addEventListener("click", () => setTimeout(applyMibLang, 50));
+
+    window.addEventListener("resize", () => {
+        if (!isMobileView()) {
+            banner.classList.remove("show", "hiding");
+            banner.style.display = "none";
+            banner.setAttribute("aria-hidden", "true");
+        }
+    });
+})();
+
+/* ================= SIDEBAR BODY SCROLL LOCK (mobile) ================= */
+(function () {
+    let lockedScrollY = 0;
+    const body = document.body;
+
+    function lockBody() {
+        if (!window.matchMedia("(max-width: 899px)").matches) return;
+        lockedScrollY = window.scrollY || window.pageYOffset || 0;
+        body.style.top = `-${lockedScrollY}px`;
+        body.classList.add("sidebar-open");
+    }
+
+    function unlockBody() {
+        body.style.top = "";
+        const y = lockedScrollY;
+        // class removal handled by existing closeSidebar; restore scroll
+        requestAnimationFrame(() => {
+            window.scrollTo(0, y);
+        });
+    }
+
+    // Patch existing open/close if present
+    const sidebar = document.getElementById("sidebar");
+    const toggle = document.getElementById("sidebarToggle");
+    const closeBtn = document.getElementById("sidebarClose");
+    const overlay = document.getElementById("sidebarOverlay");
+
+    if (toggle) {
+        toggle.addEventListener("click", () => {
+            if (window.matchMedia("(max-width: 899px)").matches) {
+                setTimeout(() => {
+                    if (sidebar && sidebar.classList.contains("open")) lockBody();
+                }, 0);
+            }
+        }, true);
+    }
+    if (closeBtn) {
+        closeBtn.addEventListener("click", () => {
+            unlockBody();
+        }, true);
+    }
+    if (overlay) {
+        overlay.addEventListener("click", () => {
+            unlockBody();
+        }, true);
+    }
+
+    // Observe class changes on sidebar for open/close from other code paths
+    if (sidebar && typeof MutationObserver !== "undefined") {
+        const obs = new MutationObserver(() => {
+            if (!window.matchMedia("(max-width: 899px)").matches) return;
+            if (sidebar.classList.contains("open")) {
+                if (!body.style.top) lockBody();
+            } else {
+                if (body.style.top) {
+                    unlockBody();
+                    body.classList.remove("sidebar-open");
+                }
+            }
+        });
+        obs.observe(sidebar, { attributes: true, attributeFilter: ["class"] });
+    }
+})();
