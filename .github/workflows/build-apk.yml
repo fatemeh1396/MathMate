@@ -27,7 +27,11 @@ jobs:
           java-version: 21
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+          accept-android-sdk-licenses: true
+          log-accepted-android-sdk-licenses: false
 
       - name: Install dependencies
         run: npm ci
@@ -62,7 +66,8 @@ jobs:
           print(f"Prepared icon: {target}")
           PY
 
-          npx --yes @capacitor/assets@3.0.5 generate --android --assetPath .ci-assets
+      - name: Generate Android app icon
+        run: npx --yes @capacitor/assets@3.0.5 generate --android --assetPath .ci-assets
 
       - name: Restore release keystore
         env:
@@ -102,21 +107,23 @@ jobs:
               }
           '''
 
-          text = text.replace(
-              "android {",
-              "android {" + signing,
-              1
-          )
+          if "signingConfigs" not in text:
+              text = text.replace(
+                  "android {",
+                  "android {" + signing,
+                  1
+              )
 
-          text = text.replace(
-              "buildTypes {",
-              """buildTypes {
-                  release {
-                      signingConfig signingConfigs.release
-                  }
-              """,
-              1
-          )
+          if "signingConfig signingConfigs.release" not in text:
+              text = text.replace(
+                  "buildTypes {",
+                  """buildTypes {
+                      release {
+                          signingConfig signingConfigs.release
+                      }
+                  """,
+                  1
+              )
 
           path.write_text(text)
           PY
