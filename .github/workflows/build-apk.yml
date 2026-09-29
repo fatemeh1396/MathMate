@@ -69,6 +69,31 @@ jobs:
       - name: Generate Android app icon
         run: npx --yes @capacitor/assets@3.0.5 generate --android --assetPath .ci-assets
 
+      - name: Set Android version code
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path("android/app/build.gradle")
+          text = path.read_text()
+
+          new_text, count = re.subn(
+              r'(\bversionCode\s+)\d+',
+              r'\g<1>2',
+              text,
+              count=1
+          )
+
+          if count != 1:
+              raise SystemExit(
+                  "ERROR: Could not find versionCode in android/app/build.gradle"
+              )
+
+          path.write_text(new_text)
+          print("Android versionCode set to 2")
+          PY
+
       - name: Restore release keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
@@ -107,23 +132,21 @@ jobs:
               }
           '''
 
-          if "signingConfigs" not in text:
-              text = text.replace(
-                  "android {",
-                  "android {" + signing,
-                  1
-              )
+          text = text.replace(
+              "android {",
+              "android {" + signing,
+              1
+          )
 
-          if "signingConfig signingConfigs.release" not in text:
-              text = text.replace(
-                  "buildTypes {",
-                  """buildTypes {
-                      release {
-                          signingConfig signingConfigs.release
-                      }
-                  """,
-                  1
-              )
+          text = text.replace(
+              "buildTypes {",
+              """buildTypes {
+                  release {
+                      signingConfig signingConfigs.release
+                  }
+              """,
+              1
+          )
 
           path.write_text(text)
           PY
