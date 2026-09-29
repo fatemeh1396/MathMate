@@ -32,6 +32,38 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Sync Capacitor Android
+        run: npx cap sync android
+
+      - name: Prepare MathMate app icon
+        run: |
+          python3 -m venv .icon-venv
+          . .icon-venv/bin/activate
+          python -m pip install --quiet --upgrade pip
+          python -m pip install --quiet pillow
+
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+
+          source = Path("www/assets/icons/favicon(1).png")
+          target_dir = Path(".ci-assets")
+          target_dir.mkdir(parents=True, exist_ok=True)
+          target = target_dir / "icon.png"
+
+          if not source.is_file():
+              raise SystemExit(f"ERROR: Icon not found: {source}")
+
+          with Image.open(source) as image:
+              image = image.convert("RGBA")
+              image = image.resize((1024, 1024), Image.Resampling.LANCZOS)
+              image.save(target, format="PNG")
+
+          print(f"Prepared icon: {target}")
+          PY
+
+          npx --yes @capacitor/assets@3.0.5 generate --android --assetPath .ci-assets
+
       - name: Restore release keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
@@ -88,9 +120,6 @@ jobs:
 
           path.write_text(text)
           PY
-
-      - name: Sync Capacitor Android
-        run: npx cap sync android
 
       - name: Make Gradle executable
         run: chmod +x android/gradlew
