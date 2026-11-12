@@ -96,7 +96,7 @@ body.theme-pink-purple {
     --accent-orange: #EC4899;
     --accent-yellow: #F472B6;
     --accent-blue: #A78BFA;
-    --gradient-hero: linear-gradient(135deg, #EC4899, #D946EF, #7C3AED);
+    --gradient-hero: linear-gradient(125deg, #EC4899 0%, #D946EF 46%, #7C3AED 78%, #F59E0B 100%);
 }
 
 body.theme-blue-purple {
@@ -108,7 +108,44 @@ body.theme-blue-purple {
     --accent-orange: #818CF8;
     --accent-yellow: #A5B4FC;
     --accent-blue: #3B82F6;
-    --gradient-hero: linear-gradient(135deg, #3B82F6, #6366F1, #8B5CF6);
+    --gradient-hero: linear-gradient(125deg, #3B82F6 0%, #6366F1 42%, #8B5CF6 74%, #E879B9 100%);
+}
+
+/* Gold & black: a role-based palette, rather than tinting every component identically. */
+body.theme-gold-black {
+    --primary: #C49A27;
+    --primary-dark: #8A6918;
+    --primary-color: #D7AD3C;
+    --primary-light: rgba(215, 173, 60, .16);
+    --accent-purple: #7B6A93;
+    --accent-orange: #C77D36;
+    --accent-yellow: #F0D477;
+    --accent-blue: #7C9CB5;
+    --gradient-hero: linear-gradient(125deg, #171719 0%, #3B2D12 52%, #C49A27 100%);
+}
+body.theme-gold-black:not(.dark) {
+    --background: #F7F3E8;
+    --card: rgba(255, 254, 249, .94);
+    --card-bg: rgba(255, 254, 249, .94);
+    --text: #242018;
+    --text-light: #716A5B;
+    --border: rgba(90, 70, 25, .13);
+    --input-bg: rgba(255,255,255,.72);
+    --card-shadow: 0 8px 32px rgba(61,48,17,.09), 0 1px 3px rgba(61,48,17,.05);
+    --sidebar-bg: rgba(255, 252, 240, .83);
+    --sidebar-border: rgba(90, 70, 25, .14);
+}
+body.theme-gold-black.dark {
+    --background: #0A0A0B;
+    --card: rgba(26, 25, 22, .96);
+    --card-bg: rgba(26, 25, 22, .96);
+    --text: #F4EEDF;
+    --text-light: #B6AE9A;
+    --border: rgba(223, 190, 101, .15);
+    --input-bg: rgba(255,255,255,.045);
+    --card-shadow: 0 8px 32px rgba(0,0,0,.38);
+    --sidebar-bg: rgba(16, 15, 12, .92);
+    --sidebar-border: rgba(223, 190, 101, .16);
 }
 
 body.dark {
@@ -2505,13 +2542,15 @@ body.dark .tool-card {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    padding: 14px 0;
-
+    padding: 14px 4px;
     margin: 0 !important;
-
-    border-bottom:
-        1px solid rgba(0, 0, 0, 0.08);
+    border: none !important;
+    border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.08)) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
 }
 
 .device-info:last-child {
@@ -5964,4 +6003,2088 @@ button:active,
         flex: 1 1 auto;
         min-height: 0;
     }
+}
+
+/* ================= Integrated MathMate games (scoped) ================= */
+.mathmate-games{--bg:var(--background,#f3f6fc);--surface:var(--card-bg,var(--card,#fff));--surface-2:var(--input-bg,#f8faff);--muted:var(--text-light,#7b8499);--line:var(--border,#e6eaf3);--primary:var(--primary-color,#5b62e8);--primary-2:var(--accent-purple,#7b7ff2);--primary-soft:var(--primary-light,#ededff);--cyan:#e6f8ff;--mint:#e6f9f1;--pink:#fff0f0;--gold:#fff5d9;--shadow:var(--card-shadow,0 12px 34px rgba(31,45,90,.06));--radius:20px;--radius-sm:13px;--success:#1a9a72;--danger:#e35c6a;--warning:#be8414;--sidebar:252px;--surface-raised:var(--card-bg,#fff);--panel-tint:var(--input-bg,#f8faff);--field-bg:var(--input-bg,rgba(255,255,255,.55));--field-border:var(--border,rgba(0,0,0,.06));--menu-bg:var(--card-bg,#fff);--menu-hover:var(--primary-light,#ededff);--menu-shadow:0 18px 42px rgba(32,38,73,.18);--table-head:var(--input-bg,#f8faff);--scroll-thumb:rgba(120,120,120,.4);--motion-fast:160ms;--motion-mid:260ms;--motion-slow:460ms;--ease-out:cubic-bezier(.2,.8,.2,1);}
+.mathmate-games *{box-sizing:border-box}
+.mathmate-games{min-height:100%;scroll-behavior:smooth}
+.mathmate-games{margin:0;background:var(--bg);color:var(--text);font-family:Arad,"Segoe UI",Tahoma,Arial,sans-serif;font-size:14px;line-height:1.65;min-height:100vh}
+.mathmate-games button,.mathmate-games input,.mathmate-games select{font:inherit}
+.mathmate-games button{cursor:pointer}
+.mathmate-games button:focus-visible,.mathmate-games input:focus-visible{outline:3px solid #999cff;outline-offset:2px}
+.mathmate-games .app-shell{min-height:100vh;display:flex}
+.mathmate-games .sidebar{width:var(--sidebar);flex:0 0 var(--sidebar);background:var(--surface);border-left:1px solid var(--line);padding:25px 17px 17px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;z-index:10}
+.mathmate-games .brand{display:flex;align-items:center;gap:12px;text-align:right;border:0;background:transparent;padding:0 9px 29px;color:var(--text)}
+.mathmate-games .brand-mark{width:44px;height:44px;flex:0 0 44px;background:linear-gradient(145deg,#7778f4,#5558d8);color:#fff;border-radius:15px;display:grid;place-items:center;font-size:30px;font-weight:800;letter-spacing:-3px;position:relative;box-shadow:0 8px 18px #6869e83c}
+.mathmate-games .brand-mark i{position:absolute;right:0;top:-5px;font-size:15px;font-style:normal;background:#2cc9a0;border:2px solid white;border-radius:50%;width:20px;height:20px;display:grid;place-items:center;letter-spacing:0}
+.mathmate-games .brand-copy{display:flex;flex-direction:column;gap:1px}
+.mathmate-games .brand-copy strong{font-size:20px;letter-spacing:-.8px;direction:ltr;text-align:right}
+.mathmate-games .brand-copy small{font-size:9px;letter-spacing:1.1px;color:var(--muted);direction:ltr;text-align:right}
+.mathmate-games .side-label{font-size:11px;color:#9ba2b3;font-weight:700;padding:0 14px 12px}
+.mathmate-games .main-nav{display:flex;flex-direction:column;gap:6px}
+.mathmate-games .nav-item{border:0;background:transparent;color:#747d94;display:flex;align-items:center;gap:12px;text-align:right;width:100%;padding:12px 13px;border-radius:12px;font-size:13px;transition:background .2s,color .2s}
+.mathmate-games .nav-item:hover{background:var(--surface-2);color:var(--text)}
+.mathmate-games .nav-item.active{background:var(--primary-soft);color:var(--primary);font-weight:700}
+.mathmate-games .nav-icon{width:24px;text-align:center;font-size:21px;line-height:1}
+.mathmate-games .nav-count{margin-right:auto;background:#dcdcff;color:var(--primary);padding:1px 7px;border-radius:7px;font-size:11px;font-weight:800}
+.mathmate-games .sidebar-bottom{margin-top:auto}
+.mathmate-games .side-promo{border-radius:17px;background:linear-gradient(140deg,#f0f0ff,#f5f7ff);margin:20px 2px 17px;padding:17px 15px;position:relative;overflow:hidden}
+.mathmate-games .promo-spark{background:#fff;width:30px;height:30px;border-radius:10px;display:grid;place-items:center;color:#7172e7;font-size:19px;margin-bottom:12px;box-shadow:0 4px 12px #5255bb1a}
+.mathmate-games .side-promo strong{font-size:12px;display:block}
+.mathmate-games .side-promo p{font-size:10px;color:#858aa4;margin:5px 0 13px;line-height:1.8}
+.mathmate-games .promo-dots{display:flex;gap:5px}
+.mathmate-games .promo-dots i{height:4px;width:20px;background:#d3d5f8;border-radius:5px}
+.mathmate-games .promo-dots i:first-child{background:#6668e8;width:28px}
+.mathmate-games .sidebar-foot{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:10px;padding:15px 10px 0}
+.mathmate-games .status-dot{width:7px;height:7px;border-radius:50%;background:#2fc69a;display:inline-block;box-shadow:0 0 0 3px #2fc69a1c}
+.mathmate-games .version{margin-right:auto;font-size:10px;color:#a5aabd}
+.mathmate-games .main-area{flex:1;min-width:0;display:flex;flex-direction:column}
+.mathmate-games .topbar{min-height:75px;padding:14px clamp(18px,3.2vw,46px);display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 86%,transparent);gap:12px}
+.mathmate-games .topbar-start,.mathmate-games .topbar-actions,.mathmate-games .breadcrumbs{display:flex;align-items:center;gap:12px}
+.mathmate-games .breadcrumbs{font-size:12px;color:var(--muted)}
+.mathmate-games .breadcrumbs b{font-weight:400;color:#c2c7d5}
+.mathmate-games .breadcrumbs strong{color:var(--text);font-weight:700}
+.mathmate-games .topbar-actions{gap:8px}
+.mathmate-games .offline-chip{display:flex;gap:7px;align-items:center;font-size:11px;color:var(--muted);padding:7px 11px;background:var(--surface);border:1px solid var(--line);border-radius:9px}
+.mathmate-games .icon-button,.mathmate-games .avatar-button{border:1px solid var(--line);background:var(--surface);color:var(--text);height:37px;min-width:37px;border-radius:11px;display:grid;place-items:center;transition:transform .16s,background .16s}
+.mathmate-games .icon-button:hover,.mathmate-games .avatar-button:hover{transform:translateY(-1px);background:var(--surface-2)}
+.mathmate-games #languageToggle{font-size:10px;font-weight:800;letter-spacing:.2px}
+.mathmate-games .avatar-button{font-weight:800;background:#e7e8ff;border-color:#dedfff;color:#5f60d9;border-radius:50%;width:37px}
+.mathmate-games .mobile-menu{display:none}
+.mathmate-games .content{width:100%;max-width:1440px;margin:0 auto;padding:clamp(18px,3.2vw,44px);flex:1;min-width:0}
+.mathmate-games .app-footer{display:flex;align-items:center;gap:8px;color:#9ba2b2;border-top:1px solid var(--line);padding:15px clamp(18px,3.2vw,46px);font-size:10px}
+.mathmate-games .footer-spacer{flex:1}
+.mathmate-games .footer-separator{font-size:15px;color:#d0d4e0}
+.mathmate-games .hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(230px,.6fr);gap:23px;align-items:stretch;margin-bottom:30px}
+.mathmate-games .hero-main{border-radius:25px;background:linear-gradient(115deg,#585be2,#767bf3);color:#fff;padding:clamp(24px,3.6vw,42px);position:relative;overflow:hidden;min-height:265px;display:flex;flex-direction:column;justify-content:center}
+.mathmate-games .hero-main:before,.mathmate-games .hero-main:after{content:"";position:absolute;border-radius:50%;border:1px solid #ffffff23;width:300px;height:300px;left:-85px;top:-180px}
+.mathmate-games .hero-main:after{width:370px;height:370px;left:-115px;top:-205px}
+.mathmate-games .eyebrow{font-size:10px;letter-spacing:1.3px;text-transform:uppercase;display:flex;align-items:center;gap:9px;color:#d8dcff;margin-bottom:12px}
+.mathmate-games .eyebrow span{display:inline-block;width:22px;height:1px;background:#c4c9ff}
+.mathmate-games .hero h1{font-size:clamp(25px,3vw,37px);line-height:1.5;margin:0 0 8px;letter-spacing:-1.1px;max-width:590px}
+.mathmate-games .hero-main p{font-size:13px;line-height:2;color:#e0e3ff;margin:0 0 22px;max-width:520px}
+.mathmate-games .hero-buttons{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.mathmate-games .button{border:0;border-radius:11px;min-height:42px;padding:9px 17px;font-weight:700;font-size:12px;display:inline-flex;justify-content:center;align-items:center;gap:8px;transition:transform .18s,box-shadow .18s,background .18s}
+.mathmate-games .button:hover{transform:translateY(-1px)}
+.mathmate-games .button-primary{background:var(--primary);color:white;box-shadow:0 6px 15px #5b62e82a}
+.mathmate-games .hero-main .button-primary{background:#fff;color:#595de0;box-shadow:0 7px 17px #3437a320}
+.mathmate-games .button-glass{color:#fff;background:#ffffff17;border:1px solid #ffffff45}
+.mathmate-games .button-secondary{background:var(--surface);border:1px solid var(--line);color:var(--text)}
+.mathmate-games .button-soft{color:var(--primary);background:var(--primary-soft)}
+.mathmate-games .button-danger{color:var(--danger);background:var(--pink)}
+.mathmate-games .button-small{padding:6px 11px;min-height:33px;font-size:11px;border-radius:9px}
+.mathmate-games .hero-art{position:absolute;left:33px;bottom:10px;width:155px;height:128px;opacity:.97;pointer-events:none}
+.mathmate-games .hero-art .orbit{position:absolute;inset:10px 0 0 0;border:1px solid #ffffff43;border-radius:50%;transform:rotate(-20deg)}
+.mathmate-games .hero-art .orb{position:absolute;border-radius:50%;background:#9bf4db;width:20px;height:20px;left:2px;top:17px}
+.mathmate-games .hero-art .cube{position:absolute;width:52px;height:52px;left:41px;top:43px;background:#ffc95e;border:3px solid #ffdf8c;border-radius:13px;transform:rotate(10deg);display:grid;place-items:center;color:#5c61dc;font-size:24px;font-weight:900;box-shadow:0 12px 18px #3238a12f}
+.mathmate-games .hero-art .planet{position:absolute;width:43px;height:43px;right:8px;top:15px;border-radius:50%;background:#ff97b8;border:3px solid #ffc0d3;display:grid;place-items:center;color:#9e3163;font-size:22px;box-shadow:0 8px 17px #3238a12f}
+.mathmate-games .hero-art .tiny-star{position:absolute;color:#fff;right:29px;bottom:10px;font-size:24px}
+.mathmate-games .stat-stack{display:flex;flex-direction:column;gap:13px}
+.mathmate-games .stat-card{background:var(--surface);border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow);padding:19px 20px;display:flex;align-items:center;gap:14px;flex:1}
+.mathmate-games .stat-icon{width:47px;height:47px;border-radius:15px;display:grid;place-items:center;font-size:22px;flex:0 0 47px}
+.mathmate-games .stat-icon.violet{background:#efedff;color:#6260d8}
+.mathmate-games .stat-icon.mint{background:#e6faf3;color:#1eac83}
+.mathmate-games .stat-icon.gold{background:#fff5d9;color:#d89e24}
+.mathmate-games .stat-copy{display:flex;flex-direction:column;gap:1px}
+.mathmate-games .stat-copy span{font-size:10px;color:var(--muted)}
+.mathmate-games .stat-copy strong{font-size:23px;letter-spacing:-.5px;line-height:1.35}
+.mathmate-games .stat-copy small{font-size:10px;color:#969db0}
+.mathmate-games .section-heading{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:16px}
+.mathmate-games .section-heading h2{font-size:18px;margin:0;font-weight:800;letter-spacing:-.4px}
+.mathmate-games .section-heading p{font-size:11px;color:var(--muted);margin:3px 0 0}
+.mathmate-games .text-button{border:0;background:transparent;color:var(--primary);font-weight:700;font-size:11px;padding:7px}
+.mathmate-games .game-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.mathmate-games .game-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:var(--shadow);transition:transform .2s,border-color .2s,box-shadow .2s;min-width:0;display:flex;flex-direction:column}
+.mathmate-games .game-card:hover{transform:translateY(-3px);border-color:#d1d2ff;box-shadow:0 16px 30px #303c7510}
+.mathmate-games .game-cover{height:135px;border-radius:15px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-bottom:15px}
+.mathmate-games .cover-sudoku{background:linear-gradient(140deg,#e7e7ff,#f5f1ff)}
+.mathmate-games .cover-quick{background:linear-gradient(140deg,#e0f8f3,#e7f6ff)}
+.mathmate-games .cover-2048{background:linear-gradient(140deg,#fff0da,#fff8e7)}
+.mathmate-games .cover-puzzle{background:linear-gradient(140deg,#e1f5ff,#e6edff)}
+.mathmate-games .cover-missing{background:linear-gradient(140deg,#ffe8f2,#f4e9ff)}
+.mathmate-games .cover-memory{background:linear-gradient(140deg,#e5f7ea,#e5f5ff)}
+.mathmate-games .cover-tag{position:absolute;right:11px;top:10px;background:#ffffffc9;border:1px solid #ffffffd9;color:#656c83;padding:3px 8px;border-radius:7px;font-size:9px;font-weight:700}
+.mathmate-games .game-card h3{font-size:15px;margin:0 0 4px}
+.mathmate-games .game-card p{font-size:11px;line-height:1.9;color:var(--muted);margin:0 0 14px;min-height:40px}
+.mathmate-games .game-card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto}
+.mathmate-games .game-meta{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.mathmate-games .game-meta b{color:var(--primary);font-weight:800}
+.mathmate-games .play-button{border:0;background:var(--primary-soft);color:var(--primary);border-radius:10px;padding:7px 12px;font-size:11px;font-weight:800;display:flex;gap:5px;align-items:center}
+.mathmate-games .play-button:hover{background:var(--primary);color:#fff}
+.mathmate-games .art-sudoku{width:101px;height:101px;background:#fff;border:5px solid #716fe7;border-radius:12px;box-shadow:0 12px 23px #7471cb25;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:4px;transform:rotate(-5deg)}
+.mathmate-games .art-sudoku span{border:1px solid #e2e3f5;display:grid;place-items:center;font-size:16px;font-weight:800;color:#6764e4}
+.mathmate-games .art-sudoku span:nth-child(2),.mathmate-games .art-sudoku span:nth-child(5){background:#e9e8ff;color:#393bb1}
+.mathmate-games .art-sudoku span:nth-child(7){color:#25b78c}
+.mathmate-games .art-quick{display:flex;flex-direction:column;align-items:center;gap:7px;transform:rotate(2deg)}
+.mathmate-games .art-equation{font-size:26px;font-weight:900;color:#333b65;background:white;border-radius:13px;padding:8px 18px;box-shadow:0 7px 13px #42665b13}
+.mathmate-games .art-options{display:flex;gap:6px}
+.mathmate-games .art-options span{background:white;border:1px solid #dbe9e5;border-radius:9px;padding:4px 11px;color:#74817e;font-weight:700}
+.mathmate-games .art-options span:first-child{background:#c9f6e6;color:#10966d}
+.mathmate-games .art-2048{display:grid;grid-template-columns:repeat(2,47px);gap:6px;transform:rotate(-6deg)}
+.mathmate-games .art-2048 span{width:47px;height:47px;border-radius:11px;background:#f4dca8;color:#987039;display:grid;place-items:center;font-size:18px;font-weight:900;box-shadow:0 4px 0 #e5c995}
+.mathmate-games .art-2048 span:nth-child(2){background:#e9e4ff;color:#6963c4}
+.mathmate-games .art-2048 span:nth-child(3){background:#e4f7ed;color:#32946b}
+.mathmate-games .art-2048 span:nth-child(4){background:#ffb7a3;color:#a24c36}
+.mathmate-games .art-puzzle{display:flex;align-items:center;gap:8px;transform:rotate(-5deg)}
+.mathmate-games .art-puzzle span{width:39px;height:52px;border:2px solid #b7dafa;border-radius:11px;background:#fff;display:grid;place-items:center;color:#4a88cb;font-size:22px;font-weight:900;box-shadow:0 7px 13px #72a9d421}
+.mathmate-games .art-puzzle span:nth-child(2){background:#cfeeff}
+.mathmate-games .art-puzzle span:nth-child(4){background:#6a83ee;color:white;border-color:#6a83ee}
+.mathmate-games .art-missing{display:flex;align-items:center;gap:5px;transform:rotate(3deg)}
+.mathmate-games .art-missing span{width:34px;height:38px;display:grid;place-items:center;border-radius:10px;background:#fff;color:#8a64c4;font-weight:900;font-size:15px;box-shadow:0 5px 12px #9976bf15}
+.mathmate-games .art-missing span:last-child{background:#8b6be0;color:white}
+.mathmate-games .art-memory{display:flex;gap:7px;transform:rotate(5deg)}
+.mathmate-games .art-memory span{width:49px;height:64px;background:white;border:2px solid #93dcbf;border-radius:10px;display:grid;place-items:center;color:#299b71;font-size:20px;font-weight:900;box-shadow:0 7px 12px #458b6a15}
+.mathmate-games .art-memory span:nth-child(2){background:#c4f3de}
+.mathmate-games .art-memory span:nth-child(3){background:#7778e9;border-color:#7778e9;color:#fff}
+.mathmate-games .quick-strip{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0 3px}
+.mathmate-games .strip-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:19px;display:flex;align-items:center;gap:13px}
+.mathmate-games .strip-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:21px;background:var(--gold)}
+.mathmate-games .strip-card:nth-child(2) .strip-icon{background:var(--mint)}
+.mathmate-games .strip-copy{flex:1}
+.mathmate-games .strip-copy strong{font-size:12px;display:block}
+.mathmate-games .strip-copy span{font-size:10px;color:var(--muted)}
+.mathmate-games .strip-value{font-size:20px;font-weight:900;color:var(--primary)}
+.mathmate-games .view-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:22px}
+.mathmate-games .view-title{display:flex;align-items:center;gap:13px}
+.mathmate-games .view-title .big-icon{width:51px;height:51px;border-radius:16px;display:grid;place-items:center;font-size:25px;background:var(--primary-soft)}
+.mathmate-games .view-title h1{font-size:23px;margin:0;letter-spacing:-.5px}
+.mathmate-games .view-title p{font-size:11px;color:var(--muted);margin:2px 0 0}
+.mathmate-games .back-button{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:9px 13px;color:var(--muted);font-size:11px;font-weight:700}
+.mathmate-games .back-button:hover{color:var(--primary)}
+.mathmate-games .game-layout{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:20px;align-items:start}
+.mathmate-games .game-main-card,.mathmate-games .info-panel,.mathmate-games .records-card,.mathmate-games .settings-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:22px;min-width:0}
+.mathmate-games .info-panel{padding:19px}
+.mathmate-games .panel-title{font-size:13px;margin:0 0 13px}
+.mathmate-games .info-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-size:11px;color:var(--muted)}
+.mathmate-games .info-row:last-child{border-bottom:0}
+.mathmate-games .info-row strong{color:var(--text);font-size:12px}
+.mathmate-games .hint-box{background:var(--surface-2);border-radius:13px;padding:13px;font-size:11px;color:var(--muted);line-height:2;margin-top:16px}
+.mathmate-games .game-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:17px}
+.mathmate-games .toolbar-group{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.mathmate-games .select-control{background:var(--surface);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:8px 11px;font-size:11px}
+.mathmate-games .game-status{display:flex;gap:9px;align-items:center}
+.mathmate-games .mini-stat{border:1px solid var(--line);border-radius:10px;padding:6px 10px;background:var(--surface-2);font-size:10px;color:var(--muted)}
+.mathmate-games .mini-stat strong{color:var(--text);font-size:12px;margin-right:4px}
+.mathmate-games .sudoku-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}
+.mathmate-games .sudoku-grid{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));width:min(100%,510px);aspect-ratio:1;border:2px solid #7474e8;border-radius:5px;overflow:hidden;direction:ltr;background:var(--surface)}
+.mathmate-games .sudoku-cell{min-width:0;position:relative;border:0;border-left:1px solid #e5e7f3;border-top:1px solid #e5e7f3;background:var(--surface);padding:0;display:grid;place-items:center;color:#555ed0;font-size:clamp(13px,2.4vw,21px);font-weight:600}
+.mathmate-games .sudoku-cell:nth-child(9n){border-left:0}
+.mathmate-games .sudoku-cell:nth-child(n/**/+73){border-bottom:0}
+.mathmate-games .sudoku-cell:nth-child(3n){border-left:1px solid #a8a9d9}
+.mathmate-games .sudoku-cell:nth-child(n/**/+19):nth-child(-n/**/+27),.mathmate-games .sudoku-cell:nth-child(n/**/+46):nth-child(-n/**/+54){border-bottom:1.5px solid #a8a9d9}
+.mathmate-games .sudoku-cell.given{font-weight:900;color:var(--text);background:var(--surface-2)}
+.mathmate-games .sudoku-cell.related{background:#f0f1ff}
+.mathmate-games .sudoku-cell.same-number{background:#deddff;color:#4548c7}
+.mathmate-games .sudoku-cell.selected{background:#c9c9ff;box-shadow:inset 0 0 0 2px #6567e8;z-index:1}
+.mathmate-games .sudoku-cell.conflict{color:#d9495d;background:#ffe5e8}
+.mathmate-games .sudoku-cell .notes{font-size:clamp(5px,.95vw,8px);color:#888eb0;display:grid;grid-template-columns:repeat(3,1fr);gap:0;line-height:1.1;position:absolute;inset:2px;align-content:stretch}
+.mathmate-games .sudoku-cell .notes span{display:grid;place-items:center}
+.mathmate-games .sudoku-pad{width:min(100%,510px);display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px}
+.mathmate-games .number-key{border:1px solid var(--line);background:var(--surface);color:var(--primary);border-radius:9px;min-height:42px;font-weight:800;font-size:17px}
+.mathmate-games .number-key:hover{background:var(--primary-soft);border-color:#d6d5ff}
+.mathmate-games .number-key.utility{font-size:10px;color:var(--muted);grid-column:span 3;min-height:37px}
+.mathmate-games .number-key:disabled{opacity:.4;cursor:not-allowed}
+.mathmate-games .sudoku-actions{display:flex;justify-content:center;gap:7px;flex-wrap:wrap}
+.mathmate-games .inline-message{padding:10px 13px;border-radius:10px;background:var(--surface-2);color:var(--muted);font-size:11px;text-align:center;max-width:510px;width:100%}
+.mathmate-games .inline-message.success{background:var(--mint);color:#16825e}
+.mathmate-games .inline-message.error{background:var(--pink);color:#be4052}
+.mathmate-games .question-stage{display:flex;flex-direction:column;align-items:center;text-align:center;padding:16px 6px 12px}
+.mathmate-games .question-topline{display:flex;align-items:center;justify-content:space-between;width:min(100%,600px);gap:12px;margin-bottom:12px}
+.mathmate-games .question-level{color:var(--muted);font-size:11px}
+.mathmate-games .question-timer{font-weight:900;font-size:14px;color:var(--primary);display:flex;align-items:center;gap:6px}
+.mathmate-games .timer-track{width:min(100%,600px);height:7px;border-radius:50px;background:var(--line);overflow:hidden;margin-bottom:25px}
+.mathmate-games .timer-fill{height:100%;width:100%;background:linear-gradient(90deg,#4dc6a0,#7777ee);border-radius:50px;transition:width .25s linear}
+.mathmate-games .question-count{font-size:11px;color:var(--muted);margin:0 0 7px}
+.mathmate-games .question-text{font-size:clamp(28px,5.5vw,49px);font-weight:900;letter-spacing:1px;margin:0 0 25px;direction:ltr;color:var(--text)}
+.mathmate-games .answer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;width:min(100%,600px)}
+.mathmate-games .answer-option{background:var(--surface);border:1.5px solid var(--line);color:var(--text);border-radius:14px;min-height:66px;font-size:21px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:12px;position:relative;transition:.16s}
+.mathmate-games .answer-option .option-letter{position:absolute;left:12px;top:9px;color:#a0a6b8;font-size:10px;font-weight:700}
+.mathmate-games .answer-option:hover:not(:disabled){border-color:#aaaaff;background:var(--primary-soft);transform:translateY(-2px)}
+.mathmate-games .answer-option.correct{background:#def9ed;border-color:#6cd9b0;color:#11855e}
+.mathmate-games .answer-option.wrong{background:#ffe7eb;border-color:#efa5b0;color:#c23d54}
+.mathmate-games .answer-option:disabled{cursor:default}
+.mathmate-games .question-progress{display:flex;gap:5px;margin-top:21px;flex-wrap:wrap;justify-content:center}
+.mathmate-games .progress-dot{width:20px;height:5px;border-radius:6px;background:var(--line)}
+.mathmate-games .progress-dot.done{background:#40c79b}
+.mathmate-games .progress-dot.missed{background:#ed8392}
+.mathmate-games .result-panel{text-align:center;padding:32px 15px}
+.mathmate-games .result-medal{width:78px;height:78px;border-radius:26px;background:var(--gold);display:grid;place-items:center;font-size:38px;margin:0 auto 14px}
+.mathmate-games .result-panel h2{margin:0 0 6px;font-size:23px}
+.mathmate-games .result-panel p{margin:0 0 20px;color:var(--muted);font-size:12px}
+.mathmate-games .result-stats{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:20px 0}
+.mathmate-games .result-stat{min-width:105px;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2)}
+.mathmate-games .result-stat strong{font-size:22px;display:block}
+.mathmate-games .result-stat span{font-size:10px;color:var(--muted)}
+.mathmate-games .board-2048-wrap{display:flex;flex-direction:column;align-items:center;gap:13px}
+.mathmate-games .board-2048{width:min(100%,420px);aspect-ratio:1;background:#bfc1d9;border-radius:14px;padding:9px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:8px;direction:ltr;touch-action:pan-y}
+.mathmate-games .tile-2048{border-radius:9px;background:#e3e5f1;display:grid;place-items:center;font-size:clamp(15px,3.7vw,28px);font-weight:900;color:#5d627c;transition:background .1s}
+.mathmate-games .tile-2048[data-value="2"]{background:#fff}
+.mathmate-games .tile-2048[data-value="4"]{background:#e5edff;color:#5b68b5}
+.mathmate-games .tile-2048[data-value="8"]{background:#a8b4fa;color:#fff}
+.mathmate-games .tile-2048[data-value="16"]{background:#858df0;color:white}
+.mathmate-games .tile-2048[data-value="32"]{background:#6e75df;color:white}
+.mathmate-games .tile-2048[data-value="64"]{background:#575ed0;color:white}
+.mathmate-games .tile-2048[data-value="128"],.mathmate-games .tile-2048[data-value="256"],.mathmate-games .tile-2048[data-value="512"]{background:#ffc96c;color:#6d4b0b;font-size:clamp(14px,3vw,23px)}
+.mathmate-games .tile-2048[data-value="1024"],.mathmate-games .tile-2048[data-value="2048"]{background:#f28d7c;color:white;font-size:clamp(12px,2.7vw,20px)}
+.mathmate-games .tile-2048.empty{background:#d3d5e6}
+.mathmate-games .puzzle-workspace{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+.mathmate-games .target-card{grid-column:1/-1;background:linear-gradient(115deg,#5d61df,#8281f3);border-radius:16px;color:white;padding:22px;text-align:center}
+.mathmate-games .target-card span{display:block;font-size:11px;color:#e2e2ff}
+.mathmate-games .target-card strong{font-size:37px;line-height:1.7}
+.mathmate-games .number-picker,.mathmate-games .operator-picker{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.mathmate-games .pick-tile{min-width:53px;min-height:51px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);font-weight:900;font-size:17px;color:var(--text)}
+.mathmate-games .pick-tile.selected{background:var(--primary-soft);border-color:#8586ee;color:var(--primary);box-shadow:inset 0 0 0 1px #8586ee}
+.mathmate-games .operator-picker .pick-tile{min-width:46px;font-size:20px;color:var(--primary)}
+.mathmate-games .puzzle-step{border:1px solid var(--line);padding:15px;border-radius:14px}
+.mathmate-games .puzzle-step h3{font-size:12px;margin:0 0 12px}
+.mathmate-games .puzzle-workspace .button{grid-column:1/-1}
+.mathmate-games .sequence-grid{width:min(100%,560px);display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:0 auto 22px;direction:ltr}
+.mathmate-games .sequence-tile{min-height:63px;border-radius:13px;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:center;font-size:clamp(15px,3vw,23px);font-weight:900;color:var(--text)}
+.mathmate-games .sequence-tile.missing{background:var(--primary-soft);color:var(--primary);border:1.5px dashed #8d8dee}
+.mathmate-games .sequence-answers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;width:min(100%,560px);margin:auto}
+.mathmate-games .sequence-answer{min-height:53px;border-radius:12px;background:var(--surface);border:1.5px solid var(--line);font-size:17px;font-weight:800}
+.mathmate-games .sequence-answer:hover:not(:disabled){background:var(--primary-soft);border-color:#9a9af4}
+.mathmate-games .sequence-answer.correct{background:var(--mint);border-color:#68d7b0;color:#10815b}
+.mathmate-games .sequence-answer.wrong{background:var(--pink);border-color:#f1abb5;color:#bb4052}
+.mathmate-games .memory-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;width:min(100%,500px);margin:6px auto 20px;direction:ltr}
+.mathmate-games .memory-card{aspect-ratio:.82;border:1px solid #dddff3;background:linear-gradient(145deg,#f7f7ff,#ededff);border-radius:13px;display:grid;place-items:center;position:relative;color:#6a6de2;font-size:21px;font-weight:900;transition:transform .2s,background .2s;transform-style:preserve-3d}
+.mathmate-games .memory-card:before{content:"";display:block;width:29px;height:29px;background:url("assets/card-back.svg") center/contain no-repeat}
+.mathmate-games .memory-card.flipped,.mathmate-games .memory-card.matched{background:var(--surface);border-color:#9dddc5;color:var(--text);font-size:clamp(12px,2.6vw,18px);padding:5px;direction:ltr}
+.mathmate-games .memory-card.flipped:before,.mathmate-games .memory-card.matched:before{content:none}
+.mathmate-games .memory-card.matched{background:#e5fbf1;color:#14855d;border-color:#8bdfbe}
+.mathmate-games .filters-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+.mathmate-games .search-field{min-width:220px;flex:1;position:relative}
+.mathmate-games .search-field input{width:100%;padding:11px 39px 11px 12px;background:var(--surface);border:1px solid var(--line);color:var(--text);border-radius:12px;font-size:12px}
+.mathmate-games .search-symbol{position:absolute;right:13px;top:9px;color:#989fb2;font-size:17px}
+.mathmate-games .difficulty-chip{display:inline-flex;align-items:center;gap:5px;font-size:10px;padding:4px 8px;border-radius:7px;background:var(--surface-2);color:var(--muted)}
+.mathmate-games .empty-state{text-align:center;padding:35px 15px;color:var(--muted)}
+.mathmate-games .records-overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-bottom:19px}
+.mathmate-games .record-highlight{padding:18px;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.mathmate-games .record-highlight span{display:block;color:var(--muted);font-size:10px}
+.mathmate-games .record-highlight strong{font-size:27px;display:block;margin-top:5px}
+.mathmate-games .record-table{width:100%;border-collapse:collapse;font-size:11px}
+.mathmate-games .record-table th{font-size:10px;color:var(--muted);font-weight:600;background:var(--surface-2)}
+.mathmate-games .record-table th,.mathmate-games .record-table td{padding:13px 12px;text-align:right;border-bottom:1px solid var(--line)}
+.mathmate-games .record-table tr:last-child td{border-bottom:0}
+.mathmate-games .record-game{display:flex;align-items:center;gap:9px;font-weight:700}
+.mathmate-games .record-game-icon{width:32px;height:32px;border-radius:10px;background:var(--primary-soft);display:grid;place-items:center}
+.mathmate-games .help-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.mathmate-games .help-card{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:16px}
+.mathmate-games .help-card h3{font-size:12px;margin:0 0 5px}
+.mathmate-games .help-card p{font-size:11px;color:var(--muted);line-height:2;margin:0}
+.mathmate-games .kbd{display:inline-grid;place-items:center;min-width:24px;padding:1px 5px;border:1px solid var(--line);border-radius:5px;background:var(--surface-2);font-size:10px;direction:ltr}
+.mathmate-games .toast-region{position:fixed;bottom:22px;left:22px;z-index:100;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.mathmate-games .toast{background:#252b40;color:#fff;border-radius:12px;padding:12px 15px;box-shadow:0 9px 22px #1c22352b;font-size:12px;animation:mmg-toast-in .2s ease;max-width:min(360px,calc(100vw - 44px))}
+.mathmate-games .toast.success{background:#168663}
+.mathmate-games .toast.error{background:#b94454}
+@keyframes mmg-toast-in{from{opacity:0;transform:translateY(6px)}
+to{opacity:1;transform:translateY(0)}}
+.mathmate-games.dark{--bg:#171a27;--surface:#202435;--surface-2:#262b40;--text:#eff1ff;--muted:#9ba3bd;--line:#32384f;--primary:#8989ff;--primary-2:#9a9aff;--primary-soft:#303052;--cyan:#243b4b;--mint:#1d4039;--pink:#452b39;--gold:#473b29;--shadow:0 12px 34px rgba(0,0,0,.12);--success:#61d8b2}
+.mathmate-games.dark .side-promo{background:linear-gradient(140deg,#292b49,#252c44)}
+.mathmate-games.dark .hero-art .cube{color:#5558d8}
+.mathmate-games.dark .hero-art .tiny-star{color:#fff}
+.mathmate-games.dark .sudoku-cell.related{background:#2a2d49}
+.mathmate-games.dark .sudoku-cell.same-number{background:#424276;color:#e6e5ff}
+.mathmate-games.dark .sudoku-cell.selected{background:#4b4a87}
+.mathmate-games.dark .sudoku-cell.given{color:var(--text)}
+.mathmate-games.dark .sudoku-cell{border-color:#373c54}
+.mathmate-games.dark .tile-2048.empty{background:#373d55}
+.mathmate-games.dark .board-2048{background:#3d435b}
+.mathmate-games.dark .tile-2048{background:#444b64;color:#fff}
+.mathmate-games.dark .tile-2048[data-value="2"]{background:#626982}
+.mathmate-games.dark .tile-2048[data-value="4"]{background:#777fa8}
+.mathmate-games.dark .memory-card{background:linear-gradient(145deg,#2e3250,#292d44);border-color:#424761}
+.mathmate-games.dark .memory-card.matched{background:#1e4038}
+.mathmate-games.dark .answer-option.correct{background:#1d4539;color:#7ce5bf}
+.mathmate-games.dark .answer-option.wrong{background:#482d3a;color:#ff9cac}
+.mathmate-games.dark .sequence-answer.correct{background:#1d4539;color:#7ce5bf}
+.mathmate-games.dark .sequence-answer.wrong{background:#482d3a;color:#ff9cac}
+.mathmate-games.dark .sudoku-cell .notes{color:#b4bad2}
+.mathmate-games.dark .stat-icon.violet{background:#333454}
+.mathmate-games.dark .stat-icon.mint{background:#1e4038}
+.mathmate-games.dark .stat-icon.gold{background:#463a29}
+.mathmate-games.dark .avatar-button{background:#303052;border-color:#41426a;color:#a8a9ff}
+.mathmate-games.dark .promo-dots i:first-child{background:#8989ff}
+.mathmate-games.dark .cover-sudoku,.mathmate-games.dark .cover-quick,.mathmate-games.dark .cover-2048,.mathmate-games.dark .cover-puzzle,.mathmate-games.dark .cover-missing,.mathmate-games.dark .cover-memory{filter:brightness(.84)}
+@media (max-width:1180px){.mathmate-games{--sidebar:222px}
+.mathmate-games .game-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.mathmate-games .hero{grid-template-columns:minmax(0,1.2fr) minmax(215px,.8fr)}
+.mathmate-games .hero-art{opacity:.5}
+.mathmate-games .game-layout{grid-template-columns:minmax(0,1fr) 235px}}
+@media (max-width:900px){.mathmate-games{--sidebar:245px}
+.mathmate-games .sidebar{position:fixed;right:0;top:0;transform:translateX(105%);transition:transform .25s;box-shadow:0 15px 40px #19204422}
+.mathmate-games .sidebar.open{transform:translateX(0)}
+.mathmate-games .mobile-menu{display:grid}
+.mathmate-games .hero{grid-template-columns:1fr}
+.mathmate-games .stat-stack{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.mathmate-games .stat-card{padding:14px;gap:9px}
+.mathmate-games .stat-icon{width:39px;height:39px;flex-basis:39px;border-radius:12px;font-size:19px}
+.mathmate-games .stat-copy strong{font-size:20px}
+.mathmate-games .game-layout{grid-template-columns:1fr}
+.mathmate-games .info-panel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 13px}
+.mathmate-games .info-panel .panel-title,.mathmate-games .info-panel .hint-box{grid-column:1/-1}
+.mathmate-games .info-panel .info-row:nth-of-type(4){border-bottom:0}
+.mathmate-games .hero-art{opacity:.45}
+.mathmate-games .app-footer{flex-wrap:wrap}}
+@media (max-width:600px){.mathmate-games .topbar{padding:12px 14px;min-height:63px}
+.mathmate-games .content{padding:19px 14px 24px}
+.mathmate-games .topbar-actions{gap:5px}
+.mathmate-games .offline-chip{display:none}
+.mathmate-games .breadcrumbs{gap:7px;font-size:10px}
+.mathmate-games .icon-button,.mathmate-games .avatar-button{height:34px;min-width:34px}
+.mathmate-games .avatar-button{width:34px}
+.mathmate-games .hero-main{padding:24px 20px;min-height:260px}
+.mathmate-games .hero-main h1{font-size:27px;max-width:100%}
+.mathmate-games .hero-main p{max-width:100%;font-size:12px}
+.mathmate-games .hero-art{left:-8px;bottom:0;opacity:.19;transform:scale(.88)}
+.mathmate-games .stat-stack{gap:7px}
+.mathmate-games .stat-card{padding:11px 8px;gap:7px;flex-direction:column;align-items:flex-start;border-radius:14px}
+.mathmate-games .stat-icon{width:33px;height:33px;flex-basis:33px;font-size:16px;border-radius:10px}
+.mathmate-games .stat-copy span{font-size:9px}
+.mathmate-games .stat-copy strong{font-size:18px}
+.mathmate-games .stat-copy small{display:none}
+.mathmate-games .section-heading h2{font-size:16px}
+.mathmate-games .game-grid{grid-template-columns:1fr;gap:12px}
+.mathmate-games .game-card{display:grid;grid-template-columns:104px minmax(0,1fr);gap:0 13px;padding:12px;border-radius:16px}
+.mathmate-games .game-cover{grid-row:1/4;grid-column:1;height:108px;margin:0;border-radius:12px}
+.mathmate-games .game-card h3{grid-column:2;align-self:end;font-size:13px}
+.mathmate-games .game-card p{grid-column:2;margin:2px 0 5px;min-height:0;font-size:10px}
+.mathmate-games .game-card-footer{grid-column:2;align-self:end}
+.mathmate-games .game-cover .cover-tag{font-size:8px;right:5px;top:5px;padding:2px 5px}
+.mathmate-games .art-sudoku{width:75px;height:75px;border-width:4px}
+.mathmate-games .art-sudoku span{font-size:12px}
+.mathmate-games .art-equation{font-size:18px;padding:5px 12px}
+.mathmate-games .art-options span{padding:3px 7px;font-size:10px}
+.mathmate-games .art-2048{grid-template-columns:repeat(2,35px);gap:5px}
+.mathmate-games .art-2048 span{width:35px;height:35px;font-size:14px}
+.mathmate-games .art-puzzle span{width:26px;height:40px;font-size:16px}
+.mathmate-games .art-missing span{width:26px;height:30px;font-size:12px}
+.mathmate-games .art-memory span{width:30px;height:45px;font-size:14px}
+.mathmate-games .quick-strip{grid-template-columns:1fr;gap:9px;margin-top:19px}
+.mathmate-games .strip-card{padding:13px}
+.mathmate-games .app-footer{padding:13px 14px;font-size:9px}
+.mathmate-games .app-footer .footer-spacer{display:none}
+.mathmate-games .view-head{align-items:flex-start}
+.mathmate-games .view-title h1{font-size:18px}
+.mathmate-games .view-title p{font-size:10px}
+.mathmate-games .view-title .big-icon{width:42px;height:42px;border-radius:13px;font-size:21px}
+.mathmate-games .back-button{padding:7px 9px;font-size:10px;white-space:nowrap}
+.mathmate-games .game-main-card,.mathmate-games .info-panel{padding:14px;border-radius:16px}
+.mathmate-games .game-toolbar{margin-bottom:12px}
+.mathmate-games .mini-stat{font-size:9px;padding:5px 7px}
+.mathmate-games .sudoku-pad{gap:4px}
+.mathmate-games .number-key{min-height:37px;font-size:15px;border-radius:7px}
+.mathmate-games .number-key.utility{min-height:34px}
+.mathmate-games .sudoku-grid{max-width:calc(100vw - 60px)}
+.mathmate-games .question-text{font-size:37px;margin-bottom:19px}
+.mathmate-games .answer-option{min-height:58px;font-size:18px}
+.mathmate-games .question-stage{padding:8px 0}
+.mathmate-games .answer-grid{gap:8px}
+.mathmate-games .game-status{gap:5px}
+.mathmate-games .puzzle-workspace{gap:9px}
+.mathmate-games .target-card{padding:13px}
+.mathmate-games .target-card strong{font-size:30px}
+.mathmate-games .puzzle-step{padding:10px}
+.mathmate-games .pick-tile{min-width:42px;min-height:44px}
+.mathmate-games .sequence-grid{gap:5px}
+.mathmate-games .sequence-tile{min-height:48px;border-radius:9px}
+.mathmate-games .sequence-answers{gap:6px}
+.mathmate-games .sequence-answer{min-height:47px}
+.mathmate-games .memory-grid{gap:7px}
+.mathmate-games .memory-card{border-radius:9px}
+.mathmate-games .records-overview{gap:7px}
+.mathmate-games .record-highlight{padding:12px}
+.mathmate-games .record-highlight strong{font-size:22px}
+.mathmate-games .record-table th,.mathmate-games .record-table td{padding:10px 6px}
+.mathmate-games .record-table{font-size:10px}
+.mathmate-games .record-game{gap:5px}
+.mathmate-games .record-game-icon{width:27px;height:27px}
+.mathmate-games .help-grid{grid-template-columns:1fr}
+.mathmate-games .info-panel{display:block}
+.mathmate-games .info-panel .info-row:nth-of-type(4){border-bottom:1px solid var(--line)}
+.mathmate-games .hero-buttons .button{min-height:39px;padding:8px 12px}}
+@media (prefers-reduced-motion:reduce){.mathmate-games *{scroll-behavior:auto;transition:none;animation:none}}
+.mathmate-games .custom-icon{width:1.15em;height:1.15em;display:inline-block;vertical-align:-.2em;flex:0 0 auto;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mathmate-games .brand-mark{display:grid;place-items:center;width:46px;height:46px;flex:0 0 46px}
+.mathmate-games .brand-mark img{display:block;width:46px;height:46px;filter:drop-shadow(0 4px 8px rgba(77,84,209,.16))}
+.mathmate-games .brand-copy strong{font-size:15px;letter-spacing:-.35px}
+.mathmate-games .brand-copy small{font-size:10px;letter-spacing:0}
+.mathmate-games .nav-icon,.mathmate-games .promo-spark,.mathmate-games .stat-icon,.mathmate-games .strip-icon,.mathmate-games .record-game-icon,.mathmate-games .big-icon{display:inline-grid;place-items:center}
+.mathmate-games .nav-icon svg,.mathmate-games .promo-spark svg,.mathmate-games .stat-icon svg,.mathmate-games .strip-icon svg,.mathmate-games .record-game-icon svg,.mathmate-games .big-icon svg,.mathmate-games .icon-button svg,.mathmate-games .avatar-button svg{width:1.2em;height:1.2em;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mathmate-games .icon-button svg{width:19px;height:19px}
+.mathmate-games .avatar-button svg{width:20px;height:20px}
+.mathmate-games .mobile-menu svg{width:18px;height:18px}
+.mathmate-games .nav-icon svg{width:19px;height:19px}
+.mathmate-games .promo-spark svg{width:21px;height:21px}
+.mathmate-games .stat-icon svg{width:22px;height:22px}
+.mathmate-games .strip-icon svg{width:24px;height:24px}
+.mathmate-games .big-icon svg{width:25px;height:25px}
+.mathmate-games .record-game-icon svg{width:18px;height:18px}
+.mathmate-games .help-card h3 svg{width:18px;height:18px;margin-inline-end:5px;vertical-align:-4px;color:var(--primary)}
+.mathmate-games .game-meta .custom-icon{margin-inline-end:3px;color:var(--muted)}
+.mathmate-games .difficulty-chip .custom-icon{font-size:11px;color:var(--primary)}
+.mathmate-games .mini-stat .custom-icon{font-size:13px;margin-inline-end:3px}
+.mathmate-games .difficulty-chip{gap:7px}
+.mathmate-games .strip-icon{color:var(--primary)}
+.mathmate-games .merge-size-label{gap:8px;font-size:11px;color:var(--muted)}
+.mathmate-games .merge-size-label select{min-width:116px;direction:rtl}
+.mathmate-games .merge-arrows{direction:ltr}
+.mathmate-games .board-2048{grid-template-columns:repeat(var(--merge-size,4),minmax(0,1fr));grid-template-rows:repeat(var(--merge-size,4),minmax(0,1fr));touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;gap:clamp(4px,1.2vw,9px);padding:clamp(6px,1.5vw,10px);background:linear-gradient(145deg,#b9bdd9,#a7abc9);box-shadow:inset 0 2px 0 rgba(255,255,255,.45),0 8px 22px rgba(47,51,97,.10)}
+.mathmate-games .board-2048:active{cursor:grabbing}
+.mathmate-games .tile-2048{font-size:clamp(13px,3vw,27px);min-width:0;min-height:0;cursor:grab;touch-action:none;transition:transform .12s,box-shadow .12s,background .12s;box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
+.mathmate-games .tile-2048:not(.empty){border:1px solid rgba(80,83,133,.08)}
+.mathmate-games .tile-2048.empty{background:rgba(241,243,255,.4);box-shadow:inset 0 1px 6px rgba(60,65,120,.06)}
+.mathmate-games .board-2048[data-size="5"] .tile-2048{font-size:clamp(11px,2.4vw,22px);border-radius:7px}
+.mathmate-games .board-2048[data-size="3"] .tile-2048{font-size:clamp(19px,4.1vw,32px)}
+.mathmate-games .merge-arrows .button{min-width:48px}
+.mathmate-games .help-card .custom-icon{color:var(--primary)}
+.mathmate-games .view-title .big-icon .custom-icon{width:25px;height:25px}
+.mathmate-games .app-footer .footer-separator{color:var(--primary)}
+@media (max-width:600px){.mathmate-games .brand-mark,.mathmate-games .brand-mark img{width:40px;height:40px}
+.mathmate-games .brand-mark{flex-basis:40px}
+.mathmate-games .brand-copy strong{font-size:14px}
+.mathmate-games .merge-size-label{flex-direction:column;align-items:flex-start}
+.mathmate-games .merge-size-label select{min-width:105px}
+.mathmate-games .board-2048{width:min(100%,420px)}}
+.mathmate-games .button .custom-icon{width:1.05em;height:1.05em}
+.mathmate-games{--motion-fast:160ms;--motion-mid:260ms;--motion-slow:460ms;--ease-out:cubic-bezier(.2,.8,.2,1)}
+.mathmate-games{scroll-behavior:smooth}
+.mathmate-games button,.mathmate-games .game-card,.mathmate-games .stat-card,.mathmate-games .strip-card,.mathmate-games .record-highlight,.mathmate-games .help-card,.mathmate-games .memory-card,.mathmate-games .sudoku-cell,.mathmate-games .answer-option,.mathmate-games .sequence-answer,.mathmate-games .pick-tile{transition:transform var(--motion-mid) var(--ease-out),box-shadow var(--motion-mid) var(--ease-out),background-color var(--motion-mid) var(--ease-out),border-color var(--motion-mid) var(--ease-out),color var(--motion-mid) var(--ease-out)}
+.mathmate-games .button:active,.mathmate-games .icon-button:active{transform:translateY(1px) scale(.985)}
+.mathmate-games .game-card:hover,.mathmate-games .help-card:hover,.mathmate-games .strip-card:hover{transform:translateY(-4px)}
+.mathmate-games .stat-card:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(47,56,112,.12)}
+.mathmate-games #content{animation:mmg-mm-content-enter .36s var(--ease-out) both}
+.mathmate-games #content .hero-main{animation:mmg-mm-hero-enter .55s var(--ease-out) both}
+.mathmate-games #content .stat-card{animation:mmg-mm-card-enter .46s var(--ease-out) both}
+.mathmate-games #content .stat-card:nth-child(2){animation-delay:55ms}
+.mathmate-games #content .stat-card:nth-child(3){animation-delay:110ms}
+.mathmate-games #content .game-card{animation:mmg-mm-card-enter .48s var(--ease-out) both}
+.mathmate-games #content .game-card:nth-child(2){animation-delay:35ms}
+.mathmate-games #content .game-card:nth-child(3){animation-delay:70ms}
+.mathmate-games #content .game-card:nth-child(4){animation-delay:105ms}
+.mathmate-games #content .game-card:nth-child(5){animation-delay:140ms}
+.mathmate-games #content .game-card:nth-child(6){animation-delay:175ms}
+.mathmate-games #content .game-card:nth-child(7){animation-delay:210ms}
+.mathmate-games .brand-mark img{animation:mmg-mm-logo-float 5s ease-in-out infinite;transform-origin:center}
+.mathmate-games .hero-main:before{animation:mmg-mm-orbit 26s linear infinite}
+.mathmate-games .hero-main:after{animation:mmg-mm-orbit 34s linear infinite reverse}
+.mathmate-games .hero-art .cube{animation:mmg-mm-cube-float 4.4s ease-in-out infinite}
+.mathmate-games .hero-art .planet{animation:mmg-mm-planet-float 5s ease-in-out infinite}
+.mathmate-games .toast{animation:mmg-mm-toast-in .24s var(--ease-out) both}
+.mathmate-games .question-text{letter-spacing:.015em;text-wrap:balance}
+.mathmate-games .sudoku-cell:focus-visible,.mathmate-games .tile-2048:focus-visible{outline:3px solid var(--primary);outline-offset:1px;z-index:2}
+@keyframes mmg-mm-content-enter{from{opacity:0;transform:translateY(8px)}
+to{opacity:1;transform:translateY(0)}}
+@keyframes mmg-mm-hero-enter{from{opacity:0;transform:translateY(12px) scale(.99)}
+to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes mmg-mm-card-enter{from{opacity:0;transform:translateY(10px)}
+to{opacity:1;transform:translateY(0)}}
+@keyframes mmg-mm-logo-float{0%,100%{transform:translateY(0) rotate(0)}
+50%{transform:translateY(-2px) rotate(-2deg)}}
+@keyframes mmg-mm-orbit{to{transform:rotate(340deg)}}
+@keyframes mmg-mm-cube-float{0%,100%{translate:0 0;rotate:7deg}
+50%{translate:0 -7px;rotate:13deg}}
+@keyframes mmg-mm-planet-float{0%,100%{translate:0 0}
+50%{translate:0 6px}}
+@keyframes mmg-mm-toast-in{from{opacity:0;transform:translateY(10px) scale(.98)}
+to{opacity:1;transform:translateY(0) scale(1)}}
+@media (prefers-reduced-motion:reduce){.mathmate-games *,.mathmate-games *::before,.mathmate-games *::after{animation-duration:.01ms;animation-iteration-count:1;transition-duration:.01ms;scroll-behavior:auto}}
+.mathmate-games{--font-ui:Arad,Tahoma,Arial,sans-serif}
+.mathmate-games,.mathmate-games,.mathmate-games button,.mathmate-games input,.mathmate-games select,.mathmate-games textarea{font-family:var(--font-ui)}
+.mathmate-games .game-card,.mathmate-games .help-card,.mathmate-games .record-highlight,.mathmate-games .game-main-card,.mathmate-games .info-panel{transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.mathmate-games .game-card:hover,.mathmate-games .help-card:hover{transform:translateY(-3px)}
+.mathmate-games button:focus-visible,.mathmate-games select:focus-visible,.mathmate-games input:focus-visible{outline:3px solid rgba(111,112,235,.55);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.mathmate-games *,.mathmate-games *::before,.mathmate-games *::after{animation-duration:.01ms;animation-iteration-count:1;scroll-behavior:auto;transition-duration:.01ms}}
+@media (max-width:600px){}
+.mathmate-games{--bg:var(--background,#f3f6fc);--surface:var(--card-bg,var(--card,#fff));--surface-2:var(--input-bg,#f8faff);--muted:var(--text-light,#7b8499);--line:var(--border,#e6eaf3);--primary:var(--primary-color,#5b62e8);--primary-2:var(--accent-purple,#7b7ff2);--primary-soft:var(--primary-light,#ededff);--cyan:#e6f8ff;--mint:#e6f9f1;--pink:#fff0f0;--gold:#fff5d9;--shadow:var(--card-shadow,0 12px 34px rgba(31,45,90,.06));--radius:20px;--radius-sm:13px;--success:#1a9a72;--danger:#e35c6a;--warning:#be8414;--sidebar:252px;--surface-raised:var(--card-bg,#fff);--panel-tint:var(--input-bg,#f8faff);--field-bg:var(--input-bg,rgba(255,255,255,.55));--field-border:var(--border,rgba(0,0,0,.06));--menu-bg:var(--card-bg,#fff);--menu-hover:var(--primary-light,#ededff);--menu-shadow:0 18px 42px rgba(32,38,73,.18);--table-head:var(--input-bg,#f8faff);--scroll-thumb:rgba(120,120,120,.4);--motion-fast:160ms;--motion-mid:260ms;--motion-slow:460ms;--ease-out:cubic-bezier(.2,.8,.2,1);}
+.mathmate-games{background:radial-gradient(ellipse at 82% 0%,rgba(121,130,245,.08),transparent 30%),radial-gradient(ellipse at 0% 70%,rgba(83,208,183,.07),transparent 27%),var(--bg)}
+.mathmate-games .sidebar{border-left-color:#e1e5f4;box-shadow:7px 0 28px rgba(37,49,100,.025)}
+.mathmate-games .brand-mark{border-radius:16px;background:linear-gradient(145deg,#7165f1,#5147d0);box-shadow:0 10px 20px rgba(88,76,217,.24)}
+.mathmate-games .brand-copy strong{font-size:19px;letter-spacing:-.55px}
+.mathmate-games .side-promo{background:linear-gradient(145deg,#f0efff,#f1fbff);border:1px solid #e6e7ff}
+.mathmate-games .topbar{backdrop-filter:blur(14px);background:rgba(246,248,255,.84);border-bottom-color:rgba(220,226,244,.9)}
+.mathmate-games .hero{gap:19px}
+.mathmate-games .hero-main{min-height:285px;border:1px solid rgba(255,255,255,.2);background:radial-gradient(circle at 12% 110%,rgba(112,230,210,.3),transparent 34%),radial-gradient(circle at 95% 2%,rgba(255,200,107,.25),transparent 27%),linear-gradient(118deg,#4741c8 0%,#6d63e8 52%,#837bf5 100%);box-shadow:0 20px 46px rgba(77,67,198,.19)}
+.mathmate-games .hero-main:before,.mathmate-games .hero-main:after{border-color:rgba(255,255,255,.15)}
+.mathmate-games .hero h1{font-size:clamp(27px,3.25vw,40px);letter-spacing:-.65px;max-width:640px}
+.mathmate-games .hero-main p{max-width:560px}
+.mathmate-games .hero-main .button-primary{color:#5047ca;font-weight:850}
+.mathmate-games .hero-art .cube{box-shadow:0 14px 28px rgba(30,29,100,.28)}
+.mathmate-games .stat-card{border-radius:20px;box-shadow:0 10px 28px rgba(31,44,99,.045)}
+.mathmate-games .stat-icon{border-radius:16px}
+.mathmate-games .game-card{border-radius:22px;padding:15px;border-color:#e2e6f4;box-shadow:0 8px 24px rgba(31,44,99,.045)}
+.mathmate-games .game-cover{height:150px;border-radius:17px}
+.mathmate-games .cover-quick{background:linear-gradient(135deg,#d9fff0,#dbf4ff)}
+.mathmate-games .cover-sudoku{background:linear-gradient(135deg,#dedcff,#f2edff)}
+.mathmate-games .cover-2048{background:linear-gradient(135deg,#ffe5ba,#fff5da)}
+.mathmate-games .cover-puzzle{background:linear-gradient(135deg,#d3f4ff,#e7e8ff)}
+.mathmate-games .cover-missing{background:linear-gradient(135deg,#ffe0ed,#f1e2ff)}
+.mathmate-games .cover-memory{background:linear-gradient(135deg,#d9f8e6,#ddf2ff)}
+.mathmate-games .game-card h3{font-size:15px;letter-spacing:-.15px}
+.mathmate-games .play-button{border-radius:11px;padding:8px 13px}
+.mathmate-games .game-card:hover{border-color:#c9c7ff;box-shadow:0 17px 34px rgba(67,61,170,.1)}
+.mathmate-games .quick-strip{gap:18px}
+.mathmate-games .strip-card{border-radius:20px;box-shadow:0 9px 25px rgba(31,44,99,.035)}
+.mathmate-games .view-title .big-icon{border:1px solid rgba(101,91,230,.08)}
+.mathmate-games .game-main-card,.mathmate-games .info-panel{border-color:#e1e6f4;box-shadow:0 12px 32px rgba(37,49,100,.05)}
+.mathmate-games .info-row strong{font-variant-numeric:tabular-nums}
+.mathmate-games .app-footer{background:rgba(255,255,255,.28)}
+.mathmate-games button:focus-visible,.mathmate-games input:focus-visible,.mathmate-games select:focus-visible{outline:3px solid rgba(103,94,231,.58);outline-offset:3px}
+@media (max-width:1050px){}
+@media (max-width:850px){}
+@media (max-width:600px){.mathmate-games .game-cover{height:114px}
+.mathmate-games .game-toolbar{align-items:flex-start}
+.mathmate-games .toolbar-group{gap:6px}
+.mathmate-games .toolbar-group .button{padding:7px 9px}}
+@media (prefers-reduced-motion:reduce){.mathmate-games .brand-mark img{animation:none}}
+.mathmate-games #content:focus,.mathmate-games #content:focus-visible{outline:none}
+.mathmate-games:not(.dark){color-scheme:light}
+.mathmate-games.dark{color-scheme:dark}
+.mathmate-games{--bg:var(--background,#f3f6fc);--surface:var(--card-bg,var(--card,#fff));--surface-2:var(--input-bg,#f8faff);--muted:var(--text-light,#7b8499);--line:var(--border,#e6eaf3);--primary:var(--primary-color,#5b62e8);--primary-2:var(--accent-purple,#7b7ff2);--primary-soft:var(--primary-light,#ededff);--cyan:#e6f8ff;--mint:#e6f9f1;--pink:#fff0f0;--gold:#fff5d9;--shadow:var(--card-shadow,0 12px 34px rgba(31,45,90,.06));--radius:20px;--radius-sm:13px;--success:#1a9a72;--danger:#e35c6a;--warning:#be8414;--sidebar:252px;--surface-raised:var(--card-bg,#fff);--panel-tint:var(--input-bg,#f8faff);--field-bg:var(--input-bg,rgba(255,255,255,.55));--field-border:var(--border,rgba(0,0,0,.06));--menu-bg:var(--card-bg,#fff);--menu-hover:var(--primary-light,#ededff);--menu-shadow:0 18px 42px rgba(32,38,73,.18);--table-head:var(--input-bg,#f8faff);--scroll-thumb:rgba(120,120,120,.4);--motion-fast:160ms;--motion-mid:260ms;--motion-slow:460ms;--ease-out:cubic-bezier(.2,.8,.2,1);}
+.mathmate-games:not(.dark){color-scheme:light}
+.mathmate-games{scroll-behavior:smooth;scroll-padding-top:18px;scrollbar-gutter:stable}
+.mathmate-games *{scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) transparent}
+.mathmate-games *::-webkit-scrollbar{width:8px;height:8px}
+.mathmate-games *::-webkit-scrollbar-track{background:transparent}
+.mathmate-games *::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border:2px solid transparent;border-radius:999px;background-clip:padding-box;min-height:28px}
+.mathmate-games *::-webkit-scrollbar-thumb:hover{background:var(--primary-2);border:2px solid transparent;background-clip:padding-box}
+.mathmate-games,.mathmate-games,.mathmate-games .sidebar,.mathmate-games .topbar,.mathmate-games .offline-chip,.mathmate-games .icon-button,.mathmate-games .avatar-button,.mathmate-games .nav-item,.mathmate-games .side-promo,.mathmate-games .game-card,.mathmate-games .stat-card,.mathmate-games .strip-card,.mathmate-games .game-main-card,.mathmate-games .info-panel,.mathmate-games .records-card,.mathmate-games .records-overview,.mathmate-games .record-highlight,.mathmate-games .help-card,.mathmate-games .app-footer,.mathmate-games .search-field input,.mathmate-games .select-control-trigger,.mathmate-games .select-control-menu,.mathmate-games .puzzle-step,.mathmate-games .sequence-tile,.mathmate-games .sequence-answer,.mathmate-games .memory-card,.mathmate-games .number-key,.mathmate-games .sudoku-cell,.mathmate-games .answer-option,.mathmate-games .pick-tile,.mathmate-games .mini-stat,.mathmate-games .difficulty-chip,.mathmate-games .hint-box{transition-property:background-color,border-color,color,box-shadow;transition-duration:var(--motion-mid);transition-timing-function:cubic-bezier(.2,.75,.2,1)
+}
+.mathmate-games{background:radial-gradient(ellipse at 82% 0,rgba(115,121,238,.075),transparent 32%),radial-gradient(ellipse at 2% 80%,rgba(72,194,173,.055),transparent 30%),var(--bg);color:var(--text)}
+.mathmate-games button,.mathmate-games input,.mathmate-games select,.mathmate-games textarea{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.mathmate-games button{outline:none}
+.mathmate-games button:focus:not(:focus-visible),.mathmate-games input:focus:not(:focus-visible),.mathmate-games select:focus:not(:focus-visible){outline:none}
+.mathmate-games button:focus-visible,.mathmate-games input:focus-visible,.mathmate-games select:focus-visible,.mathmate-games .select-control-trigger:focus-visible,.mathmate-games .select-control-option:focus-visible{outline:3px solid color-mix(in srgb,var(--primary) 52%,transparent);outline-offset:2px}
+.mathmate-games button:active,.mathmate-games .button.is-pressed,.mathmate-games .icon-button.is-pressed,.mathmate-games .play-button.is-pressed,.mathmate-games .nav-item.is-pressed{transform:scale(.975);box-shadow:0 0 0 4px color-mix(in srgb,var(--primary) 17%,transparent)}
+.mathmate-games .button:active,.mathmate-games .icon-button:active,.mathmate-games .avatar-button:active,.mathmate-games .nav-item:active,.mathmate-games .play-button:active,.mathmate-games .text-button:active,.mathmate-games .back-button:active,.mathmate-games .number-key:active,.mathmate-games .answer-option:active,.mathmate-games .sequence-answer:active,.mathmate-games .pick-tile:active,.mathmate-games .memory-card:active{filter:saturate(1.12)}
+.mathmate-games .game-card,.mathmate-games .stat-card,.mathmate-games .strip-card,.mathmate-games .help-card,.mathmate-games .record-highlight,.mathmate-games .game-main-card,.mathmate-games .info-panel,.mathmate-games .icon-button,.mathmate-games .avatar-button,.mathmate-games .play-button,.mathmate-games .button,.mathmate-games .back-button,.mathmate-games .number-key,.mathmate-games .answer-option,.mathmate-games .sequence-answer,.mathmate-games .pick-tile,.mathmate-games .memory-card{will-change:transform}
+.mathmate-games .game-card,.mathmate-games .help-card,.mathmate-games .strip-card,.mathmate-games .stat-card,.mathmate-games .button,.mathmate-games .icon-button,.mathmate-games .avatar-button,.mathmate-games .play-button,.mathmate-games .back-button,.mathmate-games .number-key,.mathmate-games .answer-option,.mathmate-games .sequence-answer,.mathmate-games .pick-tile,.mathmate-games .memory-card{transition:transform var(--motion-mid) cubic-bezier(.2,.8,.2,1),box-shadow var(--motion-mid) cubic-bezier(.2,.8,.2,1),background-color var(--motion-mid),border-color var(--motion-mid),color var(--motion-mid)}
+.mathmate-games .select-control-wrap{position:relative;display:inline-flex;min-width:0;max-width:100%;vertical-align:middle;isolation:isolate}
+.mathmate-games .select-control-wrap>.select-native-hidden{position:absolute;inset:auto auto 0 0;width:1px;height:1px;padding:0;margin:0;opacity:0;pointer-events:none;overflow:hidden;clip-path:inset(50%);border:0}
+.mathmate-games .select-control-trigger{appearance:none;-webkit-appearance:none;display:inline-flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-width:112px;min-height:39px;padding:8px 12px;border:1px solid var(--field-border);border-radius:13px;background:var(--field-bg);color:var(--text);font-size:12px;font-weight:700;text-align:start;box-shadow:0 3px 10px rgba(32,43,90,.035);cursor:pointer}
+.mathmate-games .select-control-trigger:hover{border-color:color-mix(in srgb,var(--primary) 48%,var(--field-border));box-shadow:0 6px 16px color-mix(in srgb,var(--primary) 9%,transparent)}
+.mathmate-games .select-control-value{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mathmate-games .select-control-chevron{display:grid;place-items:center;flex:0 0 auto;color:var(--muted);transition:transform 220ms cubic-bezier(.2,.8,.2,1),color 180ms}
+.mathmate-games .select-control-chevron .custom-icon{width:15px;height:15px;stroke-width:2.1}
+.mathmate-games .select-control-wrap.is-open{z-index:100}
+.mathmate-games .select-control-wrap.is-open .select-control-trigger{border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 13%,transparent)}
+.mathmate-games .select-control-wrap.is-open .select-control-chevron{transform:rotate(180deg);color:var(--primary)}
+.mathmate-games .select-control-menu{position:absolute;top:calc(100% + 7px);inset-inline-start:0;min-width:100%;width:max-content;max-width:min(280px,calc(100vw - 32px));max-height:0;overflow-x:hidden;overflow-y:auto;opacity:0;visibility:hidden;pointer-events:none;transform:translateY(7px) scale(.975);transform-origin:top center;padding:5px;border:1px solid var(--line);border-radius:15px;background:var(--menu-bg);box-shadow:var(--menu-shadow);transition:max-height 240ms cubic-bezier(.2,.8,.2,1),opacity 170ms ease,transform 220ms cubic-bezier(.2,.8,.2,1),visibility 0s linear 240ms}
+.mathmate-games .select-control-wrap.is-open .select-control-menu{max-height:min(280px,45vh);opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0) scale(1);transition:max-height 240ms cubic-bezier(.2,.8,.2,1),opacity 170ms ease,transform 220ms cubic-bezier(.2,.8,.2,1),visibility 0s}
+.mathmate-games .select-control-option{position:relative;display:flex;align-items:center;gap:10px;width:100%;min-height:37px;padding:8px 10px;border:0;border-radius:10px;background:transparent;color:var(--text);font:inherit;font-size:12px;text-align:start;white-space:nowrap;cursor:pointer;transition:background-color 150ms ease,color 150ms ease,transform 150ms ease}
+.mathmate-games .select-control-option::after{content:"";width:7px;height:7px;flex:0 0 7px;margin-inline-start:auto;border-radius:50%;background:var(--primary);opacity:0;transform:scale(.5);transition:opacity 150ms,transform 150ms}
+.mathmate-games .select-control-option:hover,.mathmate-games .select-control-option:focus-visible{background:var(--menu-hover);color:var(--primary)}
+.mathmate-games .select-control-option:active{transform:scale(.985)}
+.mathmate-games .select-control-option.is-selected{background:var(--primary-soft);color:var(--primary);font-weight:800}
+.mathmate-games .select-control-option.is-selected::after{opacity:1;transform:scale(1)}
+.mathmate-games #gameFilter{min-width:170px}
+.mathmate-games #sudokuDifficulty,.mathmate-games #quickDifficulty,.mathmate-games #mergeSize{min-width:110px}
+.mathmate-games.dark .topbar{background:rgba(23,26,39,.88);border-bottom-color:var(--line)}
+.mathmate-games.dark .sidebar{border-color:var(--line);box-shadow:7px 0 28px rgba(0,0,0,.12)}
+.mathmate-games.dark .side-promo{border-color:#3a3e5e;color:var(--text)}
+.mathmate-games.dark .offline-chip,.mathmate-games.dark .icon-button,.mathmate-games.dark .avatar-button,.mathmate-games.dark .game-card,.mathmate-games.dark .stat-card,.mathmate-games.dark .strip-card,.mathmate-games.dark .game-main-card,.mathmate-games.dark .info-panel,.mathmate-games.dark .records-card,.mathmate-games.dark .record-highlight,.mathmate-games.dark .help-card{border-color:var(--line);background-color:var(--surface)}
+.mathmate-games.dark .search-field input{background:var(--field-bg);border-color:var(--field-border);color:var(--text)}
+.mathmate-games.dark .search-field input::placeholder{color:var(--muted)}
+.mathmate-games.dark .game-card:hover,.mathmate-games.dark .help-card:hover{border-color:color-mix(in srgb,var(--primary) 55%,var(--line));box-shadow:0 18px 34px rgba(0,0,0,.2)}
+.mathmate-games.dark .game-cover .cover-tag{background:rgba(30,34,53,.82);border-color:rgba(255,255,255,.12);color:#eff1ff}
+.mathmate-games.dark .art-equation,.mathmate-games.dark .art-options span,.mathmate-games.dark .art-puzzle span,.mathmate-games.dark .art-missing span,.mathmate-games.dark .art-memory span{background:var(--surface-raised);border-color:var(--line);color:var(--text)}
+.mathmate-games.dark .art-options span:first-child{background:#19463a;color:#8ce8c4}
+.mathmate-games.dark .art-puzzle span:nth-child(4){background:#5149aa;color:#fff;border-color:#7168df}
+.mathmate-games.dark .art-missing span:last-child,.mathmate-games.dark .art-memory span:last-child{background:#5149aa;color:#fff;border-color:#7168df}
+.mathmate-games.dark .art-quick .art-options span{box-shadow:none}
+.mathmate-games.dark .game-meta,.mathmate-games.dark .stat-copy small,.mathmate-games.dark .section-heading p,.mathmate-games.dark .game-card p,.mathmate-games.dark .help-card p{color:var(--muted)}
+.mathmate-games.dark .record-table th{background:var(--table-head);color:var(--muted)}
+.mathmate-games.dark .record-table th,.mathmate-games.dark .record-table td{border-color:var(--line)}
+.mathmate-games.dark .number-key,.mathmate-games.dark .sudoku-cell,.mathmate-games.dark .answer-option,.mathmate-games.dark .sequence-tile,.mathmate-games.dark .sequence-answer,.mathmate-games.dark .puzzle-step,.mathmate-games.dark .pick-tile{background:var(--surface-raised);border-color:var(--line);color:var(--text)}
+.mathmate-games.dark .sudoku-cell.given{background:var(--surface-2);color:var(--text)}
+.mathmate-games.dark .sudoku-cell.related{background:#2b3048}
+.mathmate-games.dark .sudoku-cell.same-number{background:#414372;color:#f1f0ff}
+.mathmate-games.dark .sudoku-cell.selected{background:#49497d;box-shadow:inset 0 0 0 2px var(--primary)}
+.mathmate-games.dark .answer-option:hover:not(:disabled),.mathmate-games.dark .sequence-answer:hover:not(:disabled),.mathmate-games.dark .number-key:hover{background:var(--primary-soft);border-color:var(--primary)}
+.mathmate-games.dark .memory-card{background:linear-gradient(145deg,#303550,#272c42);border-color:#454b66;color:#d3d3ff}
+.mathmate-games.dark .memory-card.flipped{background:var(--surface-raised);color:var(--text)}
+.mathmate-games.dark .memory-card.matched{background:#1e4038;color:#8ce8c4;border-color:#367861}
+.mathmate-games.dark .hint-box{background:var(--panel-tint);color:var(--muted)}
+.mathmate-games.dark .difficulty-chip,.mathmate-games.dark .mini-stat{background:var(--surface-2);border-color:var(--line);color:var(--muted)}
+.mathmate-games.dark .button-secondary,.mathmate-games.dark .back-button{background:var(--surface-raised);border-color:var(--line);color:var(--text)}
+.mathmate-games.dark .button-soft{background:var(--primary-soft);color:var(--primary)}
+.mathmate-games.dark .button-danger{background:#432c3a;color:#ffb2c0}
+.mathmate-games.dark .strip-icon{background:var(--primary-soft)}
+.mathmate-games.dark .sudoku-actions .button{border-color:var(--line)}
+.mathmate-games.dark .stat-icon.violet{background:#333454;color:#babaff}
+.mathmate-games.dark .stat-icon.mint{background:#1e4038;color:#8ce8c4}
+.mathmate-games.dark .stat-icon.gold{background:#463a29;color:#f5ca68}
+.mathmate-games.dark .toast{box-shadow:0 12px 30px rgba(0,0,0,.35)}
+.mathmate-games.dark .app-footer{border-color:var(--line);color:var(--muted)}
+.mathmate-games #content .view-head,.mathmate-games #content .filters-row,.mathmate-games #content .game-toolbar,.mathmate-games #content .sudoku-wrap,.mathmate-games #content .question-stage,.mathmate-games #content .records-overview,.mathmate-games #content .help-grid{animation:mmg-mm-card-enter .34s cubic-bezier(.2,.8,.2,1) both}
+.mathmate-games #content .view-head{animation-delay:15ms}
+.mathmate-games #content .filters-row{animation-delay:35ms}
+.mathmate-games .select-control-wrap{animation:mmg-select-control-enter .28s cubic-bezier(.2,.8,.2,1) both}
+@keyframes mmg-select-control-enter{from{opacity:0;transform:translateY(4px)}
+to{opacity:1;transform:translateY(0)}}
+@media (max-width:900px){.mathmate-games .select-control-trigger{min-height:42px}}
+@media (max-width:600px){.mathmate-games .select-control-wrap{max-width:100%}
+.mathmate-games .select-control-trigger{min-height:43px;border-radius:13px;font-size:12px}
+.mathmate-games .select-control-menu{position:absolute;max-width:calc(100vw - 36px);border-radius:14px}
+.mathmate-games .select-control-option{min-height:42px;font-size:13px}
+.mathmate-games .filters-row .select-control-wrap{width:100%}
+.mathmate-games #gameFilter{width:100%}
+.mathmate-games .game-toolbar .select-control-wrap{max-width:100%}
+.mathmate-games .game-toolbar .select-control-trigger{min-width:105px}
+.mathmate-games .hero-main{overflow:hidden}
+.mathmate-games .topbar-actions{gap:6px}
+.mathmate-games .icon-button,.mathmate-games .avatar-button{min-width:38px;height:38px}
+.mathmate-games .app-footer{line-height:1.8}}
+@media (prefers-reduced-motion:reduce){.mathmate-games{scroll-behavior:auto}
+.mathmate-games *,.mathmate-games *::before,.mathmate-games *::after{animation-duration:.01ms;animation-iteration-count:1;transition-duration:.01ms}}
+.mathmate-games .filters-row{position:relative;z-index:30;isolation:isolate}
+.mathmate-games .game-toolbar{position:relative;z-index:30;isolation:isolate}
+.mathmate-games .select-control-menu{z-index:220}
+.mathmate-games .app-footer,.mathmate-games.dark .app-footer{background:transparent}
+@media (hover:none),(pointer:coarse){.mathmate-games button:active,.mathmate-games .button:active,.mathmate-games .icon-button:active,.mathmate-games .avatar-button:active,.mathmate-games .play-button:active,.mathmate-games .nav-item:active,.mathmate-games .back-button:active,.mathmate-games .number-key:active,.mathmate-games .answer-option:active,.mathmate-games .sequence-answer:active,.mathmate-games .pick-tile:active,.mathmate-games .memory-card:active{transform:none}
+.mathmate-games button.is-pressed,.mathmate-games .button.is-pressed,.mathmate-games .icon-button.is-pressed,.mathmate-games .play-button.is-pressed,.mathmate-games .nav-item.is-pressed{transform:none;box-shadow:0 0 0 4px color-mix(in srgb,var(--primary) 20%,transparent);filter:saturate(1.12)}}
+
+/* Host integration: game shares the main website's palette, appearance, font size, and animation preference. */
+#gamesPage.games-host-page { padding: 0 !important; width: 100%; max-width: none; }
+#gamesPage .mathmate-games { width: 100%; max-width: none; min-width: 0; direction: inherit; color: var(--text); background: transparent; font-family: inherit; border-radius: 20px; }
+#gamesPage .mathmate-games .content { max-width: none; width: 100%; min-width: 0; padding: clamp(12px, 2.1vw, 28px); }
+#gamesPage .mathmate-games .hero-main { background-image: linear-gradient(115deg, rgba(18, 20, 44, .25), rgba(18, 20, 44, .04)), var(--gradient-hero, linear-gradient(115deg, var(--primary), var(--accent-purple))); }
+#gamesPage .mathmate-games .button-primary,
+#gamesPage .mathmate-games .play-button:hover,
+#gamesPage .mathmate-games .nav-item.active,
+#gamesPage .mathmate-games .pick-tile.selected,
+#gamesPage .mathmate-games .number-key:hover:not(:disabled),
+#gamesPage .mathmate-games .select-control-option.is-selected { background-image: var(--gradient-hero, linear-gradient(135deg,var(--primary),var(--accent-purple))); border-color: transparent; color: #fff; }
+#gamesPage .mathmate-games .button-primary:hover,
+#gamesPage .mathmate-games .play-button:hover { filter: saturate(1.08); box-shadow: 0 8px 20px color-mix(in srgb, var(--primary) 28%, transparent); }
+#gamesPage .mathmate-games .target-card { background-image: linear-gradient(110deg,rgba(18,20,44,.20),rgba(18,20,44,.06)), var(--gradient-hero, linear-gradient(135deg,var(--primary),var(--accent-purple))); }
+#gamesPage .mathmate-games .view-title .big-icon,
+#gamesPage .mathmate-games .play-button,
+#gamesPage .mathmate-games .button-soft,
+#gamesPage .mathmate-games .pick-tile.selected { background-color: var(--primary-light, var(--primary-soft)); }
+#gamesPage .mathmate-games .puzzle-workspace #numberMessage { grid-column: 1 / -1 !important; width: min(100%, 520px); justify-self: center; margin-inline: auto; text-align: center; }
+#gamesPage .mathmate-games img { max-width: 100%; height: auto; object-fit: contain; }
+#gamesPage .mathmate-games .game-cover { min-width: 0; }
+#gamesPage .mathmate-games .game-cover > * { max-width: 100%; }
+#gamesPage .mathmate-games .hero-main, #gamesPage .mathmate-games .game-card, #gamesPage .mathmate-games .game-main-card, #gamesPage .mathmate-games .info-panel { min-width: 0; }
+.mathmate-games.no-animations, .mathmate-games.no-animations * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+body.games-view .app { max-width: 1440px !important; width: 100% !important; }
+@media (min-width: 900px) { body.sidebar-open.games-view .app { max-width: calc(100% - var(--sidebar-width) - 48px) !important; width: auto !important; } }
+@media (max-width: 899px) { body.games-view .app { max-width: 100% !important; width: 100% !important; } }
+@media (max-width: 600px) {
+  #gamesPage .mathmate-games .content { padding: 12px 8px 24px; }
+  #gamesPage .mathmate-games .game-card p { font-size: 12px; line-height: 1.75; }
+  #gamesPage .mathmate-games .game-meta,
+  #gamesPage .mathmate-games .cover-tag,
+  #gamesPage .mathmate-games .info-row,
+  #gamesPage .mathmate-games .hint-box,
+  #gamesPage .mathmate-games .mini-stat,
+  #gamesPage .mathmate-games .question-count,
+  #gamesPage .mathmate-games .inline-message,
+  #gamesPage .mathmate-games .view-title p,
+  #gamesPage .mathmate-games .stat-copy span { font-size: 12px; }
+  #gamesPage .mathmate-games .game-card { grid-template-columns: minmax(96px, 32%) minmax(0, 1fr); gap: 0 10px; }
+  #gamesPage .mathmate-games .game-cover { width: 100%; min-height: 108px; height: 100%; grid-row: 1 / 4; grid-column: 1; }
+  #gamesPage .mathmate-games .game-card h3 { font-size: 14px; }
+  #gamesPage .mathmate-games .game-card-footer { gap: 6px; flex-wrap: wrap; }
+  #gamesPage .mathmate-games .sudoku-grid { width: min(100%, 510px); max-width: 100%; }
+  #gamesPage .mathmate-games .sudoku-cell { font-size: clamp(16px, 4.4vw, 22px); }
+  #gamesPage .mathmate-games .number-key { font-size: 16px; min-height: 40px; }
+  #gamesPage .mathmate-games .sequence-tile { font-size: clamp(15px, 4vw, 22px); }
+  #gamesPage .mathmate-games .memory-card { min-width: 0; overflow-wrap: anywhere; font-size: clamp(12px, 3.4vw, 17px); }
+  #gamesPage .mathmate-games .question-text { font-size: clamp(30px, 8vw, 40px); overflow-wrap: anywhere; }
+  #gamesPage .mathmate-games .answer-option { font-size: clamp(16px, 4.3vw, 20px); }
+  #gamesPage .mathmate-games .number-message { font-size: 13px; }
+}
+
+
+
+/* Darsyar host surface: keep the planner isolated while giving it the full usable content width. */
+#darsyarPage.darsyar-host-page { width:100%; max-width:none; min-width:0; padding:0 !important; overflow:visible; border-radius:20px; background:transparent; }
+ #darsyarMount { display:block; width:100%; min-height:0; border-radius:20px; background:transparent; }
+.sidebar-games-icon { display:block; width:24px; height:24px; object-fit:contain; flex:0 0 24px; }
+.color-theme-swatch.gold-black { background:linear-gradient(135deg,#111 0 47%,#D7AD3C 48% 100%); border:1px solid rgba(215,173,60,.65); }
+body.theme-gold-black:not(.dark) .sidebar { background:linear-gradient(155deg,#FFFBF0 0%,#F7F0DC 55%,#F0E4C0 100%); border-color:rgba(180,140,40,.22); color:#282317; }
+body.theme-gold-black:not(.dark) .sidebar-item { color:#3a3220; }
+body.theme-gold-black:not(.dark) .sidebar-item.active { color:#1c180e; background:linear-gradient(115deg,#f4d978,#c49a27); }
+body.theme-gold-black.dark .sidebar { background:linear-gradient(180deg,#171615 0%,#272114 54%,#70551A 100%); border-color:rgba(215,173,60,.22); }
+body.theme-gold-black.dark .sidebar-item.active { color:#1c180e; background:linear-gradient(115deg,#f4d978,#c49a27); }
+body.theme-gold-black .sidebar-logo { box-shadow:0 4px 12px rgba(215,173,60,.24); }
+.mathmate-games .game-card { min-width:0; display:flex; flex-direction:column; }
+.mathmate-games .game-card h3,.mathmate-games .game-card p { overflow-wrap:anywhere; word-break:normal; }
+.mathmate-games .game-card p { min-height:0; flex:1 0 auto; }
+.mathmate-games .game-card-footer { min-width:0; display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-top:auto; }
+.mathmate-games .game-meta { min-width:0; max-width:100%; flex-wrap:wrap; }
+.mathmate-games .play-button { min-height:44px; min-width:84px; max-width:100%; flex:0 0 auto; white-space:nowrap; justify-content:center; touch-action:manipulation; }
+.mathmate-games .button:focus-visible,.mathmate-games .play-button:focus-visible { outline:3px solid color-mix(in srgb,var(--primary) 55%,transparent); outline-offset:3px; }
+@media(max-width:680px) {
+  #darsyarPage.darsyar-host-page { border-radius:15px; }
+   #darsyarMount { min-height:0; border-radius:15px; }
+  .mathmate-games .content { padding:12px; }
+  .mathmate-games .game-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+  .mathmate-games .game-card { padding:12px; }
+  .mathmate-games .game-card-footer { align-items:stretch; }
+  .mathmate-games .play-button { width:100%; min-height:44px; }
+  .mathmate-games .game-meta { width:100%; }
+}
+@media(max-width:380px) {
+  .mathmate-games .game-grid { grid-template-columns:minmax(0,1fr); }
+  .mathmate-games .game-card-footer { display:grid; grid-template-columns:minmax(0,1fr); }
+  .mathmate-games .play-button { width:100%; }
+}
+@media(min-width:900px) {
+  .sidebar,.app,.sidebar-overlay { transition-duration:var(--anim-duration,.3s); transition-timing-function:var(--anim-ease,cubic-bezier(.4,0,.2,1)); }
+}
+@media(prefers-reduced-motion:reduce) {
+  .sidebar,.app, #darsyarMount,.mathmate-games * { scroll-behavior:auto !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+}
+
+
+/* Give the embedded planner the same desktop canvas width as the game workspace. */
+body.darsyar-view .app { max-width:1440px !important; width:100% !important; }
+@media(min-width:900px) { body.sidebar-open.darsyar-view .app { max-width:calc(100% - var(--sidebar-width) - 48px) !important; width:auto !important; } }
+@media(max-width:899px) { body.darsyar-view .app { max-width:100% !important; width:100% !important; } }
+
+
+/* Prevent fixed decorative glows from creating horizontal page scrolling on tablet widths. */
+html{overflow-x:clip;}
+
+/* Requested theme-aware sidebar surface and English layout mirroring. */
+body.theme-instagram .sidebar{background:linear-gradient(155deg,rgba(255,255,255,.93),rgba(255,235,244,.92) 58%,rgba(252,224,234,.96));border-color:rgba(225,48,108,.14);}
+body.theme-pink-purple .sidebar{background:linear-gradient(155deg,rgba(255,247,255,.96),rgba(244,220,255,.95) 55%,rgba(230,218,255,.96));border-color:rgba(124,58,237,.18);}
+body.theme-blue-purple .sidebar{background:linear-gradient(155deg,rgba(248,251,255,.96),rgba(220,235,255,.95) 55%,rgba(231,222,255,.96));border-color:rgba(79,124,247,.18);}
+body.theme-gold-black:not(.dark) .sidebar{background:linear-gradient(155deg,#FFFBF0 0%,#F7F0DC 55%,#F0E4C0 100%);border-color:rgba(180,140,40,.22);}
+body.theme-gold-black.dark .sidebar{background:linear-gradient(155deg,#171510 0%,#242014 58%,#403217 100%);border-color:rgba(216,179,77,.24);}
+body.dark.theme-instagram .sidebar{background:linear-gradient(155deg,rgba(33,25,34,.98),rgba(55,29,46,.97) 58%,rgba(44,28,44,.98));border-color:rgba(225,48,108,.25);}
+body.dark.theme-pink-purple .sidebar{background:linear-gradient(155deg,#21182b,#33203f 55%,#292039);border-color:rgba(192,132,252,.22);}
+body.dark.theme-blue-purple .sidebar{background:linear-gradient(155deg,#171d31,#202747 55%,#29233f);border-color:rgba(129,140,248,.24);}
+body.dark.theme-gold-black .sidebar{background:linear-gradient(155deg,#100f0c 0%,#19170f 58%,#312612 100%);border-color:rgba(216,179,77,.28);}
+body.theme-instagram .sidebar-item,body.theme-pink-purple .sidebar-item,body.theme-blue-purple .sidebar-item{color:var(--text);}
+body.theme-instagram .sidebar-item.active,body.theme-pink-purple .sidebar-item.active,body.theme-blue-purple .sidebar-item.active{background:var(--card);color:var(--primary);box-shadow:0 4px 14px rgba(30,25,40,.1);}
+body.dark.theme-instagram .sidebar-item,body.dark.theme-pink-purple .sidebar-item,body.dark.theme-blue-purple .sidebar-item{color:var(--text);}
+body.dark.theme-instagram .sidebar-item.active,body.dark.theme-pink-purple .sidebar-item.active,body.dark.theme-blue-purple .sidebar-item.active{background:var(--card);color:var(--primary);}
+@media(min-width:900px){
+ html[dir="ltr"] .sidebar{left:10px!important;right:auto!important;border-left:0;border-right:1px solid var(--sidebar-border);}
+ html[dir="ltr"] .sidebar.open{transform:translateX(0)!important;}
+ html[dir="ltr"] .sidebar:not(.open){transform:translateX(-100%)!important;}
+ html[dir="ltr"] .sidebar-toggle{left:16px!important;right:auto!important;}
+ html[dir="ltr"] body.sidebar-open .app{margin-left:calc(var(--sidebar-width) + 24px)!important;margin-right:12px!important;max-width:calc(100% - var(--sidebar-width) - 48px)!important;width:auto!important;}
+}
+/* Keep the English game-hero artwork in a reserved right-hand gutter. */
+.mathmate-games[dir="ltr"] .hero-art,#mathmateGamesRoot[dir="ltr"] .hero-art{left:auto!important;right:30px!important;z-index:0!important;}
+.mathmate-games[dir="ltr"] .hero-main > .eyebrow,
+.mathmate-games[dir="ltr"] .hero-main > h1,
+.mathmate-games[dir="ltr"] .hero-main > p,
+.mathmate-games[dir="ltr"] .hero-main > .hero-buttons{position:relative;z-index:2;max-width:calc(100% - 180px);}
+@media(max-width:600px){
+ .mathmate-games[dir="ltr"] .hero-art,#mathmateGamesRoot[dir="ltr"] .hero-art{right:4px!important;left:auto!important;width:100px!important;height:82px!important;opacity:.1!important;transform:scale(.82);transform-origin:right bottom;}
+ .mathmate-games[dir="ltr"] .hero-main{justify-content:flex-start!important;padding-bottom:160px!important;}
+ .mathmate-games[dir="ltr"] .hero-main > .eyebrow,
+ .mathmate-games[dir="ltr"] .hero-main > h1,
+ .mathmate-games[dir="ltr"] .hero-main > p,
+ .mathmate-games[dir="ltr"] .hero-main > .hero-buttons{max-width:100%;}
+}
+/* Colored icon tiles use dark glyphs for reliable contrast. */
+.quick-access-icon img,.quick-access-icon svg,.stat-icon img,.stat-icon svg,.row-leading img,.row-leading svg,.settings-section-icon img,.settings-section-icon svg,.feature-icon img,.feature-icon svg{filter:brightness(0)!important;color:#111!important;stroke:#111!important;}
+.account-name-field{width:min(100%,520px);margin:18px auto;padding:16px;border:1px solid var(--border);border-radius:18px;background:var(--card);box-shadow:var(--card-shadow);display:grid;gap:7px;text-align:right;}
+.account-name-field label{font-weight:800;color:var(--text);}
+.account-name-field input{width:100%;min-width:0;border:1px solid var(--border);border-radius:12px;padding:11px 13px;background:var(--input-bg);color:var(--text);font:inherit;outline-offset:3px;}
+.account-name-field p{color:var(--text-light);font-size:12px;}
+.welcome-user-name{white-space:normal;}
+@media(max-width:899px){html[dir="ltr"] .sidebar{left:0!important;right:auto!important;transform:translateX(-100%)!important;}html[dir="ltr"] .sidebar.open{transform:translateX(0)!important;}}
+
+
+/* Contrast for icons placed on colored icon tiles (keep the navigation icons theme-aware). */
+.tool-list-icon img,.tool-icon img,.tool-list-icon svg,.tool-icon svg { filter:brightness(0)!important; color:#111!important; stroke:#111!important; }
+/* Keep the hero date badge and its first-task action visibly rounded. */
+.hero-date { border-radius:999px!important; padding:6px 11px; background:rgba(255,255,255,.78); }
+.hero-copy .button { border-radius:14px!important; min-height:42px; }
+
+
+/* =====================================================================
+   MathMate polish — premium Gold & Black theme + accessible feature grid
+   Appended deliberately so this additive layer wins over older overrides.
+   ===================================================================== */
+body.theme-gold-black {
+    --primary: #B88A19;
+    --primary-dark: #76550A;
+    --primary-color: #D6AC43;
+    --primary-light: rgba(197, 151, 38, .15);
+    --accent-purple: #A18AAB;
+    --accent-orange: #BA773D;
+    --accent-yellow: #F2D889;
+    --accent-blue: #7899B4;
+    --gradient-hero: linear-gradient(128deg, #11110F 0%, #211D13 48%, #6B5018 78%, #C49A32 100%);
+    --gold-line: rgba(177, 135, 34, .23);
+    --gold-highlight: #E2C66F;
+    --gold-deep: #241D0E;
+}
+body.theme-gold-black:not(.dark) {
+    --background: #F5F1E7;
+    --card: rgba(255, 253, 247, .96);
+    --card-bg: rgba(255, 253, 247, .96);
+    --text: #282317;
+    --text-light: #716A59;
+    --border: rgba(93, 72, 24, .15);
+    --input-bg: #FFFEFA;
+    --card-shadow: 0 14px 36px rgba(58, 43, 12, .075), 0 2px 7px rgba(58, 43, 12, .04);
+    --sidebar-bg: #FFFBF0;
+    --sidebar-border: rgba(180, 140, 40, .22);
+}
+body.theme-gold-black.dark {
+    --background: #0C0C0A;
+    --card: rgba(25, 24, 20, .97);
+    --card-bg: rgba(25, 24, 20, .97);
+    --text: #F4EEDC;
+    --text-light: #B8AF98;
+    --border: rgba(226, 198, 111, .17);
+    --input-bg: rgba(255, 249, 230, .045);
+    --card-shadow: 0 14px 38px rgba(0, 0, 0, .34), 0 1px 0 rgba(226, 198, 111, .035);
+    --sidebar-bg: #10100D;
+    --sidebar-border: rgba(226, 198, 111, .20);
+}
+
+/* Keep gold accents selective: surfaces remain calm, navigation and actions pop. */
+/* Light mode: warm light gold sidebar */
+body.theme-gold-black:not(.dark) .sidebar {
+    color: #282317;
+    background: linear-gradient(160deg, #FFFBF0 0%, #F8F1DE 55%, #F0E6C4 100%) !important;
+    border-color: rgba(180, 140, 40, .22) !important;
+    box-shadow: -12px 0 36px rgba(120, 90, 20, .08);
+}
+body.theme-gold-black:not(.dark) .sidebar-item { color: #3a3220; }
+body.theme-gold-black:not(.dark) .sidebar-item:hover,
+body.theme-gold-black:not(.dark) .sidebar-item:focus-visible {
+    color: #1c180e;
+    background: rgba(196, 154, 50, .12);
+}
+body.theme-gold-black:not(.dark) .sidebar-section-label { color: #8a7530; }
+/* Dark mode only: dark gold sidebar */
+body.theme-gold-black.dark .sidebar {
+    color: #F4EBD1;
+    background: linear-gradient(160deg, #11110F 0%, #1C1A13 58%, #302511 100%) !important;
+    border-color: rgba(226, 198, 111, .22) !important;
+    box-shadow: -12px 0 36px rgba(22, 18, 8, .22);
+}
+body.theme-gold-black.dark .sidebar-item { color: #E8E0CA; }
+body.theme-gold-black.dark .sidebar-item:hover,
+body.theme-gold-black.dark .sidebar-item:focus-visible {
+    color: #FFF3C6;
+    background: rgba(226, 198, 111, .105);
+}
+body.theme-gold-black.dark .sidebar-section-label { color: #C8B77E; }
+body.theme-gold-black .sidebar-item.active,
+body.dark.theme-gold-black .sidebar-item.active {
+    color: #171309 !important;
+    background: linear-gradient(110deg, #F1D987 0%, #D6AC43 58%, #BD9027 100%) !important;
+    box-shadow: 0 6px 18px rgba(191, 147, 39, .22), inset 0 1px 0 rgba(255,255,255,.42);
+}
+body.theme-gold-black .sidebar-item .active-marker {
+    background: linear-gradient(180deg, #FFF1B5, #C49A32);
+}
+body.theme-gold-black .sidebar-logo,
+body.theme-gold-black .sidebar-toggle {
+    border: 1px solid rgba(226, 198, 111, .23);
+    box-shadow: 0 5px 18px rgba(0, 0, 0, .16);
+}
+body.theme-gold-black .sidebar-close:hover { background: rgba(226, 198, 111, .13); }
+body.theme-gold-black .settings-card,
+body.theme-gold-black .about-card,
+body.theme-gold-black .avatar-box,
+body.theme-gold-black .calculator-box,
+body.theme-gold-black .multiples-box,
+body.theme-gold-black .geometry-box,
+body.theme-gold-black .gcd-lcm-box,
+body.theme-gold-black .page .input-group,
+body.theme-gold-black .device-info {
+    border-color: var(--gold-line);
+}
+body.theme-gold-black .settings-card,
+body.theme-gold-black .about-card,
+body.theme-gold-black .avatar-box {
+    box-shadow: var(--card-shadow);
+}
+body.theme-gold-black .theme-btn,
+body.theme-gold-black .back-btn,
+body.theme-gold-black .more-btn,
+body.theme-gold-black .color-theme-btn,
+body.theme-gold-black .theme-option,
+body.theme-gold-black .font-size-btn,
+body.theme-gold-black .lang-btn,
+body.theme-gold-black .anim-btn {
+    border-color: var(--gold-line);
+}
+body.theme-gold-black .color-theme-btn.active,
+body.theme-gold-black .theme-option.active,
+body.theme-gold-black .font-size-btn.active,
+body.theme-gold-black .lang-btn.active,
+body.theme-gold-black .anim-btn.active {
+    color: #211909 !important;
+    background: linear-gradient(130deg, #F0DA91, #D5AD46) !important;
+    border-color: rgba(160, 116, 22, .55) !important;
+    box-shadow: 0 5px 16px rgba(177, 135, 34, .14);
+}
+body.theme-gold-black .start-btn,
+body.theme-gold-black .calculate-btn,
+body.theme-gold-black .calculate-multiples-btn,
+body.theme-gold-black .calculate-geometry-btn,
+body.theme-gold-black .calculate-gcd-lcm-btn,
+body.theme-gold-black .calculate-percentage-btn,
+body.theme-gold-black .calculate-time-btn,
+body.theme-gold-black .calculate-unit-btn {
+    color: #211909;
+    border-color: rgba(117, 83, 11, .22);
+}
+body.theme-gold-black .avatar-option.active,
+body.theme-gold-black .avatar-option:hover,
+body.theme-gold-black input:focus-visible,
+body.theme-gold-black select:focus-visible,
+body.theme-gold-black textarea:focus-visible {
+    border-color: #C49A32;
+    box-shadow: 0 0 0 3px rgba(196, 154, 50, .20);
+}
+body.theme-gold-black .welcome-card {
+    background: linear-gradient(125deg, #11110F 0%, #211D13 46%, #5A4318 76%, #B88A19 100%);
+    box-shadow: 0 18px 42px rgba(62, 47, 14, .20);
+}
+body.theme-gold-black .color-theme-swatch.gold-black {
+    background: linear-gradient(135deg, #0D0D0B 0 44%, #4A3916 45% 61%, #E2C66F 62% 100%);
+}
+body.theme-gold-black .theme-gold-black,
+body.theme-gold-black .version { border-color: var(--gold-line); }
+body.theme-gold-black .sidebar-item.active .active-marker { opacity: 0; }
+body.theme-gold-black :is(button, a, input, select, textarea):focus-visible {
+    outline-color: #C49A32;
+}
+
+/* Features are readable, scannable, and icon-led rather than a long plain list. */
+.features-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    align-items: stretch;
+}
+.features-list li,
+body.dark .features-list li {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    gap: 11px;
+    padding: 13px 14px;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    background: var(--input-bg);
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+    transition: transform .18s ease, border-color .18s ease, background .18s ease;
+}
+.features-list li:hover {
+    transform: translateY(-2px);
+    border-color: var(--gold-line, var(--primary-light));
+    background: var(--card);
+}
+.features-list li img {
+    width: 22px !important;
+    height: 22px !important;
+    flex: 0 0 22px;
+    padding: 3px;
+    border-radius: 7px;
+    box-sizing: content-box;
+    background: var(--primary-light);
+    filter: brightness(0) !important;
+    opacity: .94;
+}
+body.dark .features-list li img { filter: brightness(0) invert(1) !important; }
+body.theme-gold-black .features-list li img { filter: brightness(0) saturate(100%) invert(48%) sepia(62%) saturate(502%) hue-rotate(8deg) brightness(91%) contrast(92%) !important; }
+body.dark.theme-gold-black .features-list li img { filter: brightness(0) saturate(100%) invert(80%) sepia(31%) saturate(588%) hue-rotate(7deg) brightness(97%) contrast(92%) !important; }
+@media (max-width: 600px) {
+    .features-list { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    .features-list li { padding: 11px 12px; }
+}
+
+/* The account action saves both the visible name and the selected avatar. */
+.account-name-field { gap: 9px; }
+.account-name-field p { line-height: 1.85; }
+.avatar-actions .calculate-btn { min-height: 46px; }
+@media (max-width: 500px) {
+    .avatar-box { padding: 20px 15px; }
+    .avatar-actions { flex-direction: column; }
+    .avatar-upload-btn, .avatar-actions .calculate-btn { width: 100%; min-width: 0; }
+}
+
+
+/* Requested restrained glass surfaces and soft page-entry motion. */
+:where(.calculator-box,.multiples-box,.geometry-box,.gcd-lcm-box,.learning-box,.factors-box,.date-box,.unit-page-box,.percentage-box,.time-page-box,.realworld-box,.tools-page-box,.settings-card,.about-card,.avatar-box,.videos-page-box) {
+    border-radius: 22px;
+    background: color-mix(in srgb, var(--card, rgba(255,255,255,.72)) 84%, transparent);
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+    backdrop-filter: blur(18px) saturate(145%);
+    box-shadow: var(--card-shadow, 0 12px 30px rgba(15,23,42,.08));
+    border: 1px solid var(--border, rgba(255,255,255,.28));
+}
+:where(.date-calendar-option,.unit-type,.shape-card,.school-tab,.theme-option,.color-theme-btn,.font-size-btn,.lang-btn,.anim-btn,.tool-list-item,.calc-btn) {
+    border-radius: 14px;
+    transition: transform .22s var(--anim-ease, cubic-bezier(.2,.8,.2,1)), background .22s ease, border-color .22s ease, box-shadow .22s ease;
+}
+:where(.date-calendar-option,.unit-type,.shape-card,.school-tab,.theme-option,.color-theme-btn,.font-size-btn,.lang-btn,.anim-btn,.tool-list-item,.calc-btn):hover {
+    transform: translateY(-1px);
+}
+.page.show { animation: mmPageAppear .28s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes mmPageAppear { from { opacity:0; transform:translateY(8px) scale(.995); } to { opacity:1; transform:translateY(0) scale(1); } }
+.color-theme-swatch.gold-black,
+body.theme-gold-black .color-theme-swatch.gold-black {
+    background: linear-gradient(135deg, #0D0D0B 0%, #30240E 42%, #B98D24 61%, #F2D889 100%) !important;
+    border: 1px solid rgba(215,173,60,.72) !important;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.13), 0 2px 5px rgba(0,0,0,.12);
+}
+@media (prefers-reduced-motion: reduce) {
+    .page.show { animation:none !important; }
+    :where(.date-calendar-option,.unit-type,.shape-card,.school-tab,.theme-option,.color-theme-btn,.font-size-btn,.lang-btn,.anim-btn,.tool-list-item,.calc-btn) { transition:none !important; }
+}
+
+
+/* Universal glass + animated expand for list-like sections/options */
+.sidebar-submenu {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s var(--anim-ease, cubic-bezier(.4,0,.2,1)), opacity 0.3s ease;
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--card, rgba(255,255,255,.72)) 70%, transparent);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid transparent;
+}
+.sidebar-submenu.open {
+    max-height: 420px;
+    opacity: 1;
+    border-color: var(--border, rgba(255,255,255,.2));
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+.font-size-options,
+.theme-options,
+.color-theme-options,
+.date-calendar-options,
+.shape-grid,
+.unit-type-options,
+.school-tabs,
+.ds-filter-row,
+.ds-choice-row {
+    border-radius: 16px;
+}
+body.no-animations .sidebar-submenu,
+body.no-animations .sidebar-submenu.open {
+    transition: none !important;
+}
+
+
+/* Force black glyphs on colored icon tiles across the site */
+.tool-icon img, .tool-icon svg,
+.tool-list-icon img, .tool-list-icon svg,
+.features-list li img, .features-list li svg,
+.quick-access-icon img, .quick-access-icon svg,
+.stat-icon img, .stat-icon svg,
+.row-leading img, .row-leading svg,
+.settings-section-icon img, .settings-section-icon svg,
+.feature-icon img, .feature-icon svg,
+.intro-icon-image,
+.learning-icon img, .learning-icon svg,
+.geometry-icon img, .factors-icon img, .date-icon img, .gcd-lcm-icon img, .multiples-icon img {
+  filter: brightness(0) !important;
+  color: #111 !important;
+  stroke: #111 !important;
+  opacity: .94;
+}
+body.dark .features-list li img,
+body.dark .features-list li svg {
+  filter: brightness(0) !important;
+  color: #111 !important;
+  stroke: #111 !important;
+}
+
+/* Mobile game cards: clean stacked layout, no jammed text */
+@media (max-width: 680px) {
+  .mathmate-games .game-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 14px !important;
+  }
+  .mathmate-games .game-card {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: none !important;
+    gap: 0 !important;
+    padding: 14px !important;
+    min-width: 0;
+  }
+  .mathmate-games .game-cover {
+    width: 100% !important;
+    height: 120px !important;
+    margin: 0 0 12px !important;
+    grid-row: auto !important;
+    grid-column: auto !important;
+    border-radius: 14px !important;
+  }
+  .mathmate-games .game-card h3 {
+    grid-column: auto !important;
+    font-size: 15px !important;
+    margin: 0 0 6px !important;
+    line-height: 1.45;
+  }
+  .mathmate-games .game-card p {
+    grid-column: auto !important;
+    font-size: 12px !important;
+    line-height: 1.85 !important;
+    margin: 0 0 12px !important;
+    min-height: 0 !important;
+    overflow-wrap: anywhere;
+  }
+  .mathmate-games .game-card-footer {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    grid-column: auto !important;
+    width: 100%;
+    margin-top: auto;
+  }
+  .mathmate-games .game-meta {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 6px 8px !important;
+    font-size: 11px !important;
+    line-height: 1.5;
+  }
+  .mathmate-games .play-button {
+    width: 100% !important;
+    min-height: 44px !important;
+    justify-content: center !important;
+    margin: 0 !important;
+  }
+}
+
+/* Game icons on soft colored tiles always black */
+.mathmate-games .stat-icon,
+.mathmate-games .stat-icon.violet,
+.mathmate-games .stat-icon.mint,
+.mathmate-games .stat-icon.gold,
+.mathmate-games .strip-icon,
+.mathmate-games .record-game-icon,
+.mathmate-games .big-icon,
+.mathmate-games .view-title .big-icon {
+  color: #111 !important;
+}
+.mathmate-games .stat-icon svg,
+.mathmate-games .strip-icon svg,
+.mathmate-games .record-game-icon svg,
+.mathmate-games .big-icon svg,
+.mathmate-games .view-title .big-icon svg,
+.mathmate-games .stat-icon .custom-icon,
+.mathmate-games .strip-icon .custom-icon,
+.mathmate-games .record-game-icon .custom-icon,
+.mathmate-games .big-icon .custom-icon {
+  color: #111 !important;
+  stroke: #111 !important;
+  fill: none !important;
+}
+.mathmate-games.dark .stat-icon,
+.mathmate-games.dark .stat-icon.violet,
+.mathmate-games.dark .stat-icon.mint,
+.mathmate-games.dark .stat-icon.gold,
+.mathmate-games.dark .strip-icon,
+.mathmate-games.dark .record-game-icon,
+.mathmate-games.dark .big-icon {
+  color: #111 !important;
+}
+.mathmate-games.dark .stat-icon svg,
+.mathmate-games.dark .strip-icon svg,
+.mathmate-games.dark .record-game-icon svg,
+.mathmate-games.dark .big-icon svg,
+.mathmate-games.dark .stat-icon .custom-icon,
+.mathmate-games.dark .strip-icon .custom-icon,
+.mathmate-games.dark .record-game-icon .custom-icon,
+.mathmate-games.dark .big-icon .custom-icon {
+  color: #111 !important;
+  stroke: #111 !important;
+}
+
+
+/* MathMate targeted fixes: calculator additions and game controls. */
+.calculator-extra-buttons {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+    direction: ltr;
+}
+.calculator-extra-buttons .calc-btn {
+    min-width: 0;
+    min-height: 48px;
+    border-radius: 13px;
+    font-size: 17px;
+}
+.calculator-expression-card {
+    box-sizing: border-box;
+    width: min(100%, 560px);
+    min-width: 0;
+    margin: 22px auto 0;
+    padding: clamp(16px, 3vw, 24px);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    background: var(--card);
+    color: var(--text);
+    box-shadow: 0 12px 30px rgba(0,0,0,.06);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.calculator-expression-card h3 { margin: 0; font-size: clamp(17px, 2.5vw, 21px); line-height: 1.6; }
+.calculator-expression-card label { font-size: 13px; font-weight: 700; }
+.calculator-expression-card input {
+    box-sizing: border-box; display: block; width: 100%; min-width: 0;
+    min-height: 48px; padding: 11px 13px; border: 1px solid var(--border);
+    border-radius: 12px; background: var(--background); color: var(--text);
+    font: inherit; direction: ltr; text-align: left; outline-offset: 2px;
+}
+.calculator-expression-help { margin: 0; font-size: 12px; line-height: 1.8; color: var(--text-light, #64748b); }
+.calc-expression-submit {
+    align-self: flex-start; min-height: 44px; padding: 9px 18px; border: 0;
+    border-radius: 12px; background: var(--primary); color: #fff; font: inherit;
+    font-weight: 800; cursor: pointer;
+}
+.calculator-expression-result { display: block; min-height: 1.4em; overflow-wrap: anywhere; white-space: normal; font-weight: 800; line-height: 1.8; }
+.calculator-expression-result.is-success { color: #16825e; }
+.calculator-expression-result.is-error { color: #c23d54; }
+body.dark .calculator-expression-card { background: var(--card); border-color: var(--border); }
+@media (max-width: 480px) {
+    .calculator-box { padding: 12px; border-radius: 22px; }
+    .calculator-buttons { gap: 7px; }
+    .calc-btn { min-height: 54px; border-radius: 13px; }
+    .calculator-display { min-height: 88px; padding: 16px; font-size: clamp(26px, 8vw, 36px); }
+    .calculator-extra-buttons { gap: 6px; }
+    .calculator-extra-buttons .calc-btn { min-height: 44px; font-size: 15px; }
+}
+.mathmate-games .sudoku-pad .number-key.utility:nth-last-child(2) { grid-column: 2 / span 3; }
+.mathmate-games .sudoku-pad .number-key.utility:last-child { grid-column: 5 / span 3; }
+.mathmate-games .merge-arrows .arrow-up { transform: rotate(-90deg); }
+.mathmate-games .merge-arrows .arrow-down { transform: rotate(90deg); }
+.mathmate-games .merge-arrows .arrow-left { transform: rotate(180deg); }
+.mathmate-games .merge-arrows .arrow-right { transform: none; }
+.mathmate-games #memoryMessage { display: block; width: min(100%, 510px); margin: 0 auto; text-align: center; overflow-wrap: anywhere; }
+
+/* Sudoku uses the project's standard backspace icon for the small erase action. */
+.mathmate-games .sudoku-actions #sudokuErase .sudoku-backspace-icon {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    object-fit: contain;
+    vertical-align: middle;
+}
+.mathmate-games .custom-icon.game-icon-2048 {
+    object-fit: contain;
+    fill: none;
+    stroke: none;
+}
+
+/* ========== Glass animated custom selects (all site selects) ========== */
+select.select-control,
+.mathmate-games select,
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 14px !important;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card, #fff) 82%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+  transition: border-color 0.2s ease, box-shadow 0.22s ease, transform 0.18s ease;
+}
+select:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--primary) 35%, var(--border));
+}
+select:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+/* Native option lists cannot be fully restyled in all browsers;
+   enhance with glass on the control itself. */
+
+/* ========== Instagram & color themes: gradient buttons ========== */
+body.theme-instagram .calculate-btn,
+body.theme-instagram .calculate-multiples-btn,
+body.theme-instagram .calculate-geometry-btn,
+body.theme-instagram .calculate-gcd-lcm-btn,
+body.theme-instagram .calculate-percentage-btn,
+body.theme-instagram .calculate-time-btn,
+body.theme-instagram .calculate-unit-btn,
+body.theme-instagram .start-btn,
+body.theme-instagram .calc-expression-submit,
+body.theme-instagram .darsyar-data-btn:not(.secondary):not(.danger),
+body.theme-instagram .font-size-btn.active,
+body.theme-instagram .theme-option.active,
+body.theme-instagram .lang-btn.active,
+body.theme-instagram .anim-btn.active,
+body.theme-instagram .color-theme-btn.active {
+  background: linear-gradient(130deg, #FCAF45, #F77737, #E1306C, #833AB4, #405DE6) !important;
+  border-color: transparent !important;
+  color: #fff !important;
+}
+body.theme-pink-purple .calculate-btn,
+body.theme-pink-purple .calculate-multiples-btn,
+body.theme-pink-purple .calculate-geometry-btn,
+body.theme-pink-purple .calculate-gcd-lcm-btn,
+body.theme-pink-purple .calculate-percentage-btn,
+body.theme-pink-purple .calculate-time-btn,
+body.theme-pink-purple .calculate-unit-btn,
+body.theme-pink-purple .start-btn,
+body.theme-pink-purple .calc-expression-submit,
+body.theme-pink-purple .darsyar-data-btn:not(.secondary):not(.danger),
+body.theme-pink-purple .font-size-btn.active,
+body.theme-pink-purple .theme-option.active,
+body.theme-pink-purple .lang-btn.active,
+body.theme-pink-purple .anim-btn.active,
+body.theme-pink-purple .color-theme-btn.active {
+  background: linear-gradient(125deg, #EC4899, #D946EF, #7C3AED) !important;
+  border-color: transparent !important;
+  color: #fff !important;
+}
+body.theme-blue-purple .calculate-btn,
+body.theme-blue-purple .calculate-multiples-btn,
+body.theme-blue-purple .calculate-geometry-btn,
+body.theme-blue-purple .calculate-gcd-lcm-btn,
+body.theme-blue-purple .calculate-percentage-btn,
+body.theme-blue-purple .calculate-time-btn,
+body.theme-blue-purple .calculate-unit-btn,
+body.theme-blue-purple .start-btn,
+body.theme-blue-purple .calc-expression-submit,
+body.theme-blue-purple .darsyar-data-btn:not(.secondary):not(.danger),
+body.theme-blue-purple .font-size-btn.active,
+body.theme-blue-purple .theme-option.active,
+body.theme-blue-purple .lang-btn.active,
+body.theme-blue-purple .anim-btn.active,
+body.theme-blue-purple .color-theme-btn.active {
+  background: linear-gradient(125deg, #3B82F6, #6366F1, #8B5CF6) !important;
+  border-color: transparent !important;
+  color: #fff !important;
+}
+
+/* Custom confirm modal */
+.mm-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.45);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  animation: mmConfirmIn 0.2s ease both;
+}
+.mm-confirm-dialog {
+  width: min(100%, 420px);
+  padding: 24px 22px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--card-bg, var(--card));
+  color: var(--text);
+  box-shadow: 0 24px 60px rgba(0,0,0,.22);
+}
+.mm-confirm-dialog p {
+  margin: 0 0 18px;
+  line-height: 1.85;
+  font-size: 14px;
+}
+.mm-confirm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+.mm-confirm-actions button {
+  min-height: 42px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.mm-confirm-ok {
+  background: var(--primary);
+  color: #fff;
+  border-color: transparent;
+}
+.mm-confirm-cancel {
+  background: var(--card);
+  color: var(--text);
+}
+@keyframes mmConfirmIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+body.no-animations .mm-confirm-overlay { animation: none; }
+
+.formula-row {
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+}
+
+/* ========== Language direction alignment ========== */
+html[dir="ltr"] body,
+body.lang-en,
+body[dir="ltr"] {
+  text-align: left;
+}
+html[dir="rtl"] body,
+body.lang-fa,
+body[dir="rtl"] {
+  text-align: right;
+}
+/* Keep centered / button content centered */
+html[dir="ltr"] .start-btn,
+html[dir="ltr"] .calculate-btn,
+html[dir="ltr"] .calculate-multiples-btn,
+html[dir="ltr"] .calculate-geometry-btn,
+html[dir="ltr"] .calculate-gcd-lcm-btn,
+html[dir="ltr"] .calc-expression-submit,
+html[dir="ltr"] .darsyar-data-btn,
+html[dir="ltr"] .tool-card,
+html[dir="ltr"] .shape-card,
+html[dir="ltr"] .font-size-btn,
+html[dir="ltr"] .theme-option,
+html[dir="ltr"] .lang-btn,
+html[dir="ltr"] .anim-btn,
+html[dir="ltr"] .color-theme-btn {
+  text-align: center;
+}
+html[dir="ltr"] .tool-card,
+html[dir="ltr"] .sidebar-item {
+  text-align: left;
+}
+html[dir="ltr"] .result-row {
+  flex-direction: row;
+}
+html[dir="ltr"] .page-header,
+html[dir="ltr"] .section-header {
+  text-align: left;
+}
+html[dir="ltr"] input,
+html[dir="ltr"] textarea,
+html[dir="ltr"] select {
+  text-align: left;
+  direction: ltr;
+}
+html[dir="rtl"] input[type="number"],
+html[dir="rtl"] input[inputmode="numeric"],
+html[dir="rtl"] input[inputmode="decimal"] {
+  direction: ltr;
+  text-align: left;
+}
+/* Formula row follows page direction */
+html[dir="ltr"] .formula-row {
+  align-items: flex-start;
+  text-align: left;
+}
+html[dir="rtl"] .formula-row {
+  align-items: flex-start;
+  text-align: right;
+}
+
+/* ========== Stronger glass selects across the site ========== */
+select,
+select.select-control,
+.mathmate-games select,
+#unitFrom, #unitTo,
+#timeFrom, #timeTo,
+select#quickDifficulty,
+select#mergeSize,
+select#sudokuDifficulty {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  border-radius: 14px !important;
+  border: 1px solid var(--border, rgba(100,116,139,.28)) !important;
+  background-color: color-mix(in srgb, var(--card-bg, var(--card, #fff)) 78%, transparent) !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 L6 6.5 L11 1.5' fill='none' stroke='%2364748b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: left 12px center !important;
+  padding: 11px 14px 11px 34px !important;
+  -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+  backdrop-filter: blur(18px) saturate(160%) !important;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.07), inset 0 1px 0 rgba(255,255,255,.35) !important;
+  transition: border-color .22s ease, box-shadow .22s ease, transform .18s ease, background-color .22s ease !important;
+  cursor: pointer;
+}
+html[dir="rtl"] select,
+html[dir="rtl"] select.select-control,
+html[dir="rtl"] #unitFrom,
+html[dir="rtl"] #unitTo {
+  background-position: right 12px center !important;
+  padding: 11px 34px 11px 14px !important;
+}
+select:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--primary, #6366f1) 40%, var(--border)) !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.1), inset 0 1px 0 rgba(255,255,255,.4) !important;
+}
+select:focus-visible {
+  outline: 2px solid var(--primary, #6366f1);
+  outline-offset: 3px;
+}
+/* option list (limited browser support, still help where possible) */
+select option {
+  border-radius: 10px;
+  padding: 10px;
+  background: var(--card-bg, #fff);
+  color: var(--text, #1f2937);
+}
+body.dark select option {
+  background: #1e293b;
+  color: #f8fafc;
+}
+@media (prefers-reduced-motion: reduce) {
+  select { transition: none !important; }
+}
+
+/* ========== School result steps: readable size ========== */
+#schoolResult .step,
+.realworld-result .step,
+#schoolSteps .step {
+  font-size: 15px !important;
+  line-height: 1.85 !important;
+  font-weight: 600;
+  padding: 8px 0;
+}
+#schoolResult,
+.realworld-result.show {
+  font-size: 15px;
+}
+
+/* ========== Features list: left-align in English ========== */
+html[dir="ltr"] .features-list,
+html[dir="ltr"] .features-list li,
+body.lang-en .features-list,
+body.lang-en .features-list li {
+  text-align: left !important;
+  justify-content: flex-start;
+}
+html[dir="ltr"] .features-list li {
+  flex-direction: row;
+}
+html[dir="rtl"] .features-list li {
+  text-align: right;
+}
+
+/* ========== Back button must stay above sidebar toggle overlap ========== */
+.page-header {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+.back-btn {
+  position: relative;
+  z-index: 6;
+  flex: 0 0 auto;
+  min-height: 42px;
+  padding-inline: 12px 14px;
+  margin-inline-end: 8px;
+}
+@media (max-width: 899px) {
+  .page-header {
+    padding-top: 8px;
+    /* Keep back control clear of the fixed sidebar toggle (top-right in RTL / top-left area) */
+    padding-inline-end: 56px;
+  }
+  html[dir="ltr"] .page-header {
+    padding-inline-start: 56px;
+    padding-inline-end: 8px;
+  }
+  .sidebar-toggle {
+    z-index: 2001;
+  }
+  .back-btn {
+    z-index: 10;
+  }
+}
+
+/* ========== Games hero-main: mobile not stretched / shapes not colliding ========== */
+@media (max-width: 680px) {
+  .mathmate-games .hero-main {
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 18px 16px 20px !important;
+    overflow: hidden;
+  }
+  .mathmate-games .hero-main h1 {
+    font-size: 22px !important;
+    line-height: 1.45 !important;
+    max-width: 100% !important;
+    margin-bottom: 8px !important;
+  }
+  .mathmate-games .hero-main p {
+    font-size: 12px !important;
+    margin-bottom: 14px !important;
+    max-width: 100% !important;
+  }
+  .mathmate-games .hero-main:before,
+  .mathmate-games .hero-main:after {
+    width: 140px !important;
+    height: 140px !important;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  .mathmate-games .hero-main:before {
+    left: -50px !important;
+    top: -70px !important;
+  }
+  .mathmate-games .hero-main:after {
+    width: 160px !important;
+    height: 160px !important;
+    left: auto !important;
+    right: -60px !important;
+    top: auto !important;
+    bottom: -80px !important;
+  }
+  .mathmate-games .hero-art {
+    display: none !important;
+  }
+}
+
+/* ========== Global custom select (same as games / Darsyar priority) ========== */
+.select-control-wrap {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  isolation: isolate;
+  z-index: 1;
+}
+.select-control-wrap.is-open {
+  z-index: 4000;
+}
+.select-control-wrap > .select-native-hidden,
+.select-native-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+  clip: rect(0,0,0,0) !important;
+  border: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.select-control-trigger {
+  appearance: none;
+  -webkit-appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 14px;
+  border: 1px solid var(--border, rgba(100,116,139,.28));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--card-bg, var(--card, #fff)) 86%, transparent);
+  color: var(--text, #1f2937);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
+  box-shadow: 0 6px 18px rgba(15,23,42,.07), inset 0 1px 0 rgba(255,255,255,.35);
+  transition: border-color .2s ease, box-shadow .22s ease, transform .18s ease;
+}
+.select-control-trigger:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--primary, #6366f1) 40%, var(--border));
+}
+.select-control-wrap.is-open .select-control-trigger {
+  border-color: color-mix(in srgb, var(--primary, #6366f1) 55%, var(--border));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary, #6366f1) 16%, transparent);
+}
+.select-control-value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.select-control-chevron {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  color: var(--text-light, #64748b);
+  transition: transform .22s cubic-bezier(.2,.8,.2,1), color .18s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.select-control-chevron svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+}
+.select-control-wrap.is-open .select-control-chevron {
+  transform: rotate(180deg);
+  color: var(--primary, #6366f1);
+}
+.select-control-menu {
+  position: absolute;
+  top: calc(100% + 7px);
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  z-index: 5000;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(7px) scale(.975);
+  transform-origin: top center;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  background: color-mix(in srgb, var(--card-bg, #fff) 94%, transparent);
+  color: var(--text, #1f2937);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: 0 16px 40px rgba(15,23,42,.16);
+  transition: max-height .24s cubic-bezier(.2,.8,.2,1), opacity .17s ease, transform .22s cubic-bezier(.2,.8,.2,1), visibility 0s linear .24s, border-color .2s ease, padding .2s ease;
+}
+.select-control-wrap.is-open .select-control-menu {
+  max-height: 280px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+  padding: 6px;
+  border-color: var(--border, rgba(100,116,139,.28));
+  overflow-y: auto;
+  transition: max-height .24s cubic-bezier(.2,.8,.2,1), opacity .17s ease, transform .22s cubic-bezier(.2,.8,.2,1), visibility 0s, border-color .2s ease, padding .2s ease;
+}
+.select-control-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 40px;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--text, #1f2937);
+  font: inherit;
+  font-size: .92em;
+  text-align: start;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+.select-control-option:hover,
+.select-control-option:focus-visible {
+  background: var(--primary-light, rgba(99,102,241,.12));
+  color: var(--primary, #6366f1);
+  outline: none;
+}
+.select-control-option.is-selected {
+  background: var(--primary-light, rgba(99,102,241,.14));
+  color: var(--primary, #6366f1);
+  font-weight: 800;
+}
+body.dark .select-control-trigger,
+body.dark .select-control-menu {
+  background: color-mix(in srgb, var(--card-bg, #1e293b) 94%, #000 4%);
+  color: var(--text, #f8fafc);
+}
+body.no-animations .select-control-trigger,
+body.no-animations .select-control-menu,
+body.no-animations .select-control-chevron {
+  transition: none !important;
+}
+
+/* Puzzle icon from assets */
+.mathmate-games .custom-icon.game-icon-puzzle {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  display: inline-block;
+  vertical-align: middle;
+  filter: brightness(0);
+}
+.mathmate-games.dark .custom-icon.game-icon-puzzle,
+body.dark .mathmate-games .custom-icon.game-icon-puzzle {
+  filter: brightness(0) invert(1);
+}
+
+/* Darsyar search results: extra opacity in host styles too */
+.darsyar-app .mm-search-results-panel,
+.mm-search-results-panel {
+  background: color-mix(in srgb, var(--card-bg, #fff) 94%, transparent) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(160%) !important;
+  backdrop-filter: blur(22px) saturate(160%) !important;
+  box-shadow: 0 16px 40px rgba(15,23,42,.18) !important;
+}
+
+/* ========== Expression result: large answer, auto-clear errors ========== */
+.calculator-expression-result {
+  display: block;
+  margin-top: 12px;
+  min-height: 1.6em;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--input-bg, var(--card));
+  font-size: clamp(20px, 4.2vw, 28px) !important;
+  font-weight: 800 !important;
+  line-height: 1.6 !important;
+  overflow-wrap: anywhere;
+}
+.calculator-expression-result.is-success {
+  color: #16825e;
+  border-color: color-mix(in srgb, #16825e 35%, var(--border));
+  background: color-mix(in srgb, #16825e 8%, var(--card));
+}
+.calculator-expression-result.is-error {
+  color: #c23d54;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+}
+
+/* ========== Formulas: separate readable lines ========== */
+.formula-row {
+  width: 100%;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+  gap: 8px !important;
+}
+.formula-row > span {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-light);
+}
+#geometryFormula,
+#gcdLcmFormula {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100%;
+  font-weight: 600 !important;
+}
+.formula-line {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--input-bg, rgba(0,0,0,.03));
+  border: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.formula-line.formula-answer {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--primary-dark, var(--primary));
+  border-color: color-mix(in srgb, var(--primary) 30%, var(--border));
+  background: var(--primary-light, rgba(99,102,241,.08));
+}
+.formula-line.formula-meta {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+/* ========== Features list tidy (EN + FA) ========== */
+.features-list {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  align-items: stretch;
+}
+.features-list li {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-width: 0 !important;
+  padding: 12px 14px !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 14px !important;
+  background: var(--input-bg, var(--card)) !important;
+  line-height: 1.65 !important;
+  overflow-wrap: anywhere !important;
+  text-align: start !important;
+}
+html[dir="ltr"] .features-list,
+html[dir="ltr"] .features-list li,
+body.lang-en .features-list,
+body.lang-en .features-list li {
+  text-align: left !important;
+  direction: ltr;
+  justify-content: flex-start;
+}
+html[dir="rtl"] .features-list li {
+  text-align: right !important;
+  direction: rtl;
+}
+.features-list li img {
+  width: 22px !important;
+  height: 22px !important;
+  flex: 0 0 22px !important;
+}
+
+/* ========== Sidebar toggle: left in English, right in Persian ========== */
+html[dir="ltr"] .sidebar-toggle,
+body.lang-en .sidebar-toggle {
+  right: auto !important;
+  left: 16px !important;
+}
+html[dir="rtl"] .sidebar-toggle,
+body.lang-fa .sidebar-toggle {
+  left: auto !important;
+  right: 16px !important;
+}
+html[dir="ltr"] .sidebar {
+  right: auto;
+  left: 0;
+  border-left: none;
+  border-right: 1px solid var(--sidebar-border);
+  transform: translateX(-100%);
+}
+html[dir="ltr"] .sidebar.open {
+  transform: translateX(0);
+}
+@media (min-width: 900px) {
+  html[dir="ltr"] .sidebar {
+    transform: translateX(0);
+  }
+}
+@media (max-width: 899px) {
+  html[dir="ltr"] .page-header {
+    padding-inline-start: 56px !important;
+    padding-inline-end: 8px !important;
+  }
+  html[dir="rtl"] .page-header {
+    padding-inline-end: 56px !important;
+  }
+}
+
+/* Game icons from assets */
+.mathmate-games .custom-icon.game-icon-memory,
+.mathmate-games .custom-icon.game-icon-missing,
+.mathmate-games .custom-icon.game-icon-puzzle {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  display: inline-block;
+  vertical-align: middle;
+  filter: brightness(0);
+}
+.mathmate-games.dark .custom-icon.game-icon-memory,
+.mathmate-games.dark .custom-icon.game-icon-missing,
+.mathmate-games.dark .custom-icon.game-icon-puzzle,
+body.dark .mathmate-games .custom-icon.game-icon-memory,
+body.dark .mathmate-games .custom-icon.game-icon-missing,
+body.dark .mathmate-games .custom-icon.game-icon-puzzle {
+  filter: brightness(0) invert(1);
+}
+
+.darsyar-app .mm-search-results-panel,
+.mm-search-results-panel {
+  background: var(--card-bg, #fff) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  opacity: 1 !important;
+  box-shadow: 0 18px 44px rgba(15,23,42,.22) !important;
+}
+body.dark .darsyar-app .mm-search-results-panel,
+body.dark .mm-search-results-panel {
+  background: var(--card-bg, #1e293b) !important;
+}
+
+/* No mobile blue tap flash anywhere */
+*, *::before, *::after {
+  -webkit-tap-highlight-color: transparent !important;
+}
+button, a, input, select, textarea, [role="button"], .sidebar-item, .tool-card, .ds-note-tool {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none;
+}
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible) {
+  outline: none;
+}
+
+
+/* ================= Requested MathMate final fixes ================= */
+/* RTL: game titles sit on the right edge of each card in Persian. */
+#gamesPage .mathmate-games[dir="rtl"] .game-card h3 {
+  width:100%;
+  text-align:right !important;
+  direction:rtl !important;
+  justify-self:stretch;
+}
+
+/* Larger game header pictograms, safely contained by the rounded tile. */
+#gamesPage .mathmate-games .view-title .big-icon img.custom-icon.game-icon-memory,
+#gamesPage .mathmate-games .view-title .big-icon img.custom-icon.game-icon-missing,
+#gamesPage .mathmate-games .view-title .big-icon img.custom-icon.game-icon-2048,
+#gamesPage .mathmate-games .view-title .big-icon img.custom-icon.game-icon-puzzle {
+  display:block !important;
+  width:29px !important;
+  height:29px !important;
+  max-width:100% !important;
+  max-height:100% !important;
+  object-fit:contain !important;
+  flex:0 1 29px !important;
+}
+
+/* Keep the floating game artwork on phones, softly behind the hero copy. */
+@media (max-width:680px) {
+  #gamesPage .mathmate-games .hero-main {
+    position:relative;
+    isolation:isolate;
+  }
+  #gamesPage .mathmate-games .hero-main > :not(.hero-art) {
+    position:relative;
+    z-index:1;
+  }
+  #gamesPage .mathmate-games .hero-main .hero-art {
+    display:block !important;
+    position:absolute !important;
+    left:auto !important;
+    right:4px !important;
+    bottom:0 !important;
+    width:110px !important;
+    height:94px !important;
+    opacity:.13 !important;
+    transform:scale(.84);
+    transform-origin:right bottom;
+    z-index:0 !important;
+    pointer-events:none !important;
+  }
+}
+
+/* Defense in depth: the installed software build never shows the store banner. */
+body[data-mathmate-build="software"] #mobileInstallBanner {
+  display:none !important;
+  visibility:hidden !important;
 }
