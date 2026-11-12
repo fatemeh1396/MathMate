@@ -1,14 +1,14 @@
 name: Build MathMate Release APK
 
 on:
+  # Run manually after all version-3 files have been uploaded and checked.
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 jobs:
   build-apk:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout project
@@ -36,19 +36,40 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Run project tests
+        run: node --test tests/*.test.cjs
+
+      - name: Verify Android version is 3.0.0 (versionCode 3)
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path("android/app/build.gradle")
+          text = path.read_text(encoding="utf-8")
+          code = re.search(r'^\s*versionCode\s+(\d+)\s*$', text, re.MULTILINE)
+          name = re.search(r'^\s*versionName\s+["\']([^"\']+)["\']\s*$', text, re.MULTILINE)
+
+          if not code or int(code.group(1)) != 3:
+              raise SystemExit("ERROR: Set versionCode 3 in android/app/build.gradle")
+          if not name or name.group(1) != "3.0.0":
+              raise SystemExit('ERROR: Set versionName "3.0.0" in android/app/build.gradle')
+
+          print("Android version verified: versionCode=3, versionName=3.0.0")
+          PY
+
       - name: Sync Capacitor Android
         run: npx cap sync android
 
-      - name: Prepare MathMate app icon
+      - name: Prepare MathMate app icon without stretching
         run: |
           python3 -m venv .icon-venv
           . .icon-venv/bin/activate
-          python -m pip install --quiet --upgrade pip
           python -m pip install --quiet pillow
 
           python - <<'PY'
           from pathlib import Path
-          from PIL import Image
+          from PIL import Image, ImageOps
 
           source = Path("www/assets/icons/favicon(1).png")
           target_dir = Path(".ci-assets")
@@ -58,54 +79,42 @@ jobs:
           if not source.is_file():
               raise SystemExit(f"ERROR: Icon not found: {source}")
 
-          with Image.open(source) as image:
-              image = image.convert("RGBA")
-              image = image.resize((1024, 1024), Image.Resampling.LANCZOS)
-              image.save(target, format="PNG")
+          with Image.open(source) as original:
+              image = original.convert("RGBA")
+              fitted = ImageOps.contain(
+                  image,
+                  (1024, 1024),
+                  method=Image.Resampling.LANCZOS,
+              )
+              canvas = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+              x = (1024 - fitted.width) // 2
+              y = (1024 - fitted.height) // 2
+              canvas.alpha_composite(fitted, (x, y))
+              canvas.save(target, format="PNG")
 
-          print(f"Prepared icon: {target}")
+          print(f"Prepared non-distorted app icon: {target}")
           PY
 
       - name: Generate Android app icon
         run: npx --yes @capacitor/assets@3.0.5 generate --android --assetPath .ci-assets
 
-      - name: Set Android version code
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
-
-          path = Path("android/app/build.gradle")
-          text = path.read_text()
-
-          new_text, count = re.subn(
-              r'(\bversionCode\s+)\d+',
-              r'\g<1>2',
-              text,
-              count=1
-          )
-
-          if count != 1:
-              raise SystemExit(
-                  "ERROR: Could not find versionCode in android/app/build.gradle"
-              )
-
-          path.write_text(new_text)
-          print("Android versionCode set to 2")
-          PY
-
       - name: Restore release keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
-          echo "$KEYSTORE_BASE64" | base64 --decode > android/app/release.keystore
+          test -n "$KEYSTORE_BASE64" || { echo "ERROR: KEYSTORE_BASE64 secret is missing"; exit 1; }
+          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > android/app/release.keystore
+          test -s android/app/release.keystore || { echo "ERROR: Restored keystore is empty"; exit 1; }
 
-      - name: Configure release signing
+      - name: Configure release signing properties
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
+          test -n "$KEYSTORE_PASSWORD" || { echo "ERROR: KEYSTORE_PASSWORD secret is missing"; exit 1; }
+          test -n "$KEY_ALIAS" || { echo "ERROR: KEY_ALIAS secret is missing"; exit 1; }
+          test -n "$KEY_PASSWORD" || { echo "ERROR: KEY_PASSWORD secret is missing"; exit 1; }
           cat >> android/gradle.properties <<EOF
           MYAPP_RELEASE_STORE_FILE=release.keystore
           MYAPP_RELEASE_STORE_PASSWORD=$KEYSTORE_PASSWORD
@@ -113,13 +122,17 @@ jobs:
           MYAPP_RELEASE_KEY_PASSWORD=$KEY_PASSWORD
           EOF
 
-      - name: Configure Gradle signing
+      - name: Configure Gradle release signing
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
 
           path = Path("android/app/build.gradle")
-          text = path.read_text()
+          text = path.read_text(encoding="utf-8")
+
+          if "signingConfigs {" in text or "signingConfig signingConfigs.release" in text:
+              raise SystemExit("ERROR: Release signing already appears in build.gradle; refusing to insert it twice")
 
           signing = '''
               signingConfigs {
@@ -132,23 +145,21 @@ jobs:
               }
           '''
 
-          text = text.replace(
-              "android {",
-              "android {" + signing,
-              1
-          )
+          if "android {" not in text:
+              raise SystemExit("ERROR: Could not find android { in android/app/build.gradle")
+          text = text.replace("android {", "android {" + signing, 1)
 
-          text = text.replace(
-              "buildTypes {",
-              """buildTypes {
-                  release {
-                      signingConfig signingConfigs.release
-                  }
-              """,
-              1
+          pattern = re.compile(r'(buildTypes\s*\{\s*release\s*\{)')
+          text, count = pattern.subn(
+              r'\1\n            signingConfig signingConfigs.release',
+              text,
+              count=1,
           )
+          if count != 1:
+              raise SystemExit("ERROR: Could not find the existing release buildType in android/app/build.gradle")
 
-          path.write_text(text)
+          path.write_text(text, encoding="utf-8")
+          print("Release signing attached to the existing release build type")
           PY
 
       - name: Make Gradle executable
@@ -158,8 +169,18 @@ jobs:
         working-directory: android
         run: ./gradlew assembleRelease
 
+      - name: Verify APK signature
+        run: |
+          APK="android/app/build/outputs/apk/release/app-release.apk"
+          test -s "$APK" || { echo "ERROR: APK output not found"; exit 1; }
+          SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
+          APKSIGNER="$(find "$SDK_ROOT/build-tools" -type f -name apksigner 2>/dev/null | sort -V | tail -n 1)"
+          test -n "$APKSIGNER" || { echo "ERROR: apksigner was not found in Android SDK build-tools"; exit 1; }
+          "$APKSIGNER" verify --verbose "$APK"
+
       - name: Upload signed APK
         uses: actions/upload-artifact@v4
         with:
-          name: MathMate-Release-APK
+          name: MathMate-3.0.0-Release-APK
           path: android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
